@@ -1,0 +1,12 @@
+{
+  "name": "zapspy-funnel",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd zapspy/backend && npm install",
+    "start": "cd zapspy/backend && node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
