@@ -210,7 +210,7 @@ app.get('/go/:slug', async (req, res) => {
 
 // ==================== ROOT REDIRECT TO ENGLISH FUNNEL ====================
 app.get('/', (req, res) => {
-    res.sendFile(path.join(funnelPath, 'ingles', 'index.html'));
+    res.redirect('/ingles/');
 });
 
 // ==================== STATIC FILE SERVING ====================
