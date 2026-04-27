@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Check Data Fetcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            width: 100%;
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .data-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .data-section h2 {
+            background: #f8f9fa;
+            padding: 15px;
+            color: #495057;
+            font-size: 18px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .data-content {
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .count {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .summary-card h3 {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .summary-card .value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Refund Check Data Fetcher</h1>
+        
+        <div id="status" class="status loading">
+            Checking for admin token...
+        </div>
+        
+        <button id="fetchBtn" onclick="fetchData()" disabled>Fetch Refund Data</button>
+        
+        <div id="summary" class="hidden" style="margin-top: 30px;">
+            <h2 style="margin-bottom: 20px;">Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h3>Refunded/Chargeback</h3>
+                    <div class="value" id="count1">-</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Monetizze Refund Requests</h3>
+                    <div class="value" id="count2">-</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Missing by Email</h3>
+                    <div class="value" id="count3">-</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Missing by TXID</h3>
+                    <div class="value" id="count4">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="results" class="hidden">
+            <div class="data-section">
+                <h2>1. Transactions with Refunded/Chargeback Status <span class="count" id="badge1">0</span></h2>
+                <div class="data-content">
+                    <pre id="data1">No data</pre>
+                </div>
+            </div>
+            
+            <div class="data-section">
+                <h2>2. Refund Requests from Monetizze <span class="count" id="badge2">0</span></h2>
+                <div class="data-content">
+                    <pre id="data2">No data</pre>
+                </div>
+            </div>
+            
+            <div class="data-section">
+                <h2>3. Missing by Email <span class="count" id="badge3">0</span></h2>
+                <div class="data-content">
+                    <pre id="data3">No data</pre>
+                </div>
+            </div>
+            
+            <div class="data-section">
+                <h2>4. Missing by Transaction ID <span class="count" id="badge4">0</span></h2>
+                <div class="data-content">
+                    <pre id="data4">No data</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'https://painel.aimonitor.com';
+        let adminToken = null;
+        
+        // Check for token on load
+        window.addEventListener('DOMContentLoaded', () => {
+            adminToken = localStorage.getItem('adminToken');
+            const statusEl = document.getElementById('status');
+            const fetchBtn = document.getElementById('fetchBtn');
+            
+            if (adminToken) {
+                statusEl.className = 'status success';
+                statusEl.textContent = '✓ Admin token found! Click the button to fetch data.';
+                fetchBtn.disabled = false;
+            } else {
+                statusEl.className = 'status error';
+                statusEl.innerHTML = `
+                    <strong>No admin token found!</strong><br><br>
+                    Please follow these steps:<br>
+                    1. Open <a href="https://painel.aimonitor.com/admin" target="_blank">https://painel.aimonitor.com/admin</a> in a new tab<br>
+                    2. Log in to the admin panel<br>
+                    3. Come back to this page and refresh<br>
+                    4. The token will be automatically detected
+                `;
+            }
+        });
+        
+        async function fetchData() {
+            const statusEl = document.getElementById('status');
+            const fetchBtn = document.getElementById('fetchBtn');
+            const resultsEl = document.getElementById('results');
+            const summaryEl = document.getElementById('summary');
+            
+            if (!adminToken) {
+                statusEl.className = 'status error';
+                statusEl.textContent = 'Error: No admin token found. Please log in first.';
+                return;
+            }
+            
+            statusEl.className = 'status loading';
+            statusEl.textContent = 'Fetching data from API...';
+            fetchBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_URL}/api/admin/debug/refund-check`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Update status
+                statusEl.className = 'status success';
+                statusEl.textContent = '✓ Data fetched successfully!';
+                
+                // Show results
+                summaryEl.classList.remove('hidden');
+                resultsEl.classList.remove('hidden');
+                
+                // Update summary cards
+                document.getElementById('count1').textContent = data.transactions_refunded_chargeback?.length || 0;
+                document.getElementById('count2').textContent = data.refund_requests_monetizze?.length || 0;
+                document.getElementById('count3').textContent = Object.keys(data.missing_by_email || {}).length;
+                document.getElementById('count4').textContent = Object.keys(data.missing_by_txid || {}).length;
+                
+                // Update badges
+                document.getElementById('badge1').textContent = data.transactions_refunded_chargeback?.length || 0;
+                document.getElementById('badge2').textContent = data.refund_requests_monetizze?.length || 0;
+                document.getElementById('badge3').textContent = Object.keys(data.missing_by_email || {}).length;
+                document.getElementById('badge4').textContent = Object.keys(data.missing_by_txid || {}).length;
+                
+                // Display data
+                document.getElementById('data1').textContent = JSON.stringify(data.transactions_refunded_chargeback || [], null, 2);
+                document.getElementById('data2').textContent = JSON.stringify(data.refund_requests_monetizze || [], null, 2);
+                document.getElementById('data3').textContent = JSON.stringify(data.missing_by_email || {}, null, 2);
+                document.getElementById('data4').textContent = JSON.stringify(data.missing_by_txid || {}, null, 2);
+                
+                // Save to console for easy copying
+                console.log('=== REFUND CHECK DATA ===');
+                console.log('Full data:', data);
+                console.log('\nTo save this data, right-click in console and select "Save as..."');
+                
+                // Offer download
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `refund-check-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                statusEl.textContent = '✓ Data fetched successfully! File downloaded automatically.';
+                
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = `Error: ${error.message}`;
+                console.error('Fetch error:', error);
+            } finally {
+                fetchBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

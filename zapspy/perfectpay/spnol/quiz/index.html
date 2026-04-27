@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Capture fbclid and poll for _fbp cookie ASAP -->
+    <script>
+    (function() {
+        var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+        if (m) {
+            var fbc = 'fb.1.' + Date.now() + '.' + decodeURIComponent(m[1]);
+            try { localStorage.setItem('_fbc', fbc); } catch(e) {}
+        }
+        var polls = 0;
+        var pi = setInterval(function() {
+            var c = document.cookie.match(/_fbp=([^;]+)/);
+            if (c) { try { localStorage.setItem('_fbp', c[1]); } catch(e) {} clearInterval(pi); }
+            if (++polls > 25) clearInterval(pi);
+        }, 200);
+    })();
+    </script>
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>¿Tu Relación Está en Riesgo?</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" href="../imagens/icon-site.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    var userData = {};
+    try {
+        var em = localStorage.getItem('userEmail');
+        var ph = localStorage.getItem('userWhatsApp');
+        var fn = localStorage.getItem('userName');
+        var ge = localStorage.getItem('targetGender');
+        if (em) userData.em = em.toLowerCase().trim();
+        if (ph) userData.ph = ph.replace(/\D/g, '');
+        if (fn) { var names = fn.trim().split(' '); userData.fn = names[0].toLowerCase(); if (names.length > 1) userData.ln = names.slice(1).join(' ').toLowerCase(); }
+        if (ge) userData.ge = ge === 'female' ? 'f' : 'm';
+    } catch(e) {}
+    fbq('init', '534495082571779', userData);
+    var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    fbq('track', 'PageView', {}, { eventID: pvId });
+    window._fbPageViewFired = true;
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=534495082571779&ev=PageView&noscript=1"/></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <script src="../js/tracking-utils.js"></script>
+    <script>if(typeof TrackingUtils!=='undefined')TrackingUtils.captureUTMs();</script>
+    <script src="../js/tracking.js"></script>
+    <script src="../js/fc.js" defer></script>
+</head>
+<body>
+
+    <div class="noise"></div>
+    <div class="vignette"></div>
+    <div class="glow-orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+    <div class="topbar" id="topbar">
+        <div class="topbar-progress"><div class="topbar-fill" id="topbarFill"></div></div>
+        <div class="topbar-label" id="topbarLabel"></div>
+    </div>
+
+    <main class="stage">
+
+        <!-- ====== ESCENA 0: HOOK ====== -->
+        <section class="scene active" data-scene="0">
+            <div class="scene-body scene-body--center">
+                <h1 class="hook-title" id="hookTitle" style="display:none"></h1>
+                <p class="hook-greeting" id="hookGreeting" style="display:none"></p>
+                <div class="hook-warning">
+                    <svg class="hook-warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <div><strong>ACCESO RESTRINGIDO</strong><br>Esta herramienta revela mensajes eliminados, conversaciones ocultas y ubicación en tiempo real. Debido a su poder, <strong>el acceso es extremadamente limitado</strong>. Solo quedan pocas plazas hoy.<br><br>Para continuar, necesitamos <strong>verificar tu intención</strong>. Tus respuestas determinan si el acceso será aprobado.</div>
+                </div>
+                <button class="btn-main" id="btnStart">
+                    <span class="btn-main-text">Iniciar Verificación de Acceso</span>
+                    <span class="btn-main-arrow">→</span>
+                </button>
+                <div class="hook-trust">
+                    <div class="trust-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Encriptado</div>
+                    <div class="trust-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Anónimo</div>
+                    <div class="trust-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 2 Min</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P1: GÉNERO ====== -->
+        <section class="scene" data-scene="1">
+            <div class="scene-body">
+                <div class="scene-step">Paso 1 de 8</div>
+                <h2 class="scene-title">Primero, dinos:</h2>
+                <p class="scene-desc">Esto cambia completamente el análisis. Hombres y mujeres engañan de formas <strong>muy diferentes</strong>.</p>
+                <div class="opts opts--gender">
+                    <button class="opt opt--lg" data-q="1" data-v="male" data-p="0">
+                        <span class="opt-emoji">👨</span>
+                        <span class="opt-main">Soy Hombre</span>
+                        <span class="opt-sub">Quiero verificar a una mujer</span>
+                    </button>
+                    <button class="opt opt--lg" data-q="1" data-v="female" data-p="0">
+                        <span class="opt-emoji">👩</span>
+                        <span class="opt-main">Soy Mujer</span>
+                        <span class="opt-sub">Quiero verificar a un hombre</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P2: MOTIVACIÓN ====== -->
+        <section class="scene" data-scene="2">
+            <div class="scene-body">
+                <div class="scene-step">Paso 2 de 8</div>
+                <h2 class="scene-title">¿Cuál es tu principal motivo para querer acceso a esta <em>herramienta</em>?</h2>
+                <p class="scene-desc">Necesitamos entender tu situación. El uso indebido puede generar <strong>consecuencias legales graves</strong>.</p>
+                <div class="opts">
+                    <button class="opt" data-q="2" data-v="a" data-p="15">
+                        <div class="opt-left"><span class="opt-emoji-sm">🔍</span><div>
+                            <span class="opt-main">"Tengo fuertes motivos para creer que me están siendo infiel."</span>
+                            <span class="opt-sub">Necesito pruebas concretas para protegerme. La situación ya pasó los límites.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--green">Aprobado</span>
+                    </button>
+                    <button class="opt" data-q="2" data-v="b" data-p="10">
+                        <div class="opt-left"><span class="opt-emoji-sm">🤔</span><div>
+                            <span class="opt-main">"Tengo dudas y quiero aclararlas."</span>
+                            <span class="opt-sub">La situación está empeorando y necesito respuestas antes de que sea tarde.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--yellow">En Revisión</span>
+                    </button>
+                    <button class="opt" data-q="2" data-v="c" data-p="0">
+                        <div class="opt-left"><span class="opt-emoji-sm">👀</span><div>
+                            <span class="opt-main">"Solo curiosidad."</span>
+                            <span class="opt-sub">Quiero ver qué puede hacer la herramienta.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--red">Requiere Justificación</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P3: PREPARACIÓN EMOCIONAL ====== -->
+        <section class="scene" data-scene="3">
+            <div class="scene-body">
+                <div class="scene-step">Paso 3 de 8</div>
+                <h2 class="scene-title">Esta herramienta revela <em>mensajes eliminados</em>, conversaciones ocultas y ubicación en tiempo real. ¿Estás preparado/a?</h2>
+                <p class="scene-desc">Muchas personas no están listas para lo que descubren. <strong>Necesitamos asegurarnos de que tú sí.</strong></p>
+                <div class="opts">
+                    <button class="opt" data-q="3" data-v="a" data-p="15">
+                        <div class="opt-left"><span class="opt-emoji-sm">💪</span><div>
+                            <span class="opt-main">"Sí. Prefiero una verdad dolorosa que una duda cómoda."</span>
+                            <span class="opt-sub">Estoy listo/a para enfrentar lo que venga. Necesito la verdad para tomar una decisión.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--green">Aprobado</span>
+                    </button>
+                    <button class="opt" data-q="3" data-v="b" data-p="10">
+                        <div class="opt-left"><span class="opt-emoji-sm">😰</span><div>
+                            <span class="opt-main">"Creo que sí, pero tengo miedo de lo que pueda descubrir."</span>
+                            <span class="opt-sub">La incertidumbre me consume, pero confrontar la realidad me asusta.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--yellow">En Revisión</span>
+                    </button>
+                    <button class="opt" data-q="3" data-v="c" data-p="0">
+                        <div class="opt-left"><span class="opt-emoji-sm">🤷</span><div>
+                            <span class="opt-main">"No estoy seguro/a — no lo he pensado a fondo."</span>
+                            <span class="opt-sub">Aún no he reflexionado sobre las consecuencias.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--red">Requiere Justificación</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P4: TIEMPO DE SUFRIMIENTO ====== -->
+        <section class="scene" data-scene="4">
+            <div class="scene-body">
+                <div class="scene-step">Paso 4 de 8</div>
+                <h2 class="scene-title">¿Hace cuánto tiempo esta situación afecta tu <em>salud mental</em>?</h2>
+                <p class="scene-desc">El tiempo de exposición al estrés emocional es un <strong>factor crítico</strong> en nuestra evaluación.</p>
+                <div class="opts">
+                    <button class="opt" data-q="4" data-v="a" data-p="15">
+                        <div class="opt-left"><span class="opt-emoji-sm">😩</span><div>
+                            <span class="opt-main">"Semanas o meses. Me está destruyendo."</span>
+                            <span class="opt-sub">No puedo dormir, comer ni concentrarme. La duda consume cada segundo de mi día.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--green">Aprobado</span>
+                    </button>
+                    <button class="opt" data-q="4" data-v="b" data-p="10">
+                        <div class="opt-left"><span class="opt-emoji-sm">📈</span><div>
+                            <span class="opt-main">"Empezó hace poco, pero empeora cada día."</span>
+                            <span class="opt-sub">Siento que la situación está escalando y necesito actuar antes de que empeore.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--yellow">En Revisión</span>
+                    </button>
+                    <button class="opt" data-q="4" data-v="c" data-p="0">
+                        <div class="opt-left"><span class="opt-emoji-sm">😐</span><div>
+                            <span class="opt-main">"No me afecta tanto."</span>
+                            <span class="opt-sub">Puedo manejar la situación normalmente.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--red">Requiere Justificación</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P5: PROFUNDIDAD DE CONEXIÓN ====== -->
+        <section class="scene" data-scene="5">
+            <div class="scene-body">
+                <div class="scene-step">Paso 5 de 8</div>
+                <h2 class="scene-title">¿Qué tan profunda es tu <em>conexión emocional</em> con esta persona?</h2>
+                <p class="scene-desc">Nuestro sistema se basa en el vínculo emocional entre dos personas para acceder a datos ocultos. <strong>Cuanto más fuerte sea la conexión, más datos podremos recuperar.</strong></p>
+                <div class="opts">
+                    <button class="opt" data-q="5" data-v="a" data-p="15">
+                        <div class="opt-left"><span class="opt-emoji-sm">💞</span><div>
+                            <span class="opt-main">"Vínculo profundo — años de historia e intimidad compartida."</span>
+                            <span class="opt-sub">Hemos estado juntos mucho tiempo. La conexión es real, lo que hace la traición aún peor.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--green">Conexión Fuerte</span>
+                    </button>
+                    <button class="opt" data-q="5" data-v="b" data-p="10">
+                        <div class="opt-left"><span class="opt-emoji-sm">💔</span><div>
+                            <span class="opt-main">"Éramos cercanos, pero las cosas cambiaron últimamente."</span>
+                            <span class="opt-sub">Siento que la distancia crece. Algo cambió y no puedo explicar por qué.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--yellow">Conexión Moderada</span>
+                    </button>
+                    <button class="opt" data-q="5" data-v="c" data-p="0">
+                        <div class="opt-left"><span class="opt-emoji-sm">🔗</span><div>
+                            <span class="opt-main">"Ya no somos tan cercanos."</span>
+                            <span class="opt-sub">La relación se ha deteriorado desde hace un tiempo.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--red">Conexión Débil</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P6: INTENTOS ANTERIORES ====== -->
+        <section class="scene" data-scene="6">
+            <div class="scene-body">
+                <div class="scene-step">Paso 6 de 8</div>
+                <h2 class="scene-title">¿Ya intentaste otros métodos para <em>descubrir la verdad</em>?</h2>
+                <p class="scene-desc">Las personas que agotaron otras opciones demuestran <strong>necesidad genuina</strong> de acceso.</p>
+                <div class="opts">
+                    <button class="opt" data-q="6" data-v="a" data-p="15">
+                        <div class="opt-left"><span class="opt-emoji-sm">🔄</span><div>
+                            <span class="opt-main">"Sí — ya intenté de todo. Nada funcionó."</span>
+                            <span class="opt-sub">Revisé mensajes, pregunté directamente, hablé con amigos. Estoy sin salida y esta es mi última opción.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--green">Aprobado</span>
+                    </button>
+                    <button class="opt" data-q="6" data-v="b" data-p="10">
+                        <div class="opt-left"><span class="opt-emoji-sm">😔</span><div>
+                            <span class="opt-main">"Lo pensé, pero tengo miedo de confrontar."</span>
+                            <span class="opt-sub">Sé que necesito actuar, pero confrontar directamente podría empeorar todo.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--yellow">En Revisión</span>
+                    </button>
+                    <button class="opt" data-q="6" data-v="c" data-p="0">
+                        <div class="opt-left"><span class="opt-emoji-sm">🆕</span><div>
+                            <span class="opt-main">"No, este es mi primer intento."</span>
+                            <span class="opt-sub">Aún no exploré otras alternativas.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--red">Requiere Justificación</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P7: VERIFICACIÓN DE CONEXIÓN ====== -->
+        <section class="scene" data-scene="7">
+            <div class="scene-body">
+                <div class="scene-step">Paso 7 de 8</div>
+                <h2 class="scene-title">Nuestra tecnología usa el <em>vínculo emocional</em> entre dos personas para desbloquear datos ocultos. ¿Tu conexión es lo suficientemente fuerte?</h2>
+                <p class="scene-desc">Esto no es solo software — <strong>lee el hilo invisible</strong> entre ustedes. Sin una conexión real, el sistema no puede funcionar.</p>
+                <div class="opts">
+                    <button class="opt" data-q="7" data-v="a" data-p="15">
+                        <div class="opt-left"><span class="opt-emoji-sm">🔥</span><div>
+                            <span class="opt-main">"Absolutamente. A pesar de todo, el vínculo entre nosotros es real."</span>
+                            <span class="opt-sub">Es exactamente por eso que duele tanto — la conexión es genuina y profunda.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--green">Conexión Confirmada</span>
+                    </button>
+                    <button class="opt" data-q="7" data-v="b" data-p="10">
+                        <div class="opt-left"><span class="opt-emoji-sm">🤔</span><div>
+                            <span class="opt-main">"Creo que sí, pero las cosas han cambiado últimamente."</span>
+                            <span class="opt-sub">La conexión siempre fue fuerte, pero los cambios recientes me hacen dudar de todo.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--yellow">Conexión Parcial</span>
+                    </button>
+                    <button class="opt" data-q="7" data-v="c" data-p="0">
+                        <div class="opt-left"><span class="opt-emoji-sm">❓</span><div>
+                            <span class="opt-main">"Ya no estoy seguro/a."</span>
+                            <span class="opt-sub">Siento que nos alejamos y no sé qué es real.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--red">Conexión Incierta</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== P8: COMPROMISO FINAL ====== -->
+        <section class="scene" data-scene="8">
+            <div class="scene-body">
+                <div class="scene-step">Última verificación</div>
+                <h2 class="scene-title">¿Comprendes que este acceso es <em>limitado, monitoreado e irreversible</em> una vez activado?</h2>
+                <p class="scene-desc">Al continuar, aceptas <strong>total responsabilidad</strong> por el uso de la información revelada.</p>
+                <div class="opts">
+                    <button class="opt" data-q="8" data-v="a" data-p="15">
+                        <div class="opt-left"><span class="opt-emoji-sm">✅</span><div>
+                            <span class="opt-main">"Sí. Acepto total responsabilidad y estoy listo/a."</span>
+                            <span class="opt-sub">Comprendo los términos y estoy preparado/a para proceder con la activación.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--green">Aprobado</span>
+                    </button>
+                    <button class="opt" data-q="8" data-v="b" data-p="10">
+                        <div class="opt-left"><span class="opt-emoji-sm">⚖️</span><div>
+                            <span class="opt-main">"Entiendo, pero aún tengo algo de duda."</span>
+                            <span class="opt-sub">Acepto los términos, pero la decisión no es fácil.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--yellow">En Revisión</span>
+                    </button>
+                    <button class="opt" data-q="8" data-v="c" data-p="0">
+                        <div class="opt-left"><span class="opt-emoji-sm">⏸️</span><div>
+                            <span class="opt-main">"Necesito más tiempo para pensarlo."</span>
+                            <span class="opt-sub">No me siento listo/a para tomar esta decisión ahora.</span>
+                        </div></div>
+                        <span class="opt-tag opt-tag--red">Requiere Justificación</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== ANÁLISIS ====== -->
+        <section class="scene" data-scene="analysis">
+            <div class="scene-body scene-body--center analysis-wrap">
+                <div class="scan-visual">
+                    <div class="scan-ring"></div>
+                    <div class="scan-ring scan-ring--2"></div>
+                    <div class="scan-core"><span id="scanPct">0</span>%</div>
+                </div>
+                <h2 class="analysis-headline" id="analysisHeadline">Procesando tus respuestas...</h2>
+                <p class="analysis-sub" id="analysisSub">Cruzando datos con 127.493 análisis anteriores</p>
+                <div class="analysis-log" id="analysisLog"></div>
+            </div>
+        </section>
+
+        <!-- ====== RESULTADO ====== -->
+        <section class="scene" data-scene="result">
+            <div class="scene-body">
+
+                <div class="res-score-wrap">
+                    <div class="res-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6"/>
+                            <circle cx="50" cy="50" r="44" fill="none" stroke-width="6" stroke-linecap="round" id="resArc" class="res-arc"/>
+                        </svg>
+                        <div class="res-number-wrap"><span class="res-number" id="resNumber">0</span><span class="res-pct">%</span></div>
+                    </div>
+                    <div class="res-level" id="resLevel">ALTO RIESGO</div>
+                </div>
+
+                <h2 class="res-headline" id="resHeadline">Resultado del análisis</h2>
+
+                <div class="res-diagnosis" id="resDiagnosis">
+                    <div class="diag-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                        Resultado de la Verificación
+                    </div>
+                    <p id="diagText"></p>
+                </div>
+
+                <div class="res-signals" id="resSignals">
+                    <div class="signals-header">Criterios Cumplidos:</div>
+                    <div class="signals-list" id="signalsList"></div>
+                </div>
+
+                <div class="res-stakes">
+                    <div class="stakes-title">⏳ Lo Que Está en Juego</div>
+                    <div class="stakes-timeline">
+                        <div class="stake-item">
+                            <div class="stake-time">Ahora</div>
+                            <div class="stake-text">Mensajes están siendo intercambiados y <strong>eliminados</strong> en este momento.</div>
+                        </div>
+                        <div class="stake-item">
+                            <div class="stake-time">1 Semana</div>
+                            <div class="stake-text">Fotos, audios y conversaciones borradas <strong>se vuelven irrecuperables</strong>.</div>
+                        </div>
+                        <div class="stake-item">
+                            <div class="stake-time">1 Mes</div>
+                            <div class="stake-text">La situación se consolida. <strong>Se hace más difícil actuar</strong> y más fácil ser engañado(a).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#" class="cta-final" id="ctaFinal">
+                    <div class="cta-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </div>
+                    <div class="cta-text"><strong>Acceder a la Herramienta Ahora</strong><span>Verificación 100% anónima e invisible</span></div>
+                    <span class="cta-arrow">→</span>
+                </a>
+
+                <div class="res-countdown-box" id="resCountdownBox" style="display:none">
+                    <div class="countdown-header">
+                        <span class="countdown-pulse"></span>
+                        <span>Tu acceso expira en:</span>
+                    </div>
+                    <div class="countdown-timer" id="countdownTimer">14:59</div>
+                    <div class="countdown-slots">Solo quedan <strong id="countdownSlots">3</strong> vacantes disponibles</div>
+                </div>
+
+                <div class="res-urgency">
+                    <span class="urgency-dot"></span>
+                    <strong>Atención:</strong> Tu acceso fue aprobado, pero es temporal. Después de que expire el tiempo, tu vacante será liberada para la siguiente persona en la fila.
+                </div>
+
+                <a href="#" class="cta-secondary" id="ctaSecondary">Asegurar Mi Acceso Ahora →</a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+    if (!localStorage.getItem('funnelVisitorId')) {
+        localStorage.setItem('funnelVisitorId', 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof FacebookCAPI !== 'undefined') {
+            FacebookCAPI.init('Quiz Page');
+            FacebookCAPI.trackViewContent('Quiz Page', 'Funnel - Quiz Entry', 47);
+        }
+    });
+    </script>
+    <script src="../js/urgency-bar.js"></script>
+</body>
+</html>

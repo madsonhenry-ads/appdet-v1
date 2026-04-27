@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Reembolso - Whats Spy</title>
+    <meta name="description" content="Solicita un reembolso por tu compra de Whats Spy. Procesamiento rápido y seguro.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    var userData = {};
+    try {
+        var em = localStorage.getItem('userEmail');
+        var ph = localStorage.getItem('userWhatsApp');
+        var fn = localStorage.getItem('userName');
+        var ct = localStorage.getItem('userCity');
+        var co = localStorage.getItem('userCountryCode');
+        var ge = localStorage.getItem('targetGender');
+        var st = localStorage.getItem('userState');
+        if (em) userData.em = em.toLowerCase().trim();
+        if (ph) userData.ph = ph.replace(/\D/g, '');
+        if (fn) {
+            var names = fn.trim().split(' ');
+            userData.fn = names[0].toLowerCase();
+            if (names.length > 1) userData.ln = names.slice(1).join(' ').toLowerCase();
+        }
+        if (ct) userData.ct = ct.toLowerCase().replace(/[^a-z]/g, '');
+        if (co) userData.country = co.toLowerCase();
+        if (ge) userData.ge = ge === 'female' ? 'f' : 'm';
+        if (st) userData.st = st.toLowerCase().replace(/[^a-z]/g, '');
+    } catch(e) {}
+    fbq('init', '534495082571779', userData);
+    var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    fbq('track', 'PageView', {}, { eventID: pvId });
+    window._fbPageViewFired = true;
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=534495082571779&ev=PageView&noscript=1"
+    /></noscript>
+</head>
+<body>
+    <!-- STEP 0: Security Validation Screen -->
+    <div id="validationScreen" class="validation-screen">
+        <div class="validation-container">
+            <div class="validation-shield">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke="#10b981" stroke-width="2"/></svg>
+            </div>
+            <h2 class="validation-title">Verificación de Seguridad</h2>
+            <p class="validation-subtitle">Estamos verificando los datos de tu compra por motivos de seguridad. Por favor, no cierres esta página.</p>
+            
+            <div class="validation-steps">
+                <div class="v-step active" id="vStep1">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Verificando registros de compra...</span>
+                </div>
+                <div class="v-step" id="vStep2">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Validando información de la cuenta...</span>
+                </div>
+                <div class="v-step" id="vStep3">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Verificando estado de elegibilidad...</span>
+                </div>
+                <div class="v-step" id="vStep4">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Preparando formulario seguro...</span>
+                </div>
+            </div>
+
+            <div class="validation-progress">
+                <div class="validation-progress-bar" id="validationBar"></div>
+            </div>
+            <div class="validation-percent" id="validationPercent">0%</div>
+
+            <div class="validation-notice">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 16v-4M12 8h.01"/></svg>
+                <span>Esta verificación es necesaria para prevenir solicitudes fraudulentas y proteger tu cuenta.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN FORM (hidden until validation completes) -->
+    <div class="page-container" id="mainContent" style="display:none;">
+        <header class="header">
+            <h1 class="page-title">Solicitud de Reembolso</h1>
+        </header>
+
+        <!-- Progress Steps: 4 steps now -->
+        <div class="progress-container">
+            <div class="progress-step active" data-step="1">
+                <div class="step-number">1</div>
+                <span class="step-label">Personal</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="2">
+                <div class="step-number">2</div>
+                <span class="step-label">Compra</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="3">
+                <div class="step-number">3</div>
+                <span class="step-label">Comentarios</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="4">
+                <div class="step-number">4</div>
+                <span class="step-label">Validación</span>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="notice-box">
+                <div class="notice-icon">ℹ</div>
+                <div class="notice-content">
+                    <h3>Importante</h3>
+                    <p>Para procesar tu reembolso, necesitamos validar la información de tu compra. Por favor completa todos los campos cuidadosamente para asegurar un procesamiento rápido.</p>
+                </div>
+            </div>
+
+            <form id="refundForm">
+                <!-- Step 1: Personal Info -->
+                <div class="form-step active" data-step="1">
+                    <h2 class="section-title">Información Personal</h2>
+                    <p class="section-subtitle">Todos los campos son obligatorios para la validación de compra</p>
+
+                    <div class="form-group">
+                        <label for="fullName">Nombre Completo <span class="required">*</span></label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Ingresa tu nombre completo" required>
+                        <span class="error-message" id="fullNameError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email de Compra <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="Ingresa el email utilizado para la compra" required>
+                        <span class="helper-text">Usa el mismo email registrado para la compra</span>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Teléfono/WhatsApp <span class="required">*</span></label>
+                        <div class="phone-input-container">
+                            <div class="country-selector" id="countrySelector">
+                                <span class="selected-country" id="selectedCountry">
+                                    <span class="flag">🇪🇸</span>
+                                    <span class="code">+34</span>
+                                    <span class="arrow">▼</span>
+                                </span>
+                                <div class="country-dropdown" id="countryDropdown">
+                                    <input type="text" class="country-search" placeholder="🔍 Buscar país..." id="countrySearch">
+                                    <div class="country-list" id="countryList"></div>
+                                </div>
+                            </div>
+                            <input type="tel" id="phone" name="phone" placeholder="Número de teléfono" required>
+                        </div>
+                        <span class="helper-text">Para contacto sobre el reembolso</span>
+                        <span class="error-message" id="phoneError"></span>
+                    </div>
+
+                    <button type="button" class="btn-primary" onclick="nextStep(2)">
+                        Continuar <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+
+                <!-- Step 2: Purchase Details -->
+                <div class="form-step" data-step="2">
+                    <h2 class="section-title">Detalles de la Compra</h2>
+                    <p class="section-subtitle">Ayúdanos a localizar tu compra rápidamente</p>
+
+                    <div class="form-group">
+                        <label for="purchaseDate">Fecha de Compra <span class="required">*</span></label>
+                        <input type="date" id="purchaseDate" name="purchaseDate" required>
+                        <span class="error-message" id="purchaseDateError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reason">Motivo del Reembolso <span class="required">*</span></label>
+                        <select id="reason" name="reason" required>
+                            <option value="">Selecciona el motivo principal</option>
+                            <option value="not_expected">El producto no entregó los resultados esperados</option>
+                            <option value="technical">Dificultad técnica para acceder al producto</option>
+                            <option value="duplicate">Cargo duplicado en la tarjeta</option>
+                            <option value="unauthorized">No autoricé esta compra</option>
+                            <option value="changed_mind">Cambié de opinión sobre la compra</option>
+                            <option value="no_access">No recibí acceso al producto</option>
+                            <option value="other">Otro motivo</option>
+                        </select>
+                        <span class="helper-text">Selecciona la razón que mejor describe tu situación</span>
+                        <span class="error-message" id="reasonError"></span>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="prevStep(1)">
+                            <span class="btn-arrow">←</span> Atrás
+                        </button>
+                        <button type="button" class="btn-primary" onclick="nextStep(3)">
+                            Continuar <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Detailed Feedback (NEW - friction step) -->
+                <div class="form-step" data-step="3">
+                    <h2 class="section-title">Comentarios Detallados</h2>
+                    <p class="section-subtitle">Nuestro equipo necesita esta información para procesar tu solicitud</p>
+
+                    <div class="feedback-notice">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <div>
+                            <strong>Requerido para análisis</strong>
+                            <p>Para que nuestro equipo directivo pueda revisar tu caso, por favor describe con el máximo detalle lo que ocurrió. Las descripciones incompletas retrasarán el procesamiento.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="details">Describe lo que ocurrió en detalle <span class="required">*</span></label>
+                        <textarea id="details" name="details" placeholder="Explica en detalle: ¿Cuál fue el problema? ¿Cuándo comenzó? ¿Qué intentaste para resolverlo? ¿Qué resultado esperabas frente a lo que ocurrió?&#10;&#10;Cuanta más información proporciones, más rápido nuestro equipo podrá analizar y procesar tu solicitud." rows="8" required></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span> / 50 caracteres mínimo
+                            <span class="char-status" id="charStatus">⚠ Se necesitan más detalles</span>
+                        </div>
+                        <span class="error-message" id="detailsError"></span>
+                    </div>
+
+                    <div class="security-notice">
+                        <span class="lock-icon">🔒</span>
+                        Tu información está protegida y solo será utilizada para procesar el reembolso
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="prevStep(2)">
+                            <span class="btn-arrow">←</span> Atrás
+                        </button>
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            Enviar Solicitud <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation - WhatsApp Bridge -->
+                <div class="form-step" data-step="4">
+                    <div class="confirmation-container">
+                        <div class="confirmation-status">
+                            <div class="status-icon pending">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            </div>
+                            <h2 class="confirmation-title">Solicitud Recibida. <span class="text-warning">Validación Pendiente.</span></h2>
+                        </div>
+                        
+                        <div class="protocol-box">
+                            <span class="protocol-label">Número de Protocolo</span>
+                            <div class="protocol-number" id="protocolNumber">REF-000000</div>
+                            <button type="button" class="btn-copy" onclick="copyProtocol()">
+                                📋 Copiar Protocolo
+                            </button>
+                        </div>
+
+                        <div class="confirmation-message">
+                            <p>Tu solicitud de reembolso ha sido registrada. Para continuar con el análisis y <strong>validar tu identidad</strong>, el siguiente paso <strong>obligatorio</strong> es confirmar tu solicitud con uno de nuestros agentes por WhatsApp.</p>
+                        </div>
+
+                        <div class="warning-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <p><strong>Las solicitudes no confirmadas por WhatsApp en 24 horas serán canceladas automáticamente por motivos de seguridad.</strong></p>
+                        </div>
+
+                        <a href="#" id="whatsappBtn" class="btn-whatsapp" target="_blank" rel="noopener">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            <div class="btn-whatsapp-text">
+                                <strong>Confirmar Solicitud en WhatsApp Ahora</strong>
+                                <span>Paso obligatorio para proceder con el reembolso</span>
+                            </div>
+                        </a>
+
+                        <div class="summary-box">
+                            <div class="summary-item">
+                                <span class="summary-label">Nombre:</span>
+                                <span class="summary-value" id="summaryName">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Email:</span>
+                                <span class="summary-value" id="summaryEmail">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Estado:</span>
+                                <span class="summary-value status-pending">⏳ Esperando Confirmación por WhatsApp</span>
+                            </div>
+                        </div>
+
+                        <div class="next-steps">
+                            <h3>¿Qué sucede después?</h3>
+                            <div class="next-step-item">
+                                <div class="next-step-num">1</div>
+                                <div>
+                                    <strong>Confirmar en WhatsApp</strong>
+                                    <span>Haz clic en el botón de arriba para hablar con un agente y validar tu identidad</span>
+                                </div>
+                            </div>
+                            <div class="next-step-item">
+                                <div class="next-step-num">2</div>
+                                <div>
+                                    <strong>Verificación de identidad</strong>
+                                    <span>Nuestro agente verificará tus datos de compra por seguridad</span>
+                                </div>
+                            </div>
+                            <div class="next-step-item">
+                                <div class="next-step-num">3</div>
+                                <div>
+                                    <strong>Procesamiento del reembolso</strong>
+                                    <span>Tras la verificación, el reembolso se procesará en un plazo de 7 días hábiles</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>⚠️ Importante:</strong> Si no confirmas tu solicitud por WhatsApp, se cancelará automáticamente después de 24 horas. Esta medida existe para prevenir fraudes y proteger a nuestros clientes.
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2026 Whats Spy. Todos los derechos reservados.</p>
+            <div class="footer-links">
+                <a href="../privacy.html">Política de Privacidad</a>
+                <a href="../terms.html">Términos de Servicio</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="../js/fc.js"></script>
+    <script>
+        if (typeof FacebookCAPI !== 'undefined') {
+            FacebookCAPI.init('Refund Page');
+            FacebookCAPI.trackViewContent('Refund Page', 'Funnel - Refund', 47);
+        }
+    </script>
+</body>
+</html>
