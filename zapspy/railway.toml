@@ -1,8 +1,8 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "cd zapspy/backend && npm install"
+buildCommand = "cd backend && npm install"
 
 [deploy]
-startCommand = "cd zapspy/backend && node server.js"
+startCommand = "cd backend && node server.js"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
