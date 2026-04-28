@@ -7,6 +7,7 @@ const { sendMissingGoogleAdsPurchases } = require('../services/google-ads-conver
 const { parseMonetizzeDate } = require('../helpers');
 const activeCampaign = require('../services/activecampaign');
 const dispatchService = require('../services/email-dispatch');
+const supabaseAuthService = require('../services/supabase-auth');
 
 // ==================== MONETIZZE POSTBACK API ====================
 
@@ -1027,6 +1028,23 @@ router.all('/api/postback/monetizze', async (req, res) => {
             });
         }
 
+        // ==================== SUPABASE AUTH: AUTO-PROVISION MEMBER AREA USER ====================
+        if (finalEmail && mappedStatus === 'approved') {
+            setImmediate(async () => {
+                try {
+                    const result = await supabaseAuthService.ensureSupabaseUser(finalEmail, buyerName || '', funnelLanguage);
+                    if (result.created) {
+                        console.log(`🔐 Supabase user created: ${finalEmail}`);
+                        await supabaseAuthService.sendCredentialsEmail(finalEmail, result.magicLink, buyerName || '', funnelLanguage);
+                    } else {
+                        console.log(`🔐 Supabase user already exists: ${finalEmail}`);
+                    }
+                } catch (sbError) {
+                    console.error('Supabase user creation error (non-blocking):', sbError.message);
+                }
+            });
+        }
+
         // Return success (Monetizze expects 200 OK)
         res.status(200).send('OK');
         
@@ -1666,7 +1684,24 @@ router.all('/api/postback/perfectpay', async (req, res) => {
                 }
             });
         }
-        
+
+        // ==================== SUPABASE AUTH: AUTO-PROVISION MEMBER AREA USER ====================
+        if (buyerEmail && mappedStatus === 'approved') {
+            setImmediate(async () => {
+                try {
+                    const result = await supabaseAuthService.ensureSupabaseUser(buyerEmail, buyerName || '', funnelLanguage);
+                    if (result.created) {
+                        console.log(`🔐 Supabase user created: ${buyerEmail} [PerfectPay]`);
+                        await supabaseAuthService.sendCredentialsEmail(buyerEmail, result.magicLink, buyerName || '', funnelLanguage);
+                    } else {
+                        console.log(`🔐 Supabase user already exists: ${buyerEmail} [PerfectPay]`);
+                    }
+                } catch (sbError) {
+                    console.error('Supabase PerfectPay user creation error (non-blocking):', sbError.message);
+                }
+            });
+        }
+
         // Return success (PerfectPay expects 200 OK)
         res.status(200).json({ status: 'ok' });
         

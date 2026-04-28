@@ -84,6 +84,10 @@ const ZAPI_BASE_URL = `https://api.z-api.io/instances/${ZAPI_INSTANCE}/token/${Z
 const AC_API_URL = process.env.AC_API_URL || 'https://draculatemer11258320.api-us1.com';
 const AC_API_KEY = process.env.AC_API_KEY || '371d6888c7c7926156a602ad9e2ff127799be33b081ae80845b599188975b7902a11591a';
 
+// Supabase Auth (for auto-provisioning member area users on purchase)
+const SUPABASE_URL = process.env.SUPABASE_URL || '';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
 const VALID_PRODUCT_CODES = [
     // PerfectPay English
     'PPPBEGBG', 'PPPBDG0I', 'PPPBDG0J', 'PPPBEIDH', 'PPPBEIDL', 'PPPBEIDM', 'PPPBEIDN', 'PPPBEIDP'
@@ -101,5 +105,7 @@ module.exports = {
     ZAPI_BASE_URL,
     VALID_PRODUCT_CODES,
     AC_API_URL,
-    AC_API_KEY
+    AC_API_KEY,
+    SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY
 };

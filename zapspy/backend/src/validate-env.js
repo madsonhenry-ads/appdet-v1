@@ -31,7 +31,9 @@ function validateEnv() {
         { name: 'ZAPI_TOKEN', desc: 'Z-API token (using fallback)' },
         { name: 'FRONTEND_URL', desc: 'Allowed CORS origins (using defaults)' },
         { name: 'AC_API_URL', desc: 'ActiveCampaign API URL (recovery automations disabled without it)' },
-        { name: 'AC_API_KEY', desc: 'ActiveCampaign API Key (recovery automations disabled without it)' }
+        { name: 'AC_API_KEY', desc: 'ActiveCampaign API Key (recovery automations disabled without it)' },
+        { name: 'SUPABASE_URL', desc: 'Supabase project URL (member area auto-provisioning disabled without it)' },
+        { name: 'SUPABASE_SERVICE_ROLE_KEY', desc: 'Supabase service role key (member area auto-provisioning disabled without it)' }
     ];
 
     for (const { name, desc } of optional) {
