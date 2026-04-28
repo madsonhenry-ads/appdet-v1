@@ -17,6 +17,9 @@ const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, AC_API_URL, AC_API_KEY } = requ
 // Lazy singleton for Supabase admin client
 let _supabaseAdmin = null;
 
+// Cache for AC custom field ID (MAGIC_LINK)
+let _magicLinkFieldId = null;
+
 function getSupabaseAdmin() {
     if (!_supabaseAdmin) {
         if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -30,6 +33,36 @@ function getSupabaseAdmin() {
         });
     }
     return _supabaseAdmin;
+}
+
+/**
+ * Resolve the AC custom field ID for MAGIC_LINK by searching by personalization tag.
+ * AC API requires numeric field IDs, not field names.
+ */
+async function getMagicLinkFieldId() {
+    if (_magicLinkFieldId) return _magicLinkFieldId;
+
+    if (!AC_API_URL || !AC_API_KEY) return null;
+
+    try {
+        const res = await fetch(`${AC_API_URL}/api/3/fields?limit=100`, {
+            headers: { 'Api-Token': AC_API_KEY }
+        });
+        if (!res.ok) return null;
+
+        const data = await res.json();
+        const field = (data.fields || []).find(f =>
+            f.title === 'MAGIC_LINK' || f.personaltag === '%MAGIC_LINK%'
+        );
+        if (field) {
+            _magicLinkFieldId = field.id;
+            console.log(`📧 AC: MAGIC_LINK field ID resolved: ${_magicLinkFieldId}`);
+        }
+        return _magicLinkFieldId;
+    } catch (err) {
+        console.error(`📧 AC: Error resolving MAGIC_LINK field ID:`, err.message);
+        return null;
+    }
 }
 
 function isConfigured() {
@@ -143,14 +176,21 @@ async function sendCredentialsEmail(email, magicLink, name, funnelLanguage) {
     }
 
     try {
-        // Create or update contact in ActiveCampaign with magic link as custom field
+        // Resolve AC custom field ID for MAGIC_LINK
+        const fieldId = await getMagicLinkFieldId();
+
+        // Build field values with numeric field ID
+        const fieldValues = [];
+        if (fieldId) {
+            fieldValues.push({ field: String(fieldId), value: magicLink || 'https://pc.appdetect.site/' });
+        }
+
+        // Create or update contact in ActiveCampaign with magic link
         const contactData = {
             email,
             firstName: (name || '').split(' ')[0] || '',
             lastName: (name || '').split(' ').slice(1).join(' ') || '',
-            fieldValues: [
-                { field: 'MAGIC_LINK', value: magicLink || 'https://pc.appdetect.site/' }
-            ]
+            fieldValues
         };
 
         const contactRes = await fetch(`${AC_API_URL}/api/3/contact/sync`, {
