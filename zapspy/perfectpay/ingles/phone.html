@@ -401,23 +401,25 @@
 
         .phone-input-wrapper {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 16px;
+            width: 100%;
         }
 
         .country-select {
             background: #1f2c33;
             border: 2px solid #2a3942;
             border-radius: 14px;
-            padding: 14px 12px;
+            padding: 14px 10px;
             color: #E9EDEF;
             font-size: 16px;
             cursor: pointer;
-            min-width: 100px;
+            width: 90px;
+            flex-shrink: 0;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238696a0' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 12px center;
+            background-position: right 8px center;
         }
 
         .country-select:focus {
@@ -427,12 +429,13 @@
 
         .phone-input {
             flex: 1;
+            min-width: 0;
             background: #1f2c33;
             border: 2px solid #2a3942;
             border-radius: 14px;
-            padding: 14px 16px;
+            padding: 14px 12px;
             color: #E9EDEF;
-            font-size: 18px;
+            font-size: 16px;
             transition: all 0.3s ease;
         }
 
@@ -575,6 +578,40 @@
         .spy-btn svg {
             width: 22px;
             height: 22px;
+        }
+
+        /* Benefit Icons */
+        .benefit-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #8696a0;
+            text-align: left;
+        }
+
+        .benefit-emoji {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .benefit-text strong {
+            color: #E9EDEF;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .benefit-text span {
+            font-size: 11px;
+            color: #8696a0;
         }
 
         /* Trust Badges */
@@ -1469,6 +1506,19 @@
             .profile-info-item .value {
                 font-size: 18px;
             }
+            .phone-input-wrapper {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .country-select {
+                width: 100%;
+            }
+            .benefit-icons {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 0 8px;
+            }
         }
         
         /* ========== LEAD CAPTURE FORM ========== */
@@ -2066,6 +2116,21 @@
                     </svg>
                     Reveal The Truth Now →
                 </button>
+
+                <div class="benefit-icons">
+                    <div class="benefit-item">
+                        <span class="benefit-emoji">🔒</span>
+                        <div class="benefit-text"><strong>Encrypted</strong><br><span>access to WhatsApp cloud.</span></div>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-emoji">🕵️</span>
+                        <div class="benefit-text"><strong>Undetectable</strong><br><span>monitoring mode.</span></div>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-emoji">⚡</span>
+                        <div class="benefit-text"><strong>Recover</strong><br><span>deleted messages.</span></div>
+                    </div>
+                </div>
             </div>
 
             <div class="trust-section">
