@@ -4096,7 +4096,7 @@ Posso ajudar com alguma dúvida?</textarea>
     
     <!-- Journey Details Modal -->
     <div class="modal-overlay" id="journeyModal">
-        <div class="modal" style="max-width: 700px;">
+        <div class="modal" style="max-width: 700px; overflow-y: auto;">
             <div class="modal-header">
                 <h3>🛤️ Jornada do Visitante</h3>
                 <p id="journeyVisitorId">Detalhes completos da jornada</p>
@@ -4119,7 +4119,7 @@ Posso ajudar com alguma dúvida?</textarea>
             <!-- Events Timeline -->
             <div style="background: var(--bg-tertiary); border-radius: 12px; padding: 16px;">
                 <h4 style="color: var(--info); margin-bottom: 12px; font-size: 14px;">📍 Timeline de Eventos</h4>
-                <div id="journeyEventsTimeline" style="max-height: 300px; overflow-y: auto;">
+                <div id="journeyEventsTimeline" style="max-height: 450px; min-height: 100px; overflow-y: auto;">
                     <p style="color: var(--text-muted);">Carregando...</p>
                 </div>
             </div>

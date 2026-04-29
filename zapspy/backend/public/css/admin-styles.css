@@ -1208,13 +1208,14 @@
             animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative;
             scrollbar-width: thin;
             scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+            box-sizing: border-box;
         }
         .modal::-webkit-scrollbar { width: 6px; }
         .modal::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); border-radius: 3px; }
         .modal::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
         .modal::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.55); }
         .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.5; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         
         .modal-content {
             background: var(--bg-glass); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
@@ -1241,6 +1242,13 @@
         .modal-actions { display: flex; gap: 14px; margin-top: 28px; }
         .modal-actions .btn-primary, .modal-actions .btn-secondary { flex: 1; justify-content: center; }
         
+        /* Journey Modal - fix para não achatar */
+        #journeyModal .modal { max-width: 720px; }
+        #journeyLeadData { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; min-height: 60px; }
+        #journeyLeadData > div { padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px; min-height: 50px; }
+        #journeyEventsTimeline { min-height: 80px; }
+        
+
         /* Notification Toast */
         .toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 9999; display: flex; flex-direction: column; gap: 14px; }
         .toast { display: flex; align-items: center; gap: 16px; padding: 18px 24px; background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); min-width: 360px; }
