@@ -22,7 +22,7 @@ export default async function TutorialPage() {
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold text-white">Installation Tutorial</h1>
-          <p className="text-zinc-400">Complete step-by-step guide to installing the TiSpy monitoring software.</p>
+          <p className="text-zinc-400">Complete step-by-step guide to installing the AppDetect monitoring software.</p>
         </div>
 
         <LessonList lessons={lessons || []} categoryTitle="Installation Guide" />

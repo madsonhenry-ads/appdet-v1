@@ -2,12 +2,12 @@
 
 ## 📋 Resumo da Integração
 
-Este projeto foi atualizado com um sistema completo de aulas em vídeo sobre TiSpy, mantendo o scanner funcional.
+Este projeto foi atualizado com um sistema completo de aulas em vídeo sobre AppDetect, mantendo o scanner funcional.
 
 ### ✨ Novas Funcionalidades
 
 1. **4 Menus de Aulas:**
-   - Comece Aqui (Introdução ao TiSpy)
+   - Comece Aqui (Introdução ao AppDetect)
    - Tutorial de Instalação (Guia passo a passo)
    - Painel Avançado (Funcionalidades avançadas)
    - Bónus (Ferramentas de scanner)

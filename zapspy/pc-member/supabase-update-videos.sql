@@ -1,23 +1,23 @@
--- Update lessons with real TiSpy YouTube videos
+-- Update lessons with real AppDetect YouTube videos
 
--- Start Here - Introduction to TiSpy
+-- Start Here - Introduction to AppDetect
 UPDATE lessons 
 SET video_url = 'https://www.youtube.com/embed/a0oXhqpFa9Y', 
-    description = 'Learn how to install and start using TiSpy. Official video from the TiSpy channel showing the first steps.'
-WHERE title = 'Introduction to TiSpy and Scanner Differences' 
+    description = 'Learn how to install and start using AppDetect. Official video from the AppDetect channel showing the first steps.'
+WHERE title = 'Introduction to AppDetect and Scanner Differences' 
 AND course_id IN (SELECT id FROM courses WHERE category = 'introduction');
 
 -- Start Here - What is Advanced Spying
 UPDATE lessons 
 SET video_url = 'https://www.youtube.com/embed/suNDvvB9xx4',
-    description = 'Understand how advanced digital spying works with TiSpy. Complete installation tutorial video.'
+    description = 'Understand how advanced digital spying works with AppDetect. Complete installation tutorial video.'
 WHERE title = 'What is Advanced Spying?' 
 AND course_id IN (SELECT id FROM courses WHERE category = 'introduction');
 
 -- Installation Tutorial - Preparation and First Steps
 UPDATE lessons 
 SET video_url = 'https://www.youtube.com/embed/cdcsM9bTJSE',
-    description = 'Complete guide to installing TiSpy on Android devices. Follow the steps in the official video.',
+    description = 'Complete guide to installing AppDetect on Android devices. Follow the steps in the official video.',
     duration_minutes = 12
 WHERE title = 'Preparation and First Steps' 
 AND course_id IN (SELECT id FROM courses WHERE category = 'installation');
@@ -25,7 +25,7 @@ AND course_id IN (SELECT id FROM courses WHERE category = 'installation');
 -- Installation Tutorial - Step-by-Step Installation
 UPDATE lessons 
 SET video_url = 'https://www.youtube.com/embed/E3Os_B2pi4c',
-    description = 'Post-installation and special TiSpy configurations. Discover best practices for perfect operation.',
+    description = 'Post-installation and special AppDetect configurations. Discover best practices for perfect operation.',
     duration_minutes = 15
 WHERE title = 'Step-by-Step Installation' 
 AND course_id IN (SELECT id FROM courses WHERE category = 'installation');
@@ -33,7 +33,7 @@ AND course_id IN (SELECT id FROM courses WHERE category = 'installation');
 -- Installation Tutorial - Practical Tips
 UPDATE lessons 
 SET video_url = 'https://www.youtube.com/embed/suNDvvB9xx4',
-    description = 'Important installation tips: test on your own device first, learn all features before using on another phone.',
+    description = 'Important installation tips: test on your own device first, learn all features before using on another phone.\n\nDownload AppDetect: https://cutt.ly/gtLkL25Q',
     duration_minutes = 10
 WHERE title = 'Practical Installation Tips' 
 AND course_id IN (SELECT id FROM courses WHERE category = 'installation');
@@ -41,7 +41,7 @@ AND course_id IN (SELECT id FROM courses WHERE category = 'installation');
 -- Advanced Panel - Overview
 UPDATE lessons 
 SET video_url = 'https://www.youtube.com/embed/mKYzNNBw6kA',
-    description = 'Get to know all the features of the TiSpy control panel. Video showing complete parental control.',
+    description = 'Get to know all the features of the AppDetect control panel. Video showing complete parental control.',
     duration_minutes = 18
 WHERE title = 'Control Panel Overview' 
 AND course_id IN (SELECT id FROM courses WHERE category = 'advanced');
@@ -81,7 +81,7 @@ AND course_id IN (SELECT id FROM courses WHERE category = 'advanced');
 -- Advanced Panel - Stealth Mode and Privacy
 UPDATE lessons 
 SET video_url = 'https://www.youtube.com/embed/suNDvvB9xx4',
-    description = 'TiSpy works 100% invisible without leaving traces. Learn how to activate full stealth mode for maximum privacy.',
+    description = 'AppDetect works 100% invisible without leaving traces. Learn how to activate full stealth mode for maximum privacy.',
     duration_minutes = 12
 WHERE title = 'Stealth Mode and Privacy' 
 AND course_id IN (SELECT id FROM courses WHERE category = 'advanced');

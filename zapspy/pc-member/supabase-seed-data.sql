@@ -1,40 +1,40 @@
 -- Initial Data - Courses
 INSERT INTO courses (title, description, category, order_index) VALUES
-('Start Here', 'Learn the differences between the scanner and TiSpy, and how TiSpy offers 100% mobile access', 'introduction', 1),
-('Installation Tutorial', 'Step-by-step guide to installing TiSpy on the target phone with practical tips', 'installation', 2),
-('Advanced Panel', 'Master all the features of the TiSpy monitoring panel', 'advanced', 3),
+('Start Here', 'Learn the differences between the scanner and AppDetect, and how AppDetect offers 100% mobile access', 'introduction', 1),
+('Installation Tutorial', 'Step-by-step guide to installing AppDetect on the target phone with practical tips', 'installation', 2),
+('Advanced Panel', 'Master all the features of the AppDetect monitoring panel', 'advanced', 3),
 ('Bonus Tools', 'Access to social media scanners as additional resources', 'bonus', 4);
 
 -- Initial Data - Lessons for "Start Here"
 INSERT INTO lessons (course_id, title, description, video_url, video_type, order_index, duration_minutes)
-SELECT id, 'Introduction to TiSpy and Scanner Differences', 'In this lesson you will learn the limitations of the traditional scanner and how TiSpy offers a complete solution with 100% access to the target phone.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 1, 15
+SELECT id, 'Introduction to AppDetect and Scanner Differences', 'In this lesson you will learn the limitations of the traditional scanner and how AppDetect offers a complete solution with 100% access to the target phone.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 1, 15
 FROM courses WHERE category = 'introduction'
 LIMIT 1;
 
 INSERT INTO lessons (course_id, title, description, video_url, video_type, order_index, duration_minutes)
-SELECT id, 'What is Advanced Spying?', 'Understand how advanced digital spying works and why TiSpy is the most reliable solution on the market.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 2, 12
+SELECT id, 'What is Advanced Spying?', 'Understand how advanced digital spying works and why AppDetect is the most reliable solution on the market.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 2, 12
 FROM courses WHERE category = 'introduction'
 LIMIT 1;
 
 -- Initial Data - Lessons for "Installation Tutorial"
 INSERT INTO lessons (course_id, title, description, video_url, video_type, order_index, duration_minutes)
-SELECT id, 'Preparation and First Steps', 'Learn how to prepare the phone and the first steps to install TiSpy safely.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 1, 18
+SELECT id, 'Preparation and First Steps', 'Learn how to prepare the phone and the first steps to install AppDetect safely.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 1, 18
 FROM courses WHERE category = 'installation'
 LIMIT 1;
 
 INSERT INTO lessons (course_id, title, description, video_url, video_type, order_index, duration_minutes)
-SELECT id, 'Step-by-Step Installation', 'Detailed guide with screenshots showing each step of the TiSpy installation on the target phone.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 2, 20
+SELECT id, 'Step-by-Step Installation', 'Detailed guide with screenshots showing each step of the AppDetect installation on the target phone.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 2, 20
 FROM courses WHERE category = 'installation'
 LIMIT 1;
 
 INSERT INTO lessons (course_id, title, description, video_url, video_type, order_index, duration_minutes)
-SELECT id, 'Practical Installation Tips', 'Important tips: install first on your own phone to learn, or offer a new phone as a gift.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 3, 10
+SELECT id, 'Practical Installation Tips', 'Important tips: install first on your own phone to learn, or offer a new phone as a gift.\n\nDownload AppDetect: https://cutt.ly/gtLkL25Q', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 3, 10
 FROM courses WHERE category = 'installation'
 LIMIT 1;
 
 -- Initial Data - Lessons for "Advanced Panel"
 INSERT INTO lessons (course_id, title, description, video_url, video_type, order_index, duration_minutes)
-SELECT id, 'Control Panel Overview', 'Get to know the complete interface of the TiSpy monitoring panel and its main features.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 1, 15
+SELECT id, 'Control Panel Overview', 'Get to know the complete interface of the AppDetect monitoring panel and its main features.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 1, 15
 FROM courses WHERE category = 'advanced'
 LIMIT 1;
 
@@ -59,7 +59,7 @@ FROM courses WHERE category = 'advanced'
 LIMIT 1;
 
 INSERT INTO lessons (course_id, title, description, video_url, video_type, order_index, duration_minutes)
-SELECT id, 'Stealth Mode and Privacy', 'Understand how TiSpy works in 100% invisible stealth mode without leaving traces.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 6, 13
+SELECT id, 'Stealth Mode and Privacy', 'Understand how AppDetect works in 100% invisible stealth mode without leaving traces.', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'youtube', 6, 13
 FROM courses WHERE category = 'advanced'
 LIMIT 1;
 

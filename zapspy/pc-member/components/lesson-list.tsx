@@ -65,7 +65,7 @@ export default function LessonList({ lessons, categoryTitle }: LessonListProps) 
           <h2 className="text-2xl font-bold text-white mb-3">
             {selectedLesson?.title}
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
             {selectedLesson?.description || "No description provided for this lesson."}
           </p>
         </div>

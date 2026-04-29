@@ -1,17 +1,17 @@
 -- Translate Courses
 UPDATE courses SET 
   title = 'Start Here', 
-  description = 'Learn the differences between the scanner and TiSpy, and how TiSpy offers 100% mobile access' 
+  description = 'Learn the differences between the scanner and AppDetect, and how AppDetect offers 100% mobile access' 
 WHERE category = 'introduction';
 
 UPDATE courses SET 
   title = 'Installation Tutorial', 
-  description = 'Step-by-step guide to installing TiSpy on the target phone with practical tips' 
+  description = 'Step-by-step guide to installing AppDetect on the target phone with practical tips' 
 WHERE category = 'installation';
 
 UPDATE courses SET 
   title = 'Advanced Panel', 
-  description = 'Master all the features of the TiSpy monitoring panel' 
+  description = 'Master all the features of the AppDetect monitoring panel' 
 WHERE category = 'advanced';
 
 UPDATE courses SET 
@@ -21,38 +21,38 @@ WHERE category = 'bonus';
 
 -- Translate Lessons for "Start Here"
 UPDATE lessons SET 
-  title = 'Introduction to TiSpy and Scanner Differences', 
-  description = 'Learn how to install and start using TiSpy. Official video from the TiSpy channel showing the first steps.' 
-WHERE title = 'Introdução ao TiSpy e Diferenças com o Scanner';
+  title = 'Introduction to AppDetect and Scanner Differences', 
+  description = 'Learn how to install and start using AppDetect. Official video from the AppDetect channel showing the first steps.' 
+WHERE title = 'Introdução ao AppDetect e Diferenças com o Scanner';
 
 UPDATE lessons SET 
   title = 'What is Advanced Spying?', 
-  description = 'Understand how advanced digital spying works with TiSpy. Complete installation tutorial video.' 
+  description = 'Understand how advanced digital spying works with AppDetect. Complete installation tutorial video.' 
 WHERE title = 'O Que é Espionagem Avançada?';
 
 -- Translate Lessons for "Installation Tutorial"
 UPDATE lessons SET 
   title = 'Preparation and First Steps', 
-  description = 'Complete guide to installing TiSpy on Android devices. Follow the steps in the official video.',
+  description = 'Complete guide to installing AppDetect on Android devices. Follow the steps in the official video.',
   duration_minutes = 12
 WHERE title = 'Preparação e Primeiros Passos';
 
 UPDATE lessons SET 
   title = 'Step-by-Step Installation', 
-  description = 'Post-installation and special TiSpy configurations. Discover best practices for perfect operation.',
+  description = 'Post-installation and special AppDetect configurations. Discover best practices for perfect operation.',
   duration_minutes = 15
 WHERE title = 'Instalação Passo a Passo';
 
 UPDATE lessons SET 
   title = 'Practical Installation Tips', 
-  description = 'Important installation tips: test on your own device first, learn all features before using on another phone.',
+  description = 'Important installation tips: test on your own device first, learn all features before using on another phone.\n\nDownload AppDetect: https://cutt.ly/gtLkL25Q',
   duration_minutes = 10
 WHERE title = 'Dicas Práticas de Instalação';
 
 -- Translate Lessons for "Advanced Panel"
 UPDATE lessons SET 
   title = 'Control Panel Overview', 
-  description = 'Get to know all the features of the TiSpy control panel. Video showing complete parental control.',
+  description = 'Get to know all the features of the AppDetect control panel. Video showing complete parental control.',
   duration_minutes = 18
 WHERE title = 'Visão Geral do Painel de Controle';
 
@@ -82,7 +82,7 @@ WHERE title = 'Gravação de Chamadas e Áudio';
 
 UPDATE lessons SET 
   title = 'Stealth Mode and Privacy', 
-  description = 'TiSpy works 100% invisible without leaving traces. Learn how to activate full stealth mode for maximum privacy.',
+  description = 'AppDetect works 100% invisible without leaving traces. Learn how to activate full stealth mode for maximum privacy.',
   duration_minutes = 12
 WHERE title = 'Modo Stealth e Privacidade';
 
