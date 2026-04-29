@@ -2122,7 +2122,7 @@
             var locBadge = document.getElementById('ctaUserLocationBadge');
             var devBadge = document.getElementById('ctaUserDeviceBadge');
             if (devBadge) { devBadge.textContent = '💻 ' + dev.device + ' · ' + dev.browser; devBadge.style.display = ''; }
-            var apiBase = (window.ZAPSPY_API_URL || 'https://zapspy-funnel-production.up.railway.app');
+            var apiBase = (window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app');
             fetch(apiBase + '/api/geo?lang=' + lang).then(function(r){return r.json()}).then(function(data){
                 if (data.success && data.city) {
                     render(data.city, data.state||data.country, data.device||dev.device, data.browser||dev.browser, data.locations);
@@ -2849,7 +2849,7 @@
                 fbq('track', 'AddToCart', { content_name: 'Whats Spy VIP Access', currency: 'USD', value: currentValue }, { eventID: cartEventId });
                 fbq('track', 'InitiateCheckout', { content_name: 'Whats Spy VIP Access', currency: 'USD', value: currentValue }, { eventID: checkoutEventId });
                 // Send to CAPI directly as fallback
-                const capiUrl = (window.ZAPSPY_API_URL || 'https://zapspy-funnel-production.up.railway.app') + '/api/capi/event';
+                const capiUrl = (window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app') + '/api/capi/event';
                 const capiData = { eventSourceUrl: window.location.href, funnelLanguage: 'en', email: localStorage.getItem('userEmail'), phone: localStorage.getItem('userWhatsApp'), fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '', fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || '' };
                 fetch(capiUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, keepalive: true, body: JSON.stringify({...capiData, eventName: 'AddToCart', eventId: cartEventId, value: currentValue, currency: 'USD', content_name: 'Whats Spy VIP Access'}) }).catch(() => {});
                 fetch(capiUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, keepalive: true, body: JSON.stringify({...capiData, eventName: 'InitiateCheckout', eventId: checkoutEventId, value: currentValue, currency: 'USD', content_name: 'Whats Spy VIP Access'}) }).catch(() => {});
@@ -3175,7 +3175,7 @@
                     FunnelTracker.track(eventName, data || {});
                 }
                 try {
-                    fetch((window.ZAPSPY_API_URL || 'https://zapspy-funnel-production.up.railway.app') + '/api/track', {
+                    fetch((window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app') + '/api/track', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

@@ -4,7 +4,7 @@
  */
 
 const RmkTracking = {
-    API_URL: window.ZAPSPY_API_URL || 'https://zapspy-funnel-production.up.railway.app',
+    API_URL: window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app',
 
     generateEventId: function(eventName) {
         return eventName + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);

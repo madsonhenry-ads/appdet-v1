@@ -8,7 +8,7 @@
 // After deploying to Railway, paste your URL below:
 // Example: 'https://Whats Spy-backend.up.railway.app'
 // ============================================================
-const ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zapspy-funnel-production.up.railway.app'; // Railway backend URL
+const ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app'; // Railway backend URL
 
 const EmailCapture = {
     modalShown: false,

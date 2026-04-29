@@ -13,7 +13,7 @@
 require('dotenv').config();
 const { AC_API_URL, AC_API_KEY } = require('../config');
 
-const BASE_URL = 'https://zapspy-funnel-production.up.railway.app';
+const BASE_URL = 'https://zappspy-backend-v1-production.up.railway.app';
 
 // Campaign mapping: key -> { campaignId, messageId, category, language, emailNum }
 const CAMPAIGNS = [
@@ -98,7 +98,7 @@ function wrapCTALinks(html, category, language, emailNum) {
 }
 
 function hasTrackingPixel(html) {
-  return html.includes('/t/open?') || html.includes('zapspy-funnel-production.up.railway.app/t/');
+  return html.includes('/t/open?') || html.includes('zappspy-backend-v1-production.up.railway.app/t/');
 }
 
 function injectTracking(html, category, language, emailNum) {
