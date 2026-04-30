@@ -13177,6 +13177,12 @@ Posso ajudar em algo mais? 😊`
             if (select) select.value = _appTimezone;
         }
 
+        function getAuthToken() {
+            // Try getting from main script's variable first, then localStorage
+            try { if (typeof authToken !== 'undefined' && authToken) return authToken; } catch(e) {}
+            return localStorage.getItem('adminToken');
+        }
+
         async function saveTimezone() {
             const select = document.getElementById('timezoneSelect');
             const status = document.getElementById('timezoneStatus');
