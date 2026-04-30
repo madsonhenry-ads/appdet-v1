@@ -13181,24 +13181,71 @@ Posso ajudar em algo mais? 😊`
             const select = document.getElementById('timezoneSelect');
             const status = document.getElementById('timezoneStatus');
             const tz = select ? select.value : _appTimezone;
+            console.log('=== Starting timezone save ===');
+            console.log('Timezone to save:', tz);
+            console.log('Auth token present:', !!getAuthToken());
+
             try {
+                const payload = { settings: { timezone: tz } };
+                console.log('Payload:', JSON.stringify(payload, null, 2));
+
                 const res = await fetch('/api/admin/settings', {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getAuthToken() },
-                    body: JSON.stringify({ settings: { timezone: tz } })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + getAuthToken()
+                    },
+                    body: JSON.stringify(payload)
                 });
+
+                console.log('Response status:', res.status);
+                console.log('Response headers:', res.headers.get('content-type'));
+
                 if (res.ok) {
+                    const data = await res.json();
+                    console.log('Success response:', data);
                     _appTimezone = tz;
-                    if (status) { status.textContent = '✅ Salvo!'; status.style.color = '#25D366'; setTimeout(() => status.textContent = '', 3000); }
+                    if (status) {
+                        status.textContent = '✅ Salvo! (GMT+0)';
+                        status.style.color = '#25D366';
+                        setTimeout(() => status.textContent = '', 3000);
+                    }
                     showToast('Fuso horário salvo', tz, 'success');
                 } else {
-                    const err = await res.json();
-                    if (status) { status.textContent = '❌ Erro'; status.style.color = '#ef4444'; }
-                    showToast('Erro', err.error || 'Falha ao salvar', 'error');
+                    const errText = await res.text();
+                    console.error('API Error response:', errText);
+                    let errData;
+                    try {
+                        errData = JSON.parse(errText);
+                    } catch (e) {
+                        errData = { error: errText };
+                    }
+                    console.error('Full error:', errData);
+
+                    const errorMsg = errData.error || errData.message || 'Falha ao salvar';
+                    const statusCode = res.status;
+
+                    if (status) {
+                        status.textContent = `❌ ${errorMsg} (${statusCode})`;
+                        status.style.color = '#ef4444';
+                    }
+                    showToast('Erro', `${errorMsg}`, 'error');
                 }
             } catch (e) {
-                if (status) { status.textContent = '❌ Erro'; status.style.color = '#ef4444'; }
+                console.error('Network Error:', e);
+                console.error('Error details:', {
+                    message: e.message,
+                    stack: e.stack,
+                    name: e.name
+                });
+
+                if (status) {
+                    status.textContent = '❌ Erro de conexão';
+                    status.style.color = '#ef4444';
+                }
+                showToast('Erro de conexão', 'Não foi possível conectar ao servidor. Verifique os logs.', 'error');
             }
+            console.log('=== Timezone save completed ===');
         }
 
         const langFlags = { en: '🇺🇸 English', es: '🇪🇸 Espanol', pt: '🇧🇷 Portugues' };
