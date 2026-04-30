@@ -2840,8 +2840,38 @@ router.get('/api/admin/settings', authenticateToken, async (req, res) => {
 // Update app settings
 router.put('/api/admin/settings', authenticateToken, async (req, res) => {
     try {
+        console.log('=== Settings PUT request ===');
+        console.log('Body:', JSON.stringify(req.body, null, 2));
         const { settings } = req.body;
+        console.log('Settings received:', settings);
+
+        // Create app_settings table if it doesn't exist
+        try {
+            await pool.query(`
+                CREATE TABLE IF NOT EXISTS app_settings (
+                    key VARCHAR(100) PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            console.log('✅ app_settings table verified/created');
+        } catch (tableErr) {
+            console.log('⚠️ Could not verify/create app_settings table:', tableErr.message);
+        }
+
+        // Seed timezone setting if it doesn't exist
+        try {
+            const existing = await pool.query(`SELECT 1 FROM app_settings WHERE key = 'timezone'`);
+            if (existing.rows.length === 0) {
+                await pool.query(`INSERT INTO app_settings (key, value) VALUES ('timezone', 'America/Sao_Paulo')`);
+                console.log('✅ Timezone seed created');
+            }
+        } catch (seedErr) {
+            console.log('⚠️ Could not seed timezone:', seedErr.message);
+        }
+
         if (!settings || typeof settings !== 'object') {
+            console.log('Error: settings object is required');
             return res.status(400).json({ error: 'settings object is required' });
         }
 
@@ -2853,11 +2883,13 @@ router.put('/api/admin/settings', authenticateToken, async (req, res) => {
                 'America/Chicago', 'Asia/Tokyo', 'Australia/Sydney'
             ];
             if (!validTZs.includes(settings.timezone)) {
+                console.log('Error: Invalid timezone', settings.timezone);
                 return res.status(400).json({ error: 'Invalid timezone. Allowed: ' + validTZs.join(', ') });
             }
         }
 
         for (const [key, value] of Object.entries(settings)) {
+            console.log(`Saving ${key} = ${value}`);
             await pool.query(`
                 INSERT INTO app_settings (key, value, updated_at)
                 VALUES ($1, $2, NOW())
@@ -2868,9 +2900,12 @@ router.put('/api/admin/settings', authenticateToken, async (req, res) => {
         // Clear timezone cache so next request picks up new value
         clearTimezoneCache();
 
+        console.log('Settings saved successfully');
         res.json({ success: true });
     } catch (error) {
-        console.error('Error saving settings:', error.message);
+        console.error('=== Error saving settings ===');
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
         res.status(500).json({ error: error.message });
     }
 });
