@@ -1,6 +1,6 @@
 const pool = require('../database');
 const { VALID_PRODUCT_CODES } = require('../config');
-const { parseMonetizzeDate } = require('../helpers');
+const { parseMonetizzeDate, getUTCOffset, getTimezone } = require('../helpers');
 const { sendToFacebookCAPI, sendMissingCAPIPurchases } = require('./facebook-capi');
 const { backfillTransactionFbcFbp } = require('./facebook-capi');
 
@@ -705,7 +705,7 @@ async function runDeepSync() {
                         `, [
                             transactionId, email, buyerPhone, buyerName, productName,
                             value, statusCode, mappedStatus, JSON.stringify(item),
-                            vendaData.dataInicio ? new Date(vendaData.dataInicio.replace(' ', 'T') + '-03:00') : new Date()
+                            vendaData.dataInicio ? new Date(vendaData.dataInicio.replace(' ', 'T') + getUTCOffset(await getTimezone())) : new Date()
                         ]);
                         
                         // Create refund_requests for refunded/chargebacked

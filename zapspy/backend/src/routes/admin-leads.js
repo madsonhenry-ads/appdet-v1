@@ -6,12 +6,14 @@ const { authenticateToken, requireAdmin, bulkLimiter } = require('../middleware'
 const { getCountryFromIP } = require('../services/geolocation');
 const { ZAPI_INSTANCE, ZAPI_TOKEN, ZAPI_BASE_URL, ZAPI_CLIENT_TOKEN } = require('../config');
 const { zapiCheckStatus, zapiSendText, zapiProfilePicture } = require('../services/zapi');
+const { getTimezone } = require('../helpers');
 
 // ==================== LEADS MANAGEMENT ====================
 
 // Get leads paginated (protected)
 router.get('/api/admin/leads', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 50;
         const offset = (page - 1) * limit;
@@ -58,7 +60,7 @@ router.get('/api/admin/leads', authenticateToken, async (req, res) => {
         }
         
         if (startDate && endDate) {
-            conditions.push(`(created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${params.length + 1}::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${params.length + 2}::date`);
+            conditions.push(`(created_at AT TIME ZONE '${tz}')::date >= $${params.length + 1}::date AND (created_at AT TIME ZONE '${tz}')::date <= $${params.length + 2}::date`);
             params.push(startDate, endDate);
         }
         
@@ -113,6 +115,7 @@ router.get('/api/admin/leads', authenticateToken, async (req, res) => {
 // Get clients (leads who purchased) - protected
 router.get('/api/admin/clients', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 50;
         const offset = (page - 1) * limit;
@@ -150,8 +153,8 @@ router.get('/api/admin/clients', authenticateToken, async (req, res) => {
         
         // Date range filter on first_purchase_at
         if (startDate && endDate) {
-            conditions.push(`(l.first_purchase_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${params.length + 1}::date`);
-            conditions.push(`(l.first_purchase_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${params.length + 2}::date`);
+            conditions.push(`(l.first_purchase_at AT TIME ZONE '${tz}')::date >= $${params.length + 1}::date`);
+            conditions.push(`(l.first_purchase_at AT TIME ZONE '${tz}')::date <= $${params.length + 2}::date`);
             params.push(startDate, endDate);
         }
         
@@ -177,7 +180,7 @@ router.get('/api/admin/clients', authenticateToken, async (req, res) => {
         const statsQuery = `
             SELECT 
                 COUNT(*) as total,
-                COUNT(*) FILTER (WHERE (l.first_purchase_at AT TIME ZONE 'America/Sao_Paulo')::date = CURRENT_DATE) as today,
+                COUNT(*) FILTER (WHERE (l.first_purchase_at AT TIME ZONE '${tz}')::date = CURRENT_DATE) as today,
                 COALESCE(SUM(l.total_spent), 0) as total_revenue,
                 CASE WHEN COUNT(*) > 0 THEN COALESCE(SUM(l.total_spent), 0) / COUNT(*) ELSE 0 END as avg_ticket
             FROM leads l

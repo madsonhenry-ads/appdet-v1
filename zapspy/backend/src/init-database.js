@@ -586,6 +586,24 @@ async function _initDatabaseCore() {
         await pool.query(`ALTER TABLE whatsapp_check_logs ADD COLUMN IF NOT EXISTS rapid_error VARCHAR(100) DEFAULT NULL`);
         await pool.query(`ALTER TABLE whatsapp_check_logs ADD COLUMN IF NOT EXISTS rapid_duration_ms INTEGER DEFAULT NULL`);
 
+        // Create app_settings table for configurable admin settings (timezone, etc.)
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS app_settings (
+                key VARCHAR(100) PRIMARY KEY,
+                value TEXT NOT NULL,
+                updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+
+        // Seed default timezone if not exists
+        const tzExists = await pool.query(`SELECT 1 FROM app_settings WHERE key = 'timezone'`);
+        if (tzExists.rows.length === 0) {
+            await pool.query(`
+                INSERT INTO app_settings (key, value) VALUES ('timezone', 'America/Sao_Paulo')
+            `);
+            console.log('✅ Default timezone setting created (America/Sao_Paulo)');
+        }
+
         console.log('✅ Database ready');
         
         // ==================== CLEANUP: Remove duplicate refund_requests ====================

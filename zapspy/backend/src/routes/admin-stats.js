@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../database');
 const { authenticateToken, getCached, setCache } = require('../middleware');
-const { buildDateFilter } = require('../helpers');
+const { buildDateFilter, getTimezone, clearTimezoneCache } = require('../helpers');
 const { UPSELL_SQL, FB_PIXELS_BY_LANGUAGE, FB_API_VERSION } = require('../config');
 
 // Real-time active users tracking (protected)
@@ -55,6 +55,7 @@ router.get('/api/admin/active-users', authenticateToken, async (req, res) => {
 // Diagnostic endpoint: check funnel_events table health (protected)
 router.get('/api/admin/debug/funnel-events', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         // Check table exists and count recent events
         const tableCheck = await pool.query(`
             SELECT 
@@ -110,6 +111,7 @@ router.get('/api/admin/debug/funnel-events', authenticateToken, async (req, res)
 // Trends endpoint with sparkline data (protected)
 router.get('/api/admin/stats/trends', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const days = parseInt(req.query.days) || 7;
         const cappedDays = Math.min(Math.max(days, 1), 90);
 
@@ -148,13 +150,13 @@ router.get('/api/admin/stats/trends', authenticateToken, async (req, res) => {
                 [cappedDays * 2, cappedDays]
             ),
             pool.query(
-                `SELECT DATE(created_at AT TIME ZONE 'America/Sao_Paulo') as day, COUNT(*) as count 
+                `SELECT DATE(created_at AT TIME ZONE '${tz}') as day, COUNT(*) as count 
                  FROM leads WHERE created_at >= NOW() - make_interval(days => $1) 
                  GROUP BY day ORDER BY day ASC`,
                 [cappedDays]
             ),
             pool.query(
-                `SELECT DATE(created_at AT TIME ZONE 'America/Sao_Paulo') as day, COUNT(DISTINCT email) as count,
+                `SELECT DATE(created_at AT TIME ZONE '${tz}') as day, COUNT(DISTINCT email) as count,
                         COALESCE(SUM(CASE WHEN CAST(value AS numeric) > 0 THEN CAST(value AS numeric) ELSE 0 END), 0) as revenue
                  FROM transactions WHERE status = 'approved' AND created_at >= NOW() - make_interval(days => $1) 
                  GROUP BY day ORDER BY day ASC`,
@@ -377,6 +379,7 @@ router.get('/api/admin/capi-token-check', authenticateToken, async (req, res) =>
 // Pixel & CAPI aggregated stats (protected - for admin dashboard)
 router.get('/api/admin/pixel-stats', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         let startDate = req.query.startDate;
         let endDate = req.query.endDate;
         const days = parseInt(req.query.days, 10);
@@ -417,9 +420,9 @@ router.get('/api/admin/pixel-stats', authenticateToken, async (req, res) => {
             txWhereClause = `created_at >= NOW() - ($1::numeric || ' hours')::interval AND status = 'approved'`;
             txParams = [hours];
         } else {
-            whereClause = `(created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $1::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $2::date`;
+            whereClause = `(created_at AT TIME ZONE '${tz}')::date >= $1::date AND (created_at AT TIME ZONE '${tz}')::date <= $2::date`;
             params = [startDate, endDate];
-            txWhereClause = `(created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $1::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $2::date AND status = 'approved'`;
+            txWhereClause = `(created_at AT TIME ZONE '${tz}')::date >= $1::date AND (created_at AT TIME ZONE '${tz}')::date <= $2::date AND status = 'approved'`;
             txParams = [startDate, endDate];
         }
         if (language === 'en') {
@@ -514,6 +517,7 @@ router.get('/api/admin/pixel-stats', authenticateToken, async (req, res) => {
 // Get financial summary (revenue from transactions + costs)
 router.get('/api/admin/financial/summary', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const days = parseInt(req.query.days) || 30;
         const language = req.query.language || '';
         const source = req.query.source || '';
@@ -560,7 +564,7 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             SELECT COALESCE(SUM(${revenueBRL}), 0) as revenue, COUNT(*) as sales
             FROM transactions t
             WHERE t.status = 'approved'
-            AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date = CURRENT_DATE
+            AND (t.created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE
             ${langSourceFilter}
         `;
         
@@ -569,7 +573,7 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             SELECT COALESCE(SUM(${revenueBRL}), 0) as refunds, COUNT(*) as refund_count
             FROM transactions t
             WHERE t.status IN ('refunded', 'chargeback')
-            AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date = CURRENT_DATE
+            AND (t.created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE
             ${langSourceFilter}
         `;
         
@@ -583,7 +587,7 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             SELECT COALESCE(SUM(${revenueBRL}), 0) as revenue, COUNT(*) as sales
             FROM transactions t
             WHERE t.status = 'approved'
-            AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= date_trunc('month', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('month', CURRENT_DATE)
             ${langSourceFilter}
         `;
         
@@ -592,7 +596,7 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             SELECT COALESCE(SUM(${revenueBRL}), 0) as refunds, COUNT(*) as refund_count
             FROM transactions t
             WHERE t.status IN ('refunded', 'chargeback')
-            AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= date_trunc('month', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('month', CURRENT_DATE)
             ${langSourceFilter}
         `;
         
@@ -606,7 +610,7 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             SELECT COALESCE(SUM(${revenueBRL}), 0) as revenue, COUNT(*) as sales
             FROM transactions t
             WHERE t.status = 'approved'
-            AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= date_trunc('year', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('year', CURRENT_DATE)
             ${langSourceFilter}
         `;
         
@@ -615,7 +619,7 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             SELECT COALESCE(SUM(${revenueBRL}), 0) as refunds, COUNT(*) as refund_count
             FROM transactions t
             WHERE t.status IN ('refunded', 'chargeback')
-            AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= date_trunc('year', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('year', CURRENT_DATE)
             ${langSourceFilter}
         `;
         
@@ -630,25 +634,25 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
         const dailyQuery = `
             WITH daily_revenue AS (
                 SELECT 
-                    (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date as day,
+                    (t.created_at AT TIME ZONE '${tz}')::date as day,
                     COALESCE(SUM(${revenueBRL}), 0) as revenue,
                     COUNT(*) as sales
                 FROM transactions t
                 WHERE t.status = 'approved'
-                AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= CURRENT_DATE - INTERVAL '${safeDays} days'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '${safeDays} days'
                 ${langSourceFilter}
-                GROUP BY (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date
+                GROUP BY (t.created_at AT TIME ZONE '${tz}')::date
             ),
             daily_refunds AS (
                 SELECT 
-                    (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date as day,
+                    (t.created_at AT TIME ZONE '${tz}')::date as day,
                     COALESCE(SUM(${revenueBRL}), 0) as refunds,
                     COUNT(*) as refund_count
                 FROM transactions t
                 WHERE t.status IN ('refunded', 'chargeback')
-                AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= CURRENT_DATE - INTERVAL '${safeDays} days'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '${safeDays} days'
                 ${langSourceFilter}
-                GROUP BY (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date
+                GROUP BY (t.created_at AT TIME ZONE '${tz}')::date
             ),
             daily_costs AS (
                 SELECT cost_date as day, COALESCE(SUM(amount), 0) as costs
@@ -681,25 +685,25 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
         const monthlyQuery = `
             WITH monthly_revenue AS (
                 SELECT 
-                    date_trunc('month', (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date)::date as month,
+                    date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date as month,
                     COALESCE(SUM(${revenueBRL}), 0) as revenue,
                     COUNT(*) as sales
                 FROM transactions t
                 WHERE t.status = 'approved'
-                AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= CURRENT_DATE - INTERVAL '12 months'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '12 months'
                 ${langSourceFilter}
-                GROUP BY date_trunc('month', (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date)::date
+                GROUP BY date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date
             ),
             monthly_refunds AS (
                 SELECT 
-                    date_trunc('month', (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date)::date as month,
+                    date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date as month,
                     COALESCE(SUM(${revenueBRL}), 0) as refunds,
                     COUNT(*) as refund_count
                 FROM transactions t
                 WHERE t.status IN ('refunded', 'chargeback')
-                AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= CURRENT_DATE - INTERVAL '12 months'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '12 months'
                 ${langSourceFilter}
-                GROUP BY date_trunc('month', (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date)::date
+                GROUP BY date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date
             ),
             monthly_costs AS (
                 SELECT 
@@ -955,6 +959,7 @@ router.delete('/api/admin/financial/costs/:id', authenticateToken, async (req, r
 // Get lead statistics (protected)
 router.get('/api/admin/stats', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { startDate, endDate, language, source, platform } = req.query;
         
         // Smart cache (2 min TTL)
@@ -966,7 +971,7 @@ router.get('/api/admin/stats', authenticateToken, async (req, res) => {
         let dateFilter = '';
         const params = [];
         if (startDate && endDate) {
-            dateFilter = ` AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${params.length + 1}::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${params.length + 2}::date`;
+            dateFilter = ` AND (created_at AT TIME ZONE '${tz}')::date >= $${params.length + 1}::date AND (created_at AT TIME ZONE '${tz}')::date <= $${params.length + 2}::date`;
             params.push(startDate, endDate);
         }
         
@@ -992,17 +997,17 @@ router.get('/api/admin/stats', authenticateToken, async (req, res) => {
         
         const [totalResult, todayResult, weekResult, statusResult] = await Promise.all([
             pool.query(`SELECT COUNT(*) FROM leads WHERE 1=1${dateFilter}${platformFilter}`, params),
-            pool.query(`SELECT COUNT(*) FROM leads WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = (NOW() AT TIME ZONE 'America/Sao_Paulo')::date${dateFilter}${platformFilter}`, params),
-            pool.query(`SELECT COUNT(*) FROM leads WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '7 days')::date${dateFilter}${platformFilter}`, params),
+            pool.query(`SELECT COUNT(*) FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date = (NOW() AT TIME ZONE '${tz}')::date${dateFilter}${platformFilter}`, params),
+            pool.query(`SELECT COUNT(*) FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '7 days')::date${dateFilter}${platformFilter}`, params),
             pool.query(`SELECT status, COUNT(*) FROM leads WHERE 1=1${dateFilter}${platformFilter} GROUP BY status`, params)
         ]);
         
         // Get leads by day for the last 7 days (using Brazil timezone)
         const dailyResult = await pool.query(`
-            SELECT (created_at AT TIME ZONE 'America/Sao_Paulo')::date as date, COUNT(*) as count
+            SELECT (created_at AT TIME ZONE '${tz}')::date as date, COUNT(*) as count
             FROM leads
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '7 days')::date${dateFilter}${platformFilter}
-            GROUP BY (created_at AT TIME ZONE 'America/Sao_Paulo')::date
+            WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '7 days')::date${dateFilter}${platformFilter}
+            GROUP BY (created_at AT TIME ZONE '${tz}')::date
             ORDER BY date DESC
         `, params);
         
@@ -1031,45 +1036,46 @@ router.get('/api/admin/stats', authenticateToken, async (req, res) => {
 // Get period comparison stats (current week vs previous week)
 router.get('/api/admin/stats/comparison', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const usdToBrl = 1 / parseFloat(process.env.CONVERSION_BRL_TO_USD || '0.18');
         const revBRL = `CASE WHEN funnel_source = 'perfectpay' THEN CAST(value AS DECIMAL) * ${usdToBrl.toFixed(2)} ELSE CAST(value AS DECIMAL) END`;
         
         // Current week stats (using Brazil timezone)
         const currentWeekLeads = await pool.query(`
             SELECT COUNT(*) FROM leads 
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '7 days')::date
+            WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '7 days')::date
         `);
         
         const currentWeekSales = await pool.query(`
             SELECT COUNT(DISTINCT email) as count, COALESCE(SUM(${revBRL}), 0) as revenue
             FROM transactions 
-            WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '7 days')::date
+            WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '7 days')::date
         `);
         
         // Previous week stats (using Brazil timezone)
         const previousWeekLeads = await pool.query(`
             SELECT COUNT(*) FROM leads 
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '14 days')::date 
-            AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '7 days')::date
+            WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '14 days')::date 
+            AND (created_at AT TIME ZONE '${tz}')::date < ((NOW() AT TIME ZONE '${tz}') - INTERVAL '7 days')::date
         `);
         
         const previousWeekSales = await pool.query(`
             SELECT COUNT(DISTINCT email) as count, COALESCE(SUM(${revBRL}), 0) as revenue
             FROM transactions 
             WHERE status = 'approved' 
-            AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '14 days')::date
-            AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '7 days')::date
+            AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '14 days')::date
+            AND (created_at AT TIME ZONE '${tz}')::date < ((NOW() AT TIME ZONE '${tz}') - INTERVAL '7 days')::date
         `);
         
         // Hourly heatmap data (for conversion optimization) - using Brazil timezone
         const hourlyData = await pool.query(`
             SELECT 
-                EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo') as hour,
-                EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo') as day_of_week,
+                EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}') as hour,
+                EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}') as day_of_week,
                 COUNT(*) as count
             FROM leads
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '30 days')::date
-            GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo'), EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo')
+            WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '30 days')::date
+            GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}'), EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}')
             ORDER BY day_of_week, hour
         `);
         
@@ -1096,6 +1102,7 @@ router.get('/api/admin/stats/comparison', authenticateToken, async (req, res) =>
 // Get flexible period comparison (day, week, month, quarter)
 router.get('/api/admin/stats/period-comparison', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { type = 'week' } = req.query;
         const usdToBrl = 1 / parseFloat(process.env.CONVERSION_BRL_TO_USD || '0.18');
         const revBRL = `CASE WHEN funnel_source = 'perfectpay' THEN CAST(value AS DECIMAL) * ${usdToBrl.toFixed(2)} ELSE CAST(value AS DECIMAL) END`;
@@ -1105,26 +1112,26 @@ router.get('/api/admin/stats/period-comparison', authenticateToken, async (req, 
         if (type === 'day') {
             currentLeads = await pool.query(`
                 SELECT COUNT(*) FROM leads 
-                WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = (NOW() AT TIME ZONE 'America/Sao_Paulo')::date
+                WHERE (created_at AT TIME ZONE '${tz}')::date = (NOW() AT TIME ZONE '${tz}')::date
             `);
             
             currentSales = await pool.query(`
                 SELECT COUNT(DISTINCT email) as count, COALESCE(SUM(${revBRL}), 0) as revenue
                 FROM transactions 
                 WHERE status = 'approved' 
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = (NOW() AT TIME ZONE 'America/Sao_Paulo')::date
+                AND (created_at AT TIME ZONE '${tz}')::date = (NOW() AT TIME ZONE '${tz}')::date
             `);
             
             previousLeads = await pool.query(`
                 SELECT COUNT(*) FROM leads 
-                WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '1 day')::date
+                WHERE (created_at AT TIME ZONE '${tz}')::date = ((NOW() AT TIME ZONE '${tz}') - INTERVAL '1 day')::date
             `);
             
             previousSales = await pool.query(`
                 SELECT COUNT(DISTINCT email) as count, COALESCE(SUM(${revBRL}), 0) as revenue
                 FROM transactions 
                 WHERE status = 'approved' 
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '1 day')::date
+                AND (created_at AT TIME ZONE '${tz}')::date = ((NOW() AT TIME ZONE '${tz}') - INTERVAL '1 day')::date
             `);
         } else {
             let currentInterval, previousInterval;
@@ -1146,28 +1153,28 @@ router.get('/api/admin/stats/period-comparison', authenticateToken, async (req, 
             
             currentLeads = await pool.query(`
                 SELECT COUNT(*) FROM leads 
-                WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '${currentInterval}')::date
+                WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '${currentInterval}')::date
             `);
             
             currentSales = await pool.query(`
                 SELECT COUNT(DISTINCT email) as count, COALESCE(SUM(${revBRL}), 0) as revenue
                 FROM transactions 
                 WHERE status = 'approved' 
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '${currentInterval}')::date
+                AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '${currentInterval}')::date
             `);
             
             previousLeads = await pool.query(`
                 SELECT COUNT(*) FROM leads 
-                WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '${previousInterval}')::date 
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '${currentInterval}')::date
+                WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '${previousInterval}')::date 
+                AND (created_at AT TIME ZONE '${tz}')::date < ((NOW() AT TIME ZONE '${tz}') - INTERVAL '${currentInterval}')::date
             `);
             
             previousSales = await pool.query(`
                 SELECT COUNT(DISTINCT email) as count, COALESCE(SUM(${revBRL}), 0) as revenue
                 FROM transactions 
                 WHERE status = 'approved' 
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '${previousInterval}')::date
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '${currentInterval}')::date
+                AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '${previousInterval}')::date
+                AND (created_at AT TIME ZONE '${tz}')::date < ((NOW() AT TIME ZONE '${tz}') - INTERVAL '${currentInterval}')::date
             `);
         }
         
@@ -1194,6 +1201,7 @@ router.get('/api/admin/stats/period-comparison', authenticateToken, async (req, 
 // Get heatmap data by type (leads, sales, revenue)
 router.get('/api/admin/stats/heatmap', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { type = 'leads' } = req.query;
         
         // Smart cache (5 min TTL - heatmap data changes slowly)
@@ -1205,24 +1213,24 @@ router.get('/api/admin/stats/heatmap', authenticateToken, async (req, res) => {
         if (type === 'leads') {
             query = `
                 SELECT 
-                    EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo') as hour,
-                    EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo') as day_of_week,
+                    EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}') as hour,
+                    EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}') as day_of_week,
                     COUNT(*) as count
                 FROM leads
-                WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '30 days')::date
-                GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo'), EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo')
+                WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '30 days')::date
+                GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}'), EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}')
                 ORDER BY day_of_week, hour
             `;
         } else if (type === 'sales') {
             query = `
                 SELECT 
-                    EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo') as hour,
-                    EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo') as day_of_week,
+                    EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}') as hour,
+                    EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}') as day_of_week,
                     COUNT(DISTINCT email) as count
                 FROM transactions
                 WHERE status = 'approved' 
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '30 days')::date
-                GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo'), EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo')
+                AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '30 days')::date
+                GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}'), EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}')
                 ORDER BY day_of_week, hour
             `;
         } else if (type === 'revenue') {
@@ -1230,14 +1238,14 @@ router.get('/api/admin/stats/heatmap', authenticateToken, async (req, res) => {
             const revBRL = `CASE WHEN funnel_source = 'perfectpay' THEN CAST(value AS DECIMAL) * ${usdToBrl.toFixed(2)} ELSE CAST(value AS DECIMAL) END`;
             query = `
                 SELECT 
-                    EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo') as hour,
-                    EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo') as day_of_week,
+                    EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}') as hour,
+                    EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}') as day_of_week,
                     COALESCE(SUM(${revBRL}), 0) as value,
                     COUNT(*) as count
                 FROM transactions
                 WHERE status = 'approved' 
-                AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '30 days')::date
-                GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE 'America/Sao_Paulo'), EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo')
+                AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '30 days')::date
+                GROUP BY EXTRACT(HOUR FROM created_at AT TIME ZONE '${tz}'), EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}')
                 ORDER BY day_of_week, hour
             `;
         }
@@ -1256,6 +1264,7 @@ router.get('/api/admin/stats/heatmap', authenticateToken, async (req, res) => {
 // Get top countries by sales
 router.get('/api/admin/stats/countries-sales', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const result = await pool.query(`
             SELECT 
                 COALESCE(NULLIF(TRIM(l.country_code), ''), 'XX') as country_code,
@@ -1265,7 +1274,7 @@ router.get('/api/admin/stats/countries-sales', authenticateToken, async (req, re
             FROM transactions t
             LEFT JOIN leads l ON LOWER(TRIM(t.email)) = LOWER(TRIM(l.email))
             WHERE t.status = 'approved'
-            AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '30 days')::date
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '30 days')::date
             GROUP BY COALESCE(NULLIF(TRIM(l.country_code), ''), 'XX'), COALESCE(NULLIF(TRIM(l.country), ''), 'Desconhecido')
             ORDER BY sales DESC, revenue DESC
             LIMIT 10
@@ -1324,28 +1333,29 @@ router.get('/api/admin/stats/traffic-sources', authenticateToken, async (req, re
 // Get weekly performance data
 router.get('/api/admin/stats/weekly-performance', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
         
         // Get leads by day of week (last 4 weeks)
         const leadsResult = await pool.query(`
             SELECT 
-                EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo') as day_of_week,
+                EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}') as day_of_week,
                 COUNT(*) as count
             FROM leads
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '28 days')::date
-            GROUP BY EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo')
+            WHERE (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '28 days')::date
+            GROUP BY EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}')
             ORDER BY day_of_week
         `);
         
         // Get sales by day of week (last 4 weeks) - unique buyers only
         const salesResult = await pool.query(`
             SELECT 
-                EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo') as day_of_week,
+                EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}') as day_of_week,
                 COUNT(DISTINCT email) as count
             FROM transactions
             WHERE status = 'approved'
-            AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '28 days')::date
-            GROUP BY EXTRACT(DOW FROM created_at AT TIME ZONE 'America/Sao_Paulo')
+            AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '28 days')::date
+            GROUP BY EXTRACT(DOW FROM created_at AT TIME ZONE '${tz}')
             ORDER BY day_of_week
         `);
         
@@ -1373,6 +1383,7 @@ router.get('/api/admin/stats/weekly-performance', authenticateToken, async (req,
 // Funnel stats for conversion funnel chart
 router.get('/api/admin/funnel-stats', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { startDate, endDate, language, source } = req.query;
         
         // Smart cache (2 min TTL)
@@ -1501,6 +1512,7 @@ router.get('/api/admin/funnel-stats', authenticateToken, async (req, res) => {
 // Get funnel data with language/source/date filtering
 router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { language, source, startDate, endDate } = req.query;
         
         let langCondition = '';
@@ -1523,9 +1535,9 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
         
         let dateCondition = '';
         if (startDate && endDate) {
-            dateCondition = `AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= '${endDate}'::date`;
+            dateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
         } else if (startDate) {
-            dateCondition = `AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date`;
+            dateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date`;
         } else {
             dateCondition = `AND created_at >= CURRENT_DATE - INTERVAL '30 days'`;
         }
@@ -1580,7 +1592,7 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
         // Get daily funnel data (use same date range, but limit to 7 days for daily view)
         let dailyDateCondition = '';
         if (startDate && endDate) {
-            dailyDateCondition = `AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= '${endDate}'::date`;
+            dailyDateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
         } else {
             dailyDateCondition = `AND created_at >= CURRENT_DATE - INTERVAL '7 days'`;
         }
@@ -1628,7 +1640,7 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
             // Build date filter for transactions (using Brazil timezone)
             let txDateCondition = '';
             if (startDate && endDate) {
-                txDateCondition = `AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= '${endDate}'::date`;
+                txDateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
             } else {
                 txDateCondition = `AND created_at >= CURRENT_DATE - INTERVAL '30 days'`;
             }
@@ -2161,6 +2173,7 @@ router.get('/api/admin/customer/:leadId/journey', authenticateToken, async (req,
 // Only transactions can be reliably separated by platform.
 router.get('/api/admin/platform-comparison', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { language, startDate, endDate } = req.query;
         
         // Smart cache (2 min TTL)
@@ -2174,9 +2187,9 @@ router.get('/api/admin/platform-comparison', authenticateToken, async (req, res)
         let feDateCond = '';
         const dateParams = [];
         if (startDate && endDate) {
-            txDateCond = ` AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date AND (t.created_at AT TIME ZONE 'America/Sao_Paulo')::date <= '${endDate}'::date`;
-            leadDateCond = ` AND (l.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date AND (l.created_at AT TIME ZONE 'America/Sao_Paulo')::date <= '${endDate}'::date`;
-            feDateCond = ` AND (fe.created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date AND (fe.created_at AT TIME ZONE 'America/Sao_Paulo')::date <= '${endDate}'::date`;
+            txDateCond = ` AND (t.created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (t.created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
+            leadDateCond = ` AND (l.created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (l.created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
+            feDateCond = ` AND (fe.created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (fe.created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
         }
         
         // Build language conditions
@@ -2360,6 +2373,7 @@ router.get('/api/admin/platform-comparison', authenticateToken, async (req, res)
 // Revenue by day endpoint (with USD→BRL conversion for PerfectPay)
 router.get('/api/admin/revenue-by-day', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { language, source, startDate, endDate, platform } = req.query;
         
         // Smart cache (2 min TTL)
@@ -2371,7 +2385,7 @@ router.get('/api/admin/revenue-by-day', authenticateToken, async (req, res) => {
         let dateCondition = '';
         let dateParams = [];
         if (startDate && endDate) {
-            dateCondition = ` AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $1::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $2::date`;
+            dateCondition = ` AND (created_at AT TIME ZONE '${tz}')::date >= $1::date AND (created_at AT TIME ZONE '${tz}')::date <= $2::date`;
             dateParams = [startDate, endDate];
         } else {
             dateCondition = ` AND created_at >= CURRENT_DATE - INTERVAL '30 days'`;
@@ -2411,7 +2425,7 @@ router.get('/api/admin/revenue-by-day', authenticateToken, async (req, res) => {
         
         const result = await pool.query(
             `SELECT 
-                (created_at AT TIME ZONE 'America/Sao_Paulo')::date as day,
+                (created_at AT TIME ZONE '${tz}')::date as day,
                 COUNT(DISTINCT email) as sales_count,
                 COALESCE(SUM(${valueBRL}), 0) as revenue
             FROM transactions 
@@ -2441,6 +2455,7 @@ router.get('/api/admin/revenue-by-day', authenticateToken, async (req, res) => {
 // Compares current period metrics with previous period to detect anomalies
 router.get('/api/admin/alerts', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         // Cache for 10 minutes (alerts don't need to be real-time)
         const cacheKey = 'smart-alerts';
         const cached = getCached(cacheKey, 10 * 60 * 1000);
@@ -2452,29 +2467,29 @@ router.get('/api/admin/alerts', authenticateToken, async (req, res) => {
         // Compare last 7 days vs previous 7 days
         const [currentLeads, prevLeads, currentSales, prevSales, currentRefunds, prevRefunds, currentRevenue, prevRevenue, todayLeads, yesterdayLeads, todaySales, yesterdaySales] = await Promise.all([
             // Leads: current 7 days
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Leads: previous 7 days
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Sales: current 7 days
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Sales: previous 7 days
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Refunds: current 7 days
-            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Refunds: previous 7 days
-            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Revenue: current 7 days
-            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Revenue: previous 7 days
-            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
             // Today leads
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = CURRENT_DATE`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE`),
             // Yesterday leads
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = CURRENT_DATE - 1`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE - 1`),
             // Today sales
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = CURRENT_DATE`),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE`),
             // Yesterday sales
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = CURRENT_DATE - 1`)
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE - 1`)
         ]);
         
         // Calculate conversion rates
@@ -2801,6 +2816,61 @@ router.get('/api/admin/gads-purchase-logs', authenticateToken, async (req, res) 
         res.json({ logs: result.rows });
     } catch (error) {
         console.error('Error loading Google Ads logs:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ==================== APP SETTINGS (timezone, etc.) ====================
+
+// Get all app settings
+router.get('/api/admin/settings', authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query(`SELECT key, value, updated_at FROM app_settings ORDER BY key`);
+        const settings = {};
+        for (const row of result.rows) {
+            settings[row.key] = row.value;
+        }
+        res.json({ settings });
+    } catch (error) {
+        console.error('Error loading settings:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Update app settings
+router.put('/api/admin/settings', authenticateToken, async (req, res) => {
+    try {
+        const { settings } = req.body;
+        if (!settings || typeof settings !== 'object') {
+            return res.status(400).json({ error: 'settings object is required' });
+        }
+
+        // Validate timezone if provided
+        if (settings.timezone) {
+            const validTZs = [
+                'America/Sao_Paulo', 'Europe/Lisbon', 'America/New_York',
+                'Europe/London', 'America/Los_Angeles', 'Europe/Berlin',
+                'America/Chicago', 'Asia/Tokyo', 'Australia/Sydney'
+            ];
+            if (!validTZs.includes(settings.timezone)) {
+                return res.status(400).json({ error: 'Invalid timezone. Allowed: ' + validTZs.join(', ') });
+            }
+        }
+
+        for (const [key, value] of Object.entries(settings)) {
+            await pool.query(`
+                INSERT INTO app_settings (key, value, updated_at)
+                VALUES ($1, $2, NOW())
+                ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()
+            `, [key, value]);
+        }
+
+        // Clear timezone cache so next request picks up new value
+        clearTimezoneCache();
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving settings:', error.message);
         res.status(500).json({ error: error.message });
     }
 });

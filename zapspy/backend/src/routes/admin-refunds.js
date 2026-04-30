@@ -4,6 +4,7 @@ const pool = require('../database');
 const { authenticateToken, requireAdmin } = require('../middleware');
 const { zapiSendText } = require('../services/zapi');
 const { buildDateFilter, parseMonetizzeDate } = require('../helpers');
+const { getTimezone } = require('../helpers');
 const { sendToFacebookCAPI, sendMissingCAPIPurchases } = require('../services/facebook-capi');
 
 // In-memory postback storage (shared within this module)
@@ -216,6 +217,7 @@ router.post('/api/admin/backfill-refunds', authenticateToken, requireAdmin, asyn
 // Get all refund requests (protected)
 router.get('/api/admin/refunds', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         // Step 1: Fix transaction statuses that were overwritten by auto-sync
         try {
             const fixResult = await pool.query(`
@@ -324,7 +326,7 @@ router.get('/api/admin/refunds', authenticateToken, async (req, res) => {
             params.push(language);
         }
         if (startDate && endDate) {
-            conditions.push(`(created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${paramIndex++}::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${paramIndex++}::date`);
+            conditions.push(`(created_at AT TIME ZONE '${tz}')::date >= $${paramIndex++}::date AND (created_at AT TIME ZONE '${tz}')::date <= $${paramIndex++}::date`);
             params.push(startDate, endDate);
         }
         
@@ -342,7 +344,7 @@ router.get('/api/admin/refunds', authenticateToken, async (req, res) => {
         let statsParamIndex = 1;
         
         if (startDate && endDate) {
-            statsConditions.push(`(created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${statsParamIndex++}::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${statsParamIndex++}::date`);
+            statsConditions.push(`(created_at AT TIME ZONE '${tz}')::date >= $${statsParamIndex++}::date AND (created_at AT TIME ZONE '${tz}')::date <= $${statsParamIndex++}::date`);
             statsParams.push(startDate, endDate);
         }
         
@@ -675,6 +677,7 @@ router.get('/api/admin/refunds/:id/notes', authenticateToken, async (req, res) =
 // Get transactions with pagination
 router.get('/api/admin/transactions', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { language, startDate, endDate, source, search, page = 1, limit = 10, platform } = req.query;
         
         const pageNum = parseInt(page) || 1;
@@ -707,7 +710,7 @@ router.get('/api/admin/transactions', authenticateToken, async (req, res) => {
         }
         
         if (startDate && endDate) {
-            baseQuery += ` AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${paramIndex}::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${paramIndex + 1}::date`;
+            baseQuery += ` AND (created_at AT TIME ZONE '${tz}')::date >= $${paramIndex}::date AND (created_at AT TIME ZONE '${tz}')::date <= $${paramIndex + 1}::date`;
             params.push(startDate, endDate);
             paramIndex += 2;
         }
@@ -772,6 +775,7 @@ router.delete('/api/admin/transactions/:id', authenticateToken, async (req, res)
 // Get sales stats
 router.get('/api/admin/sales', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { language, startDate, endDate, source, platform } = req.query;
         
         console.log('[Sales API] Params:', { language, startDate, endDate, source, platform });
@@ -802,7 +806,7 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
         if (startDate && endDate) {
             const startIdx = langParams.length + 1;
             const endIdx = langParams.length + 2;
-            dateCondition = ` AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${startIdx}::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${endIdx}::date`;
+            dateCondition = ` AND (created_at AT TIME ZONE '${tz}')::date >= $${startIdx}::date AND (created_at AT TIME ZONE '${tz}')::date <= $${endIdx}::date`;
             langParams.push(startDate, endDate);
         }
         
@@ -848,8 +852,8 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
         ]);
         
         const [todayResult, weekResult] = await Promise.all([
-            pool.query(`SELECT COUNT(*) FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = (NOW() AT TIME ZONE 'America/Sao_Paulo')::date ${langCondition}${sourceCondition}${dateCondition}`, langParams),
-            pool.query(`SELECT COUNT(*) FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= ((NOW() AT TIME ZONE 'America/Sao_Paulo') - INTERVAL '7 days')::date ${langCondition}${sourceCondition}${dateCondition}`, langParams)
+            pool.query(`SELECT COUNT(*) FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = (NOW() AT TIME ZONE '${tz}')::date ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COUNT(*) FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= ((NOW() AT TIME ZONE '${tz}') - INTERVAL '7 days')::date ${langCondition}${sourceCondition}${dateCondition}`, langParams)
         ]);
         
         let funnelLangCondition = '';
@@ -864,7 +868,7 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
         
         let funnelDateCondition = '';
         if (startDate && endDate) {
-            funnelDateCondition = ` AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= '${startDate}'::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= '${endDate}'::date`;
+            funnelDateCondition = ` AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
         }
         
         const checkoutClickedResult = await pool.query(`
@@ -907,7 +911,7 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
         if (startDate && endDate) {
             const startIdx = leadsParams.length + 1;
             const endIdx = leadsParams.length + 2;
-            leadsDateCondition = ` AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= $${startIdx}::date AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date <= $${endIdx}::date`;
+            leadsDateCondition = ` AND (created_at AT TIME ZONE '${tz}')::date >= $${startIdx}::date AND (created_at AT TIME ZONE '${tz}')::date <= $${endIdx}::date`;
             leadsParams.push(startDate, endDate);
         }
         

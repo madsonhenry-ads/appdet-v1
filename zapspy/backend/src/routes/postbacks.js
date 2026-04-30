@@ -4,7 +4,7 @@ const pool = require('../database');
 const { authenticateToken, requireAdmin, invalidateCache } = require('../middleware');
 const { sendToFacebookCAPI, hashData, normalizePhone, normalizeGender, sendMissingCAPIPurchases } = require('../services/facebook-capi');
 const { sendMissingGoogleAdsPurchases } = require('../services/google-ads-conversion');
-const { parseMonetizzeDate } = require('../helpers');
+const { parseMonetizzeDate, getUTCOffset, getTimezone } = require('../helpers');
 const activeCampaign = require('../services/activecampaign');
 const dispatchService = require('../services/email-dispatch');
 const supabaseAuthService = require('../services/supabase-auth');
@@ -1348,7 +1348,8 @@ router.all('/api/postback/perfectpay', async (req, res) => {
         let saleDate = null;
         try {
             if (dateCreated) {
-                saleDate = new Date(dateCreated.replace(' ', 'T') + '-03:00');
+                const tz = await getTimezone();
+                saleDate = new Date(dateCreated.replace(' ', 'T') + getUTCOffset(tz));
                 if (isNaN(saleDate.getTime())) saleDate = null;
             }
         } catch (e) { saleDate = null; }
@@ -1749,7 +1750,8 @@ router.post('/api/admin/fix-perfectpay-dates', authenticateToken, requireAdmin, 
                 continue;
             }
             
-            const correctedDate = new Date(dateCreated.replace(' ', 'T') + '-03:00');
+            const tz = await getTimezone();
+            const correctedDate = new Date(dateCreated.replace(' ', 'T') + getUTCOffset(tz));
             if (isNaN(correctedDate.getTime())) {
                 skipped++;
                 continue;

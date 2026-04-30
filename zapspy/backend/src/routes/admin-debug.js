@@ -5,6 +5,7 @@ const { authenticateToken, requireAdmin } = require('../middleware');
 const { getMonetizzeToken } = require('../services/monetizze');
 const { sendToFacebookCAPI, sendMissingCAPIPurchases, backfillTransactionFbcFbp } = require('../services/facebook-capi');
 const { parseMonetizzeDate } = require('../helpers');
+const { getTimezone } = require('../helpers');
 
 // Shared in-memory postback storage from postbacks module
 const { recentPostbacks } = require('./postbacks');
@@ -13,9 +14,10 @@ const { recentPostbacks } = require('./postbacks');
 
 router.get('/api/admin/debug/refund-check', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const txRefunded = await pool.query(`
             SELECT transaction_id, email, name, product, value, status, monetizze_status, 
-                   (created_at AT TIME ZONE 'America/Sao_Paulo')::date as date
+                   (created_at AT TIME ZONE '${tz}')::date as date
             FROM transactions 
             WHERE status IN ('refunded', 'chargeback')
             ORDER BY created_at DESC
@@ -23,7 +25,7 @@ router.get('/api/admin/debug/refund-check', authenticateToken, async (req, res) 
         
         const rrAll = await pool.query(`
             SELECT id, protocol, email, product, value, source, refund_type, transaction_id, funnel_language,
-                   (created_at AT TIME ZONE 'America/Sao_Paulo')::date as date
+                   (created_at AT TIME ZONE '${tz}')::date as date
             FROM refund_requests 
             WHERE source = 'monetizze'
             ORDER BY created_at DESC
@@ -293,14 +295,15 @@ router.post('/api/admin/debug/fetch-monetizze-transaction', authenticateToken, r
 
 router.get('/api/admin/debug/sales-count', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const total = await pool.query(`SELECT COUNT(*) as count FROM transactions`);
         const approved = await pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'approved'`);
         const byStatus = await pool.query(`SELECT status, COUNT(*) as count FROM transactions GROUP BY status ORDER BY count DESC`);
         const byDate = await pool.query(`
-            SELECT (created_at AT TIME ZONE 'America/Sao_Paulo')::date as date, COUNT(*) as total, 
+            SELECT (created_at AT TIME ZONE '${tz}')::date as date, COUNT(*) as total, 
                    SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved
             FROM transactions 
-            GROUP BY (created_at AT TIME ZONE 'America/Sao_Paulo')::date 
+            GROUP BY (created_at AT TIME ZONE '${tz}')::date 
             ORDER BY date DESC 
             LIMIT 10
         `);
@@ -315,7 +318,7 @@ router.get('/api/admin/debug/sales-count', authenticateToken, async (req, res) =
             SELECT transaction_id, email, product, value, status, created_at
             FROM transactions 
             WHERE status IN ('cancelled', 'pending_payment', 'blocked', 'refused', 'rejected', 'waiting_payment')
-            AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = (NOW() AT TIME ZONE 'America/Sao_Paulo')::date
+            AND (created_at AT TIME ZONE '${tz}')::date = (NOW() AT TIME ZONE '${tz}')::date
             ORDER BY created_at DESC
         `);
         
@@ -1036,6 +1039,7 @@ router.post('/api/admin/test-postback', authenticateToken, requireAdmin, async (
 
 router.get('/api/admin/debug-transactions', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const { startDate, endDate } = req.query;
         
         let params = [];
@@ -1045,9 +1049,9 @@ router.get('/api/admin/debug-transactions', authenticateToken, async (req, res) 
         
         const approved = await pool.query(`
             SELECT transaction_id, email, product, value, status, created_at,
-                   (created_at AT TIME ZONE 'America/Sao_Paulo') as created_at_brazil
+                   (created_at AT TIME ZONE '${tz}') as created_at_brazil
             FROM transactions 
-            WHERE status = 'approved' ${startDate ? 'AND (created_at AT TIME ZONE \'America/Sao_Paulo\')::date >= $1::date AND (created_at AT TIME ZONE \'America/Sao_Paulo\')::date <= $2::date' : ''}
+            WHERE status = 'approved' ${startDate ? `AND (created_at AT TIME ZONE '${tz}')::date >= $1::date AND (created_at AT TIME ZONE '${tz}')::date <= $2::date` : ''}
             ORDER BY created_at DESC
             LIMIT 50
         `, params);
@@ -1058,7 +1062,7 @@ router.get('/api/admin/debug-transactions', authenticateToken, async (req, res) 
                 COALESCE(SUM(CAST(value AS DECIMAL)), 0) as total_value,
                 COALESCE(SUM(CAST(value AS DECIMAL)), 0) as revenue
             FROM transactions 
-            WHERE status = 'approved' ${startDate ? 'AND (created_at AT TIME ZONE \'America/Sao_Paulo\')::date >= $1::date AND (created_at AT TIME ZONE \'America/Sao_Paulo\')::date <= $2::date' : ''}
+            WHERE status = 'approved' ${startDate ? `AND (created_at AT TIME ZONE '${tz}')::date >= $1::date AND (created_at AT TIME ZONE '${tz}')::date <= $2::date` : ''}
         `, params);
         
         const statuses = await pool.query(`
@@ -1082,32 +1086,33 @@ router.get('/api/admin/debug-transactions', authenticateToken, async (req, res) 
 // DIAGNOSTIC: Complete panel health check
 router.get('/api/admin/diagnostic', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const today = new Date().toISOString().split('T')[0];
-        const brazilNow = `(NOW() AT TIME ZONE 'America/Sao_Paulo')`;
+        const brazilNow = `(NOW() AT TIME ZONE '${tz}')`;
         const brazilToday = `(${brazilNow})::date`;
         
         const leadsTotal = await pool.query(`SELECT COUNT(*) as count FROM leads`);
         const leadsTodayBrazil = await pool.query(`
             SELECT COUNT(*) as count FROM leads 
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ${brazilToday}
+            WHERE (created_at AT TIME ZONE '${tz}')::date = ${brazilToday}
         `);
         const leadsThisWeek = await pool.query(`
             SELECT COUNT(*) as count FROM leads 
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date >= (${brazilNow} - INTERVAL '7 days')::date
+            WHERE (created_at AT TIME ZONE '${tz}')::date >= (${brazilNow} - INTERVAL '7 days')::date
         `);
         
         const txTotal = await pool.query(`SELECT COUNT(*) as count FROM transactions`);
         const txApproved = await pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'approved'`);
         const txTodayBrazil = await pool.query(`
             SELECT COUNT(*) as count FROM transactions 
-            WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ${brazilToday}
+            WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = ${brazilToday}
         `);
         const txRevenue = await pool.query(`
             SELECT COALESCE(SUM(CAST(value AS DECIMAL)), 0) as total FROM transactions WHERE status = 'approved'
         `);
         const txRevenueTodayBrazil = await pool.query(`
             SELECT COALESCE(SUM(CAST(value AS DECIMAL)), 0) as total FROM transactions 
-            WHERE status = 'approved' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ${brazilToday}
+            WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = ${brazilToday}
         `);
         
         const txByStatus = await pool.query(`
@@ -1118,39 +1123,39 @@ router.get('/api/admin/diagnostic', authenticateToken, async (req, res) => {
         const funnelTotal = await pool.query(`SELECT COUNT(*) as count FROM funnel_events`);
         const funnelTodayBrazil = await pool.query(`
             SELECT COUNT(*) as count FROM funnel_events 
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ${brazilToday}
+            WHERE (created_at AT TIME ZONE '${tz}')::date = ${brazilToday}
         `);
         const funnelByEvent = await pool.query(`
             SELECT event, COUNT(*) as count FROM funnel_events 
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ${brazilToday}
+            WHERE (created_at AT TIME ZONE '${tz}')::date = ${brazilToday}
             GROUP BY event ORDER BY count DESC
         `);
         const funnelLandingToday = await pool.query(`
             SELECT COUNT(DISTINCT visitor_id) as count FROM funnel_events 
-            WHERE event = 'page_view_landing' AND (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ${brazilToday}
+            WHERE event = 'page_view_landing' AND (created_at AT TIME ZONE '${tz}')::date = ${brazilToday}
         `);
         
         const refundsTotal = await pool.query(`SELECT COUNT(*) as count FROM refund_requests`);
         const refundsTodayBrazil = await pool.query(`
             SELECT COUNT(*) as count FROM refund_requests 
-            WHERE (created_at AT TIME ZONE 'America/Sao_Paulo')::date = ${brazilToday}
+            WHERE (created_at AT TIME ZONE '${tz}')::date = ${brazilToday}
         `);
         
-        const serverTime = await pool.query(`SELECT NOW() as utc, NOW() AT TIME ZONE 'America/Sao_Paulo' as brazil`);
+        const serverTime = await pool.query(`SELECT NOW() as utc, NOW() AT TIME ZONE '${tz}' as brazil`);
         
         const recentTx = await pool.query(`
             SELECT transaction_id, email, status, value, 
                    created_at as utc_time,
-                   (created_at AT TIME ZONE 'America/Sao_Paulo') as brazil_time,
-                   (created_at AT TIME ZONE 'America/Sao_Paulo')::date as brazil_date
+                   (created_at AT TIME ZONE '${tz}') as brazil_time,
+                   (created_at AT TIME ZONE '${tz}')::date as brazil_date
             FROM transactions ORDER BY created_at DESC LIMIT 5
         `);
         
         const recentLeads = await pool.query(`
             SELECT id, email, 
                    created_at as utc_time,
-                   (created_at AT TIME ZONE 'America/Sao_Paulo') as brazil_time,
-                   (created_at AT TIME ZONE 'America/Sao_Paulo')::date as brazil_date
+                   (created_at AT TIME ZONE '${tz}') as brazil_time,
+                   (created_at AT TIME ZONE '${tz}')::date as brazil_date
             FROM leads ORDER BY created_at DESC LIMIT 5
         `);
         
@@ -1203,11 +1208,12 @@ router.get('/api/admin/diagnostic', authenticateToken, async (req, res) => {
 // DATA CLEANUP: Find corrupted data
 router.get('/api/admin/diagnostic/corrupted', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const issues = [];
         
         const futureTx = await pool.query(`
             SELECT transaction_id, email, status, value, created_at,
-                   (created_at AT TIME ZONE 'America/Sao_Paulo') as brazil_time
+                   (created_at AT TIME ZONE '${tz}') as brazil_time
             FROM transactions 
             WHERE created_at > NOW() + INTERVAL '1 day'
             ORDER BY created_at DESC
@@ -1612,9 +1618,10 @@ router.get('/api/admin/debug/journey-by-email/:email', authenticateToken, async 
 // Analytics endpoint for monthly breakdown by funnel
 router.get('/api/admin/analytics/monthly-breakdown', authenticateToken, async (req, res) => {
     try {
+        const tz = await getTimezone();
         const leadsQuery = await pool.query(`
             SELECT 
-                TO_CHAR(created_at AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM') as month,
+                TO_CHAR(created_at AT TIME ZONE '${tz}', 'YYYY-MM') as month,
                 COALESCE(funnel_source, 'main') as funnel_source,
                 COUNT(*) as total_leads
             FROM leads
@@ -1624,7 +1631,7 @@ router.get('/api/admin/analytics/monthly-breakdown', authenticateToken, async (r
         
         const txQuery = await pool.query(`
             SELECT 
-                TO_CHAR(created_at AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM') as month,
+                TO_CHAR(created_at AT TIME ZONE '${tz}', 'YYYY-MM') as month,
                 COALESCE(funnel_source, 'main') as funnel_source,
                 status,
                 COUNT(*) as total,
@@ -1636,7 +1643,7 @@ router.get('/api/admin/analytics/monthly-breakdown', authenticateToken, async (r
         
         const eventsQuery = await pool.query(`
             SELECT 
-                TO_CHAR(created_at AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM') as month,
+                TO_CHAR(created_at AT TIME ZONE '${tz}', 'YYYY-MM') as month,
                 COALESCE(metadata->>'funnelSource', 'main') as funnel_source,
                 event,
                 COUNT(*) as total
@@ -1648,7 +1655,7 @@ router.get('/api/admin/analytics/monthly-breakdown', authenticateToken, async (r
         
         const postbackLogsQuery = await pool.query(`
             SELECT 
-                TO_CHAR(created_at AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM') as month,
+                TO_CHAR(created_at AT TIME ZONE '${tz}', 'YYYY-MM') as month,
                 COUNT(*) as total
             FROM postback_logs
             GROUP BY month
@@ -1657,7 +1664,7 @@ router.get('/api/admin/analytics/monthly-breakdown', authenticateToken, async (r
         
         const capiLogsQuery = await pool.query(`
             SELECT 
-                TO_CHAR(created_at AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM') as month,
+                TO_CHAR(created_at AT TIME ZONE '${tz}', 'YYYY-MM') as month,
                 COALESCE(funnel_source, 'unknown') as funnel_source,
                 COUNT(*) as total,
                 COALESCE(SUM(value), 0) as total_value

@@ -3550,7 +3550,25 @@
                             <a href="https://support.perfectpay.com.br/doc/perfect-pay/perfectpay-api/conhecendo-a-api" target="_blank" rel="noopener">API PerfectPay</a>
                         </p>
                     </div>
-                    
+
+                    <div class="config-box">
+                        <h3>🌍 Fuso Horário</h3>
+                        <p>Selecione o fuso horário usado no painel. Deve ser o mesmo do Facebook Ads e UTMify para alinhar as métricas.</p>
+                        <div style="margin-top: 12px; display: flex; gap: 12px; align-items: center;">
+                            <select id="timezoneSelect" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #2a2a2a; background: #1a1a1a; color: #e0e0e0; font-size: 14px; min-width: 260px;">
+                                <option value="America/Sao_Paulo">America/Sao_Paulo (GMT-3) - São Paulo</option>
+                                <option value="Europe/Lisbon">Europe/Lisbon (GMT+1) - Lisboa</option>
+                                <option value="America/New_York">America/New_York (GMT-5) - Nova York</option>
+                                <option value="Europe/London">Europe/London (GMT+0) - Londres</option>
+                                <option value="America/Los_Angeles">America/Los_Angeles (GMT-8) - Los Angeles</option>
+                                <option value="Europe/Berlin">Europe/Berlin (GMT+1) - Berlim</option>
+                                <option value="America/Chicago">America/Chicago (GMT-6) - Chicago</option>
+                            </select>
+                            <button class="btn-secondary" onclick="saveTimezone()" style="white-space: nowrap;">💾 Salvar</button>
+                            <span id="timezoneStatus" style="font-size: 12px; color: var(--text-muted);"></span>
+                        </div>
+                    </div>
+
                     <div class="config-box">
                         <h3>🧪 Testar Postback → Initiate Checkout / Purchase</h3>
                         <p>Simule um postback da Monetizze e confira se os eventos <strong>Initiate Checkout</strong> e <strong>Purchase</strong> são enviados ao Meta (CAPI). Os eventos vão para <strong>Test Events</strong> no Gerenciador de Eventos.</p>
@@ -4576,6 +4594,7 @@ Estou aqui para esclarecer tudo! 😊`
             updateUIForRole(user);
             
             try { initCharts(); } catch(e) { console.error('⚠️ initCharts error:', e); }
+            loadTimezone(); // Load timezone early so formatDate uses correct TZ
             loadAllData();
             
             // Start real-time active users tracking
@@ -5014,6 +5033,7 @@ Estou aqui para esclarecer tudo! 😊`
                 document.getElementById('syncStartDate').value = today;
                 document.getElementById('syncEndDate').value = today;
                 loadGadsConfig();
+                loadTimezone();
             }
             else if (tabName === 'users') loadUsers();
             else if (tabName === 'pixel') { loadPixelStats(); loadPurchaseCAPILogs(); loadCAPIMonitor(); loadCapiFunnel(); loadWhatsAppStats(); }
@@ -6050,21 +6070,24 @@ Estou aqui para esclarecer tudo! 😊`
             loadLeads(page);
         }
         
+        // Global timezone (loaded from settings)
+        let _appTimezone = 'America/Sao_Paulo';
+
         function formatDate(dateStr) {
             if (!dateStr) return '-';
-            return new Date(dateStr).toLocaleDateString('pt-BR', { 
-                day: '2-digit', 
-                month: '2-digit', 
-                hour: '2-digit', 
+            return new Date(dateStr).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
                 minute: '2-digit',
-                timeZone: 'America/Sao_Paulo'
+                timeZone: _appTimezone
             });
         }
-        
-        // Full date-time formatting with Brazil timezone
+
+        // Full date-time formatting with configured timezone
         function formatDateTime(dateStr) {
             if (!dateStr) return '-';
-            return new Date(dateStr).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            return new Date(dateStr).toLocaleString('pt-BR', { timeZone: _appTimezone });
         }
         
         function timeAgo(dateStr) {
@@ -8579,7 +8602,7 @@ Estou aqui para esclarecer tudo! 😊`
             
             timeline.forEach((item, index) => {
                 const isFirst = index === 0;
-                const timeStr = new Date(item.timestamp).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+                const timeStr = new Date(item.timestamp).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', timeZone: _appTimezone });
                 
                 let bgColor = '#3b82f6';
                 let icon = '📍';
@@ -13137,6 +13160,45 @@ Posso ajudar em algo mais? 😊`
         function copyPerfectPayWebhookUrl() {
             navigator.clipboard.writeText(document.getElementById('perfectpayWebhookUrl').textContent);
             showToast('Copiado!', 'URL PerfectPay na área de transferência', 'success');
+        }
+
+        // Timezone management
+        async function loadTimezone() {
+            try {
+                const res = await fetch('/api/admin/settings', { headers: { 'Authorization': 'Bearer ' + getAuthToken() } });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.settings && data.settings.timezone) {
+                        _appTimezone = data.settings.timezone;
+                    }
+                }
+            } catch (e) { /* use default */ }
+            const select = document.getElementById('timezoneSelect');
+            if (select) select.value = _appTimezone;
+        }
+
+        async function saveTimezone() {
+            const select = document.getElementById('timezoneSelect');
+            const status = document.getElementById('timezoneStatus');
+            const tz = select ? select.value : _appTimezone;
+            try {
+                const res = await fetch('/api/admin/settings', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getAuthToken() },
+                    body: JSON.stringify({ settings: { timezone: tz } })
+                });
+                if (res.ok) {
+                    _appTimezone = tz;
+                    if (status) { status.textContent = '✅ Salvo!'; status.style.color = '#25D366'; setTimeout(() => status.textContent = '', 3000); }
+                    showToast('Fuso horário salvo', tz, 'success');
+                } else {
+                    const err = await res.json();
+                    if (status) { status.textContent = '❌ Erro'; status.style.color = '#ef4444'; }
+                    showToast('Erro', err.error || 'Falha ao salvar', 'error');
+                }
+            } catch (e) {
+                if (status) { status.textContent = '❌ Erro'; status.style.color = '#ef4444'; }
+            }
         }
 
         const langFlags = { en: '🇺🇸 English', es: '🇪🇸 Espanol', pt: '🇧🇷 Portugues' };
