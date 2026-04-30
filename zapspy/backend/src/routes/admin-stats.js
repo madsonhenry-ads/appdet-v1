@@ -2840,13 +2840,24 @@ router.get('/api/admin/settings', authenticateToken, async (req, res) => {
 // Update app settings
 router.put('/api/admin/settings', authenticateToken, async (req, res) => {
     try {
+        console.log('========================================');
         console.log('=== Settings PUT request ===');
+        console.log('Time:', new Date().toISOString());
         console.log('Body:', JSON.stringify(req.body, null, 2));
+
+        if (!req.body || Object.keys(req.body).length === 0) {
+            console.log('❌ Body is empty');
+            return res.status(400).json({ error: 'Request body is empty' });
+        }
+
         const { settings } = req.body;
         console.log('Settings received:', settings);
+        console.log('Settings type:', typeof settings);
+        console.log('Settings keys:', settings ? Object.keys(settings) : 'N/A');
 
         // Create app_settings table if it doesn't exist
         try {
+            console.log('Creating app_settings table...');
             await pool.query(`
                 CREATE TABLE IF NOT EXISTS app_settings (
                     key VARCHAR(100) PRIMARY KEY,
@@ -2856,57 +2867,76 @@ router.put('/api/admin/settings', authenticateToken, async (req, res) => {
             `);
             console.log('✅ app_settings table verified/created');
         } catch (tableErr) {
-            console.log('⚠️ Could not verify/create app_settings table:', tableErr.message);
+            console.error('❌ Could not verify/create app_settings table:', tableErr.message);
+            console.error('Table error stack:', tableErr.stack);
         }
 
         // Seed timezone setting if it doesn't exist
         try {
+            console.log('Checking if timezone seed exists...');
             const existing = await pool.query(`SELECT 1 FROM app_settings WHERE key = 'timezone'`);
             if (existing.rows.length === 0) {
                 await pool.query(`INSERT INTO app_settings (key, value) VALUES ('timezone', 'America/Sao_Paulo')`);
                 console.log('✅ Timezone seed created');
+            } else {
+                console.log('✅ Timezone seed already exists');
             }
         } catch (seedErr) {
-            console.log('⚠️ Could not seed timezone:', seedErr.message);
+            console.error('❌ Could not seed timezone:', seedErr.message);
+            console.error('Seed error stack:', seedErr.stack);
         }
 
         if (!settings || typeof settings !== 'object') {
-            console.log('Error: settings object is required');
+            console.log('❌ Error: settings object is required');
             return res.status(400).json({ error: 'settings object is required' });
         }
 
         // Validate timezone if provided
         if (settings.timezone) {
+            console.log('Validating timezone:', settings.timezone);
             const validTZs = [
                 'America/Sao_Paulo', 'Europe/Lisbon', 'America/New_York',
                 'Europe/London', 'America/Los_Angeles', 'Europe/Berlin',
                 'America/Chicago', 'Asia/Tokyo', 'Australia/Sydney'
             ];
             if (!validTZs.includes(settings.timezone)) {
-                console.log('Error: Invalid timezone', settings.timezone);
+                console.log('❌ Error: Invalid timezone', settings.timezone);
                 return res.status(400).json({ error: 'Invalid timezone. Allowed: ' + validTZs.join(', ') });
             }
+            console.log('✅ Timezone valid:', settings.timezone);
         }
 
+        // Save all settings
+        console.log('Saving settings...');
         for (const [key, value] of Object.entries(settings)) {
             console.log(`Saving ${key} = ${value}`);
-            await pool.query(`
-                INSERT INTO app_settings (key, value, updated_at)
-                VALUES ($1, $2, NOW())
-                ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()
-            `, [key, value]);
+            try {
+                await pool.query(`
+                    INSERT INTO app_settings (key, value, updated_at)
+                    VALUES ($1, $2, NOW())
+                    ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()
+                `, [key, value]);
+                console.log(`✅ Saved ${key}`);
+            } catch (saveErr) {
+                console.error(`❌ Failed to save ${key}:`, saveErr.message);
+                console.error(`${key} error stack:`, saveErr.stack);
+                // Continue with other settings
+            }
         }
 
         // Clear timezone cache so next request picks up new value
         clearTimezoneCache();
 
-        console.log('Settings saved successfully');
+        console.log('✅ Settings saved successfully');
         res.json({ success: true });
     } catch (error) {
-        console.error('=== Error saving settings ===');
+        console.error('========================================');
+        console.error('❌ Error saving settings ===');
+        console.error('Error name:', error.name);
         console.error('Error message:', error.message);
+        console.error('Error code:', error.code);
         console.error('Error stack:', error.stack);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message + ' - ' + error.code });
     }
 });
 
