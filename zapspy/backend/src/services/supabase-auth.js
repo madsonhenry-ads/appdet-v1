@@ -36,8 +36,8 @@ function getSupabaseAdmin() {
 }
 
 /**
- * Resolve the AC custom field ID for MAGIC_LINK by searching by personalization tag.
- * AC API requires numeric field IDs, not field names.
+ * Get or create a numeric field for magic link in ActiveCampaign.
+ * This field will contain the actual magic link URL (not placeholder).
  */
 async function getMagicLinkFieldId() {
     if (_magicLinkFieldId) return _magicLinkFieldId;
@@ -51,16 +51,48 @@ async function getMagicLinkFieldId() {
         if (!res.ok) return null;
 
         const data = await res.json();
+
+        // Look for field named "Magic Link" or "MAGICALINK"
         const field = (data.fields || []).find(f =>
-            f.title === 'MAGIC_LINK' || f.personaltag === '%MAGIC_LINK%'
+            f.title === 'Magic Link' ||
+            f.title === 'MAGICALINK' ||
+            f.personaltag === '%MAGIC_LINK%'
         );
+
         if (field) {
             _magicLinkFieldId = field.id;
-            console.log(`📧 AC: MAGIC_LINK field ID resolved: ${_magicLinkFieldId}`);
+            console.log(`📧 AC: Found magic link field (ID: ${_magicLinkFieldId})`);
+            return _magicLinkFieldId;
         }
-        return _magicLinkFieldId;
+
+        // If not found, create it
+        console.log(`📧 AC: Magic link field not found, creating one...`);
+        const createRes = await fetch(`${AC_API_URL}/api/3/fields`, {
+            method: 'POST',
+            headers: {
+                'Api-Token': AC_API_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                field: {
+                    title: 'Magic Link',
+                    type: 'text',
+                    description: 'Magic link URL for member area access',
+                    useAsUrlParameter: false
+                }
+            })
+        });
+
+        if (createRes.ok) {
+            const createData = await createRes.json();
+            _magicLinkFieldId = createData.field.id;
+            console.log(`📧 AC: Created magic link field (ID: ${_magicLinkFieldId})`);
+            return _magicLinkFieldId;
+        }
+
+        return null;
     } catch (err) {
-        console.error(`📧 AC: Error resolving MAGIC_LINK field ID:`, err.message);
+        console.error(`📧 AC: Error resolving/getting MAGIC_LINK field ID:`, err.message);
         return null;
     }
 }
@@ -185,6 +217,11 @@ async function sendCredentialsEmail(email, magicLink, name, funnelLanguage) {
             fieldValues.push({ field: String(fieldId), value: magicLink || 'https://pc.appdetect.site/' });
         }
 
+        console.log(`📧 AC: Magic link for ${email}: ${magicLink}`);
+        console.log(`📧 AC: Field ID for Magic Link: ${fieldId}`);
+        console.log(`📧 AC: Field values being sent:`, JSON.stringify(fieldValues, null, 2));
+        console.log(`📧 AC: Creating/updating contact with magic link...`);
+
         // Create or update contact in ActiveCampaign with magic link
         const contactData = {
             email,
@@ -210,6 +247,7 @@ async function sendCredentialsEmail(email, magicLink, name, funnelLanguage) {
         const contactJson = await contactRes.json();
         const contactId = contactJson.contact?.id;
         console.log(`📧 AC: Contact synced: ${email} (id: ${contactId})`);
+        console.log(`📧 AC: Contact JSON response:`, JSON.stringify(contactJson, null, 2));
 
         // Add "buyer" tag based on language (same tags used by activecampaign.js)
         const buyerTags = {
@@ -218,6 +256,7 @@ async function sendCredentialsEmail(email, magicLink, name, funnelLanguage) {
             pt: 'Whats Spy-buyer-en', // Portuguese uses EN tag as fallback
             fr: 'Whats Spy-buyer-en'  // French uses EN tag as fallback
         };
+        console.log(`📧 AC: Buyer tag for ${lang}: ${buyerTags[lang]}`);
 
         // Look up the tag ID
         const tagRes = await fetch(`${AC_API_URL}/api/3/tags?search=${encodeURIComponent(buyerTags[lang])}`, {
