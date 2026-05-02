@@ -10960,10 +10960,10 @@ Estou aqui para esclarecer tudo! 😊`
                 
                 // Fetch REAL CAPI events from capi_purchase_logs (not transactions)
                 let capiUrl = `${API_URL}/api/admin/capi-purchase-logs?limit=15`;
+                if (minutes > 0) capiUrl += `&minutes=${minutes}`;
+                else if (hours > 0) capiUrl += `&hours=${hours}`;
+                else if (days > 0) capiUrl += `&days=${days}`;
                 if (langParam) capiUrl += `&language=${langParam}`;
-                const periodSelect2 = document.getElementById('pixelDateRange');
-                const period2 = periodSelect2 ? periodSelect2.value : '';
-                if (period2) capiUrl += `&period=${period2}`;
                 const capiRes = await fetch(capiUrl, { headers });
                 const capiData = await capiRes.json();
                 const capiLogs = capiData.logs || [];
