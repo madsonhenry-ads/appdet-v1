@@ -1,13 +1,10 @@
 "use client"
 
-import { useAuth } from "@/lib/auth-context"
 import { Menu } from "lucide-react"
 
 export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
-  const { user } = useAuth()
-  
-  // TODO: Use real user name from session/Supabase when ready
-  const userName = user?.username || "Madson Papito"
+  // Usuário guest - não precisa de autenticação
+  const userName = "Guest"
 
   return (
     <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-20">

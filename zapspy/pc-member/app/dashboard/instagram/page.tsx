@@ -251,8 +251,8 @@ const CHATS_FOR_MALE_TARGET = [
 ]
 
 export default function InstagramScannerPage() {
-    const { language } = useAuth()
-    const t = translations[language || "en"]
+    const language = "en" // Forçar inglês - sem autenticação
+    const t = translations["en"]
 
     // --- ESTADOS DO FUNIL ---
     const [step, setStep] = useState(1) // 1: Input, 2: Scanning, 3: Results

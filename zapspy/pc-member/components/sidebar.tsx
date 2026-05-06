@@ -1,147 +1,211 @@
 "use client"
 
+import { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { translations } from "@/lib/translations"
+import DashboardLayout from "@/components/dashboard-layout"
+import { getCourses, getCoursesByCategory, getLessonsByCourse, getCourseProgress } from "@/lib/supabase-queries"
+import type { Course, Lesson } from "@/lib/supabase-queries"
 import Link from "next/link"
-import { useAuth } from "@/lib/auth-context"
-import { MessageCircle, Camera, Heart, PlayCircle, CheckSquare, Settings, LogOut, X } from "lucide-react"
+import { BookOpen, Clock, CheckCircle2, ArrowRight } from "lucide-react"
 
-interface SidebarProps {
-  open: boolean
-  onToggle: () => void
-  activeTab: string
-}
+export default function CoursesContent() {
+  const searchParams = useSearchParams()
+  const category = searchParams.get("category") || "introduction"
+  const t = translations["en"] // Forçar inglês - sem autenticação
 
-export default function Sidebar({ open, onToggle, activeTab }: SidebarProps) {
-  const { signOut } = useAuth()
+  const [courses, setCourses] = useState<Course[]>([])
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
+  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [progress, setProgress] = useState<{ [key: string]: number }>({})
+  const [loading, setLoading] = useState(true)
 
-  // TODO: We could get the user info from Supabase session if stored in auth-context
-  const userName = "Madson Papito"
-  const userEmail = "madsonpapito@gmail.com"
+  // Carregar dados sem autenticação - usar usuário padrão
+  const user = { id: "guest", username: "Guest", email: "guest@appdetect.com" }
 
-  const homeItem = { id: "home", label: "Home", icon: PlayCircle, path: "/dashboard" }
+  useEffect(() => {
+    const loadCourses = async () => {
+      setLoading(true)
+      try {
+        const data = await getCoursesByCategory(category)
+        setCourses(data)
 
-  const scannerItems = [
-    { id: "whatsapp", label: "Whatsapp Scanner", icon: MessageCircle, path: "/dashboard/whatsapp" },
-    { id: "instagram", label: "Instagram Scanner", icon: Camera, path: "/dashboard/instagram" },
-    { id: "dating", label: "Dating Scanner", icon: Heart, path: "/dashboard/dating" },
-  ]
+        if (data.length > 0) {
+          setSelectedCourse(data[0])
+          const lessonsData = await getLessonsByCourse(data[0].id)
+          setLessons(lessonsData)
 
-  const advancedItems = [
-    { id: "intro", label: "Start Here", icon: PlayCircle, path: "/dashboard/intro" },
-    { id: "tutorial", label: "Installation Tutorial", icon: CheckSquare, path: "/dashboard/tutorial" },
-    { id: "advanced", label: "Advanced Panel", icon: Settings, path: "/dashboard/scanners" },
-  ]
+          // Carregar progresso do guest
+          const progressData = await getCourseProgress("guest", data[0].id)
+          setProgress((prev) => ({
+            ...prev,
+            [data[0].id]: progressData.percentage,
+          }))
+        }
+      } catch (error) {
+        console.error("Erro ao carregar cursos:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadCourses()
+  }, [category])
+
+  const handleSelectCourse = async (course: Course) => {
+    setSelectedCourse(course)
+    const lessonsData = await getLessonsByCourse(course.id)
+    setLessons(lessonsData)
+
+    const progressData = await getCourseProgress("guest", course.id)
+    setProgress((prev) => ({
+      ...prev,
+      [course.id]: progressData.percentage,
+    }))
+  }
+
+  const handleSelectCourse = async (course: Course) => {
+    setSelectedCourse(course)
+    const lessonsData = await getLessonsByCourse(course.id)
+    setLessons(lessonsData)
+
+    if (user?.id) {
+      const progressData = await getCourseProgress(user.id, course.id)
+      setProgress((prev) => ({
+        ...prev,
+        [course.id]: progressData.percentage,
+      }))
+    }
+  }
+
+  const getCategoryTitle = () => {
+    switch (category) {
+      case "introduction":
+        return t.startHere
+      case "installation":
+        return t.installationTutorial
+      case "advanced":
+        return t.advancedPanel
+      case "bonus":
+        return "Bonus Tools"
+      default:
+        return "Courses"
+    }
+  }
 
   return (
-    <aside
-      className={`w-64 bg-card/80 backdrop-blur-md border-r border-border transition-all duration-300 flex flex-col overflow-hidden h-full ${
-        open ? "fixed inset-y-0 left-0 z-50" : "hidden md:flex relative"
-      }`}
-    >
-      {/* Logo/Brand Area */}
-      <div className="h-16 flex items-center justify-between px-6 border-b border-white/5">
-        <div className="flex flex-col">
-          <span className="text-xl font-bold text-blue-500">Scanner Pro</span>
-          <span className="text-xs text-zinc-400">Members Area</span>
+    <DashboardLayout activeTab="courses">
+      <div className="space-y-6">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">{getCategoryTitle()}</h1>
+          <p className="text-gray-400">
+            {selectedCourse?.description}
+          </p>
         </div>
-        <button onClick={onToggle} className="md:hidden p-1 text-zinc-400 hover:text-white rounded-md">
-          <X className="w-5 h-5" />
-        </button>
+
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400">Loading courses...</p>
+          </div>
+        ) : courses.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-400">No courses available in this category.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Sidebar de Cursos */}
+            <div className="lg:col-span-1">
+              <div className="space-y-2">
+                {courses.map((course) => (
+                    <button
+                    key={course.id}
+                    onClick={() => handleSelectCourse(course)}
+                    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                      selectedCourse?.id === course.id
+                        ? "border-[#2962FF] bg-[#1a1f3a]"
+                        : "border-[#2a3050] hover:border-[#2962FF] bg-[#1a1f3a]"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-white" style={{ fontFamily: 'var(--font-space-grotesk)' }}>{course.title}</h3>
+	                        <p className="text-sm text-[#a0a9c9] mt-1" style={{ fontFamily: 'var(--font-manrope)' }}>
+	                          {lessons.length} lessons
+	                        </p>
+                      </div>
+                      {progress[course.id] === 100 && (
+                        <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                      )}
+                    </div>
+
+                    {progress[course.id] !== undefined && progress[course.id] > 0 && (
+                      <div className="mt-2">
+                        <div className="w-full bg-[#2a3050] rounded-full h-1">
+                          <div
+                            className="bg-[#00E676] h-1 rounded-full"
+                            style={{ width: `${progress[course.id]}%` }}
+                          />
+                        </div>
+                        <p className="text-xs text-[#a0a9c9] mt-1" style={{ fontFamily: 'var(--font-manrope)' }}>
+	                          {progress[course.id]}% completed
+	                        </p>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+	            {/* Lessons */}
+	            <div className="lg:col-span-2">
+	              <div className="space-y-4">
+	                <h2 className="text-2xl font-bold text-white" style={{ fontFamily: 'var(--font-space-grotesk)' }}>Lessons</h2>
+
+	                {lessons.length === 0 ? (
+	                  <div className="text-center py-12 bg-[#1a1f3a] rounded-lg">
+	                    <p className="text-[#a0a9c9]" style={{ fontFamily: 'var(--font-manrope)' }}>No lessons available.</p>
+	                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {lessons.map((lesson) => (
+                      <Link
+                        key={lesson.id}
+                        href={`/dashboard/courses/${selectedCourse?.id}/${lesson.id}`}
+                        className="block p-4 border border-[#2a3050] rounded-lg hover:border-[#2962FF] hover:bg-[#1a1f3a]/80 transition-all group bg-[#1a1f3a]"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-white group-hover:text-[#2962FF]" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+                              {lesson.title}
+                            </h3>
+                            <p className="text-sm text-[#a0a9c9] mt-1 line-clamp-2" style={{ fontFamily: 'var(--font-manrope)' }}>
+                              {lesson.description}
+                            </p>
+
+                            <div className="flex items-center gap-4 mt-3 text-xs text-[#6b7280]" style={{ fontFamily: 'var(--font-manrope)' }}>
+                              <div className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {lesson.duration_minutes} min
+                              </div>
+	                              <div className="flex items-center gap-1">
+	                                <BookOpen className="w-4 h-4" />
+	                                Video
+	                              </div>
+                            </div>
+                          </div>
+
+                          <ArrowRight className="w-5 h-5 text-[#6b7280] group-hover:text-[#2962FF] flex-shrink-0 mt-1" />
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* Menu Items */}
-      <nav className="flex-1 overflow-y-auto px-4 py-8 space-y-6">
-        
-        {/* Category: General */}
-        <div>
-          <div className="space-y-1">
-            <Link
-              href={homeItem.path}
-              onClick={onToggle}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm font-medium ${
-                activeTab === homeItem.id || activeTab === ""
-                  ? "bg-primary/10 text-white border border-primary/20 shadow-[0_0_15px_rgba(41,98,255,0.1)]" 
-                  : "text-zinc-400 hover:bg-white/5 hover:text-white border border-transparent"
-              }`}
-            >
-              <homeItem.icon className={`w-5 h-5 ${activeTab === homeItem.id || activeTab === "" ? "text-primary" : "text-zinc-500"}`} />
-              <span>{homeItem.label}</span>
-            </Link>
-          </div>
-        </div>
-        <div>
-          <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Scanner</h3>
-          <div className="space-y-1">
-            {scannerItems.map((item) => {
-              const Icon = item.icon
-              const isActive = activeTab === item.id
-
-              return (
-                <Link
-                  key={item.id}
-                  href={item.path}
-                  onClick={onToggle}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm font-medium ${
-                    isActive 
-                      ? "bg-white/10 text-white" 
-                      : "text-zinc-300 hover:bg-white/5 hover:text-white"
-                  }`}
-                >
-                  <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-zinc-400"}`} />
-                  <span>{item.label}</span>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Category: Advanced Spy */}
-        <div>
-          <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Advanced Spy</h3>
-          <div className="space-y-1">
-            {advancedItems.map((item) => {
-              const Icon = item.icon
-              const isActive = activeTab === item.id || (activeTab === "" && item.id === "intro")
-
-              return (
-                <Link
-                  key={item.id}
-                  href={item.path}
-                  onClick={onToggle}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all text-sm font-medium ${
-                    isActive 
-                      ? "bg-white/10 text-white" 
-                      : "text-zinc-300 hover:bg-white/5 hover:text-white"
-                  }`}
-                >
-                  <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-zinc-400"}`} />
-                  <span>{item.label}</span>
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-      </nav>
-
-      {/* User Profile Footer */}
-      <div className="p-4 border-t border-border bg-background/40 backdrop-blur-sm">
-        <div className="flex items-center gap-3 px-2 py-2">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary/20">
-            M
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">{userName}</p>
-            <p className="text-xs text-zinc-500 truncate">{userEmail}</p>
-          </div>
-        </div>
-        <button 
-          onClick={() => signOut()}
-          className="mt-2 w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
-        >
-          <LogOut className="w-4 h-4 text-destructive" />
-          <span>Log Out</span>
-        </button>
-      </div>
-    </aside>
+    </DashboardLayout>
   )
 }

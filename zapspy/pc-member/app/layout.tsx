@@ -2,7 +2,6 @@ import type React from "react"
 import { GoogleTagManager } from "@next/third-parties/google"
 import Script from "next/script"
 import { Space_Grotesk, Manrope } from "next/font/google"
-import { Providers } from "@/app/providers"
 import "./globals.css"
 
 const spaceGrotesk = Space_Grotesk({
@@ -33,7 +32,7 @@ export default function RootLayout({
         />
       </head>
       <body className="dark bg-[#0a0e27]">
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   )
