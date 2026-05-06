@@ -58,9 +58,10 @@ const LIST_MAP = {
     }
 };
 
-// Cache for tag IDs and list IDs (populated on first use)
+// Cache for tag IDs, list IDs, and field IDs (populated on first use)
 let tagIdCache = {};
 let listIdCache = {};
+let fieldIdCache = {};
 let cacheLoaded = false;
 
 /**
@@ -164,8 +165,16 @@ async function loadCache() {
             }
         }
 
+        // Load all custom fields
+        const fieldsData = await apiRequest('GET', 'fields?limit=100');
+        if (fieldsData && fieldsData.fields) {
+            for (const field of fieldsData.fields) {
+                fieldIdCache[field.title] = field.id;
+            }
+        }
+
         cacheLoaded = true;
-        console.log(`📧 ActiveCampaign cache loaded: ${Object.keys(tagIdCache).length} tags, ${Object.keys(listIdCache).length} lists`);
+        console.log(`📧 ActiveCampaign cache loaded: ${Object.keys(tagIdCache).length} tags, ${Object.keys(listIdCache).length} lists, ${Object.keys(fieldIdCache).length} fields`);
     } catch (error) {
         console.error('❌ Failed to load AC cache:', error.message);
     }
@@ -227,6 +236,35 @@ async function getOrCreateList(listName) {
 }
 
 /**
+ * Get or create a custom field by title
+ */
+async function getOrCreateField(fieldTitle) {
+    await loadCache();
+
+    if (fieldIdCache[fieldTitle]) {
+        return fieldIdCache[fieldTitle];
+    }
+
+    // Create field
+    const data = await apiRequest('POST', 'fields', {
+        field: {
+            title: fieldTitle,
+            type: 'text',
+            descript: `Whats Spy field: ${fieldTitle}`,
+            isrequired: 0,
+            perstag: fieldTitle.toUpperCase().replace(/[^A-Z0-9]/g, '')
+        }
+    });
+
+    if (data && data.field) {
+        fieldIdCache[fieldTitle] = data.field.id;
+        return data.field.id;
+    }
+
+    return null;
+}
+
+/**
  * Create or update a contact in ActiveCampaign
  */
 async function syncContact(email, firstName = '', phone = '', customFields = {}) {
@@ -244,7 +282,27 @@ async function syncContact(email, firstName = '', phone = '', customFields = {})
     const data = await apiRequest('POST', 'contact/sync', contactData);
 
     if (data && data.contact) {
-        return data.contact.id;
+        const contactId = data.contact.id;
+
+        // Save custom fields if provided
+        if (Object.keys(customFields).length > 0) {
+            for (const [fieldTitle, fieldValue] of Object.entries(customFields)) {
+                if (fieldValue) {
+                    const fieldId = await getOrCreateField(fieldTitle);
+                    if (fieldId) {
+                        await apiRequest('POST', 'fieldValues', {
+                            fieldValue: {
+                                contact: String(contactId),
+                                field: String(fieldId),
+                                value: String(fieldValue)
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        return contactId;
     }
 
     return null;
@@ -342,8 +400,23 @@ async function processEvent(eventType, language, contactInfo) {
     try {
         console.log(`📧 AC Event: ${eventType} [${lang.toUpperCase()}] for ${email}`);
 
-        // 1. Create/update contact
-        const contactId = await syncContact(email, name, phone || whatsapp);
+        // Extract last 4 digits from targetPhone
+        let last4Digits = '';
+        if (targetPhone) {
+            const digitsOnly = targetPhone.replace(/\D/g, '');
+            if (digitsOnly.length >= 4) {
+                last4Digits = digitsOnly.slice(-4);
+            }
+        }
+
+        // Prepare custom fields
+        const customFields = {};
+        if (last4Digits) {
+            customFields['LAST4DIGITS'] = last4Digits;
+        }
+
+        // 1. Create/update contact with custom fields
+        const contactId = await syncContact(email, name, phone || whatsapp, customFields);
         if (!contactId) {
             return { success: false, reason: 'Failed to sync contact' };
         }
@@ -409,8 +482,8 @@ async function processEvent(eventType, language, contactInfo) {
             console.log(`📧 AC: Removed recovery tags + unsubscribed from recovery lists for buyer ${email}`);
         }
 
-        console.log(`✅ AC Event processed: ${eventType} [${lang.toUpperCase()}] → tag "${tagName}" added to ${email}`);
-        return { success: true, contactId, tagName };
+        console.log(`✅ AC Event processed: ${eventType} [${lang.toUpperCase()}] → tag "${tagName}" added to ${email}${last4Digits ? ` (LAST4DIGITS: ${last4Digits})` : ''}`);
+        return { success: true, contactId, tagName, last4Digits };
 
     } catch (error) {
         console.error(`❌ AC processEvent error:`, error.message);
@@ -428,6 +501,7 @@ module.exports = {
     deleteContact,
     getOrCreateTag,
     getOrCreateList,
+    getOrCreateField,
     loadCache,
     apiRequest,
     apiV1Request,
