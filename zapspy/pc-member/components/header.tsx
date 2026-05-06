@@ -3,9 +3,6 @@
 import { Menu } from "lucide-react"
 
 export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
-  // Usuário guest - não precisa de autenticação
-  const userName = "Guest"
-
   return (
     <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-20">
       <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
@@ -23,10 +20,9 @@ export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
         {/* For desktop, we don't need a left element since it's clean, but we could put breadcrumbs later */}
         <div className="hidden md:block"></div>
 
-        {/* Right side - Welcome text */}
-        <div className="flex flex-col text-right">
-          <span className="text-xs text-zinc-400">Welcome</span>
-          <span className="text-sm font-bold text-white">{userName}</span>
+        {/* Right side - Empty (keep clean, no user info) */}
+        <div className="hidden md:flex">
+          {/* Optional: Add logo or brand here */}
         </div>
       </div>
     </header>
