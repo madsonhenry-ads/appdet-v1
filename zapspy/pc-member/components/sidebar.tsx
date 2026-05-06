@@ -64,20 +64,6 @@ export default function CoursesContent() {
     }))
   }
 
-  const handleSelectCourse = async (course: Course) => {
-    setSelectedCourse(course)
-    const lessonsData = await getLessonsByCourse(course.id)
-    setLessons(lessonsData)
-
-    if (user?.id) {
-      const progressData = await getCourseProgress(user.id, course.id)
-      setProgress((prev) => ({
-        ...prev,
-        [course.id]: progressData.percentage,
-      }))
-    }
-  }
-
   const getCategoryTitle = () => {
     switch (category) {
       case "introduction":
