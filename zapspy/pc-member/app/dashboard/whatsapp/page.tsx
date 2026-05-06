@@ -310,8 +310,8 @@ const ChatPopup = ({ onClose, profilePhoto, conversationData, conversationName }
 }
 
 export default function WhatsAppScannerPage() {
-    const { language } = useAuth()
-    const t = translations[language || "en"]
+    const language = "en" // Forçar inglês - sem autenticação
+    const t = translations["en"]
 
     // --- ESTADOS ---
     const [step, setStep] = useState(1) // 1: Input, 2: Loading, 3: Results

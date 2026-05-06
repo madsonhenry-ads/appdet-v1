@@ -257,8 +257,8 @@ const maleMatchesData: Omit<Match, "location">[] = [
 // =======================================================
 
 function DatingAppScannerContent() {
-  const { language } = useAuth()
-  const t = translations[language || "en"]
+  const language = "en" // Forçar inglês - sem autenticação
+  const t = translations["en"]
 
   // --- ESTADOS ---
   const [step, setStep] = useState(1) // 1: Input, 2: Scanning, 3: Results

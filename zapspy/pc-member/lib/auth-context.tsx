@@ -21,36 +21,25 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Inicializamos com valores seguros para não quebrar a página enquanto carrega o localStorage
-  const [user, setUser] = useState<User | null>(null)
+  // Usuário fake/invitado para não mostrar erro de login
+  const [user, setUser] = useState<User | null>({
+    id: "guest",
+    username: "Guest",
+    email: "guest@appdetect.com",
+    photo: "/diverse-user-avatars.png",
+  })
   const [language, setLanguageState] = useState<"en" | "es">("en")
-  
-  // O estado isLoaded ainda é útil, mas não vamos impedir o Provider de renderizar
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(true)
 
+  // Carregar preferências de idioma do localStorage se existirem
   useEffect(() => {
     try {
-      const storedUser = localStorage.getItem("dashboardUser")
-      const storedLanguage = "en"
-
-      if (storedUser) {
-        setUser(JSON.parse(storedUser))
-      } else {
-        // Usuário Mock Padrão
-        const mockUser: User = {
-          id: "1",
-          username: "John Doe",
-          email: "john@example.com",
-          photo: "/diverse-user-avatars.png",
-        }
-        setUser(mockUser)
-        // Opcional: Salvar o mock no storage na primeira vez
-        localStorage.setItem("dashboardUser", JSON.stringify(mockUser))
+      const storedLanguage = localStorage.getItem("language")
+      if (storedLanguage && (storedLanguage === "en" || storedLanguage === "es")) {
+        setLanguageState(storedLanguage)
       }
-
-      setLanguageState(storedLanguage)
     } catch (error) {
-      console.error("Erro ao carregar do localStorage", error)
+      console.error("Erro ao carregar idioma", error)
     } finally {
       setIsLoaded(true)
     }
@@ -62,20 +51,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const logout = () => {
-    localStorage.removeItem("dashboardUser")
-    setUser(null)
+    // Não faz nada - area aberta
+    console.log("Usuário saiu (sem necessidade de logout)")
   }
 
-  // ✅ CORREÇÃO: Removemos o "if (!isLoaded) return children".
-  // Agora o Provider SEMPRE envolve os filhos, impedindo o erro "useAuth must be used within AuthProvider".
-  
   return (
     <AuthContext.Provider value={{ user, language, setLanguage, logout }}>
-      {/* 
-         Opcional: Se quiser que a tela fique branca até carregar o usuário, 
-         use: {!isLoaded ? null : children} 
-         Mas nunca retorne 'children' sozinho sem o Provider.
-      */}
       {children}
     </AuthContext.Provider>
   )

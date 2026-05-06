@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useAuth } from "@/lib/auth-context"
 import { translations } from "@/lib/translations"
 import Header from "./header"
 import Sidebar from "./sidebar"
@@ -15,7 +14,7 @@ export default function DashboardLayout({
   activeTab: string
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { language } = useAuth()
+  const language = "en" // Padrão em inglês, sem autenticação
   const t = translations[language]
 
   return (
