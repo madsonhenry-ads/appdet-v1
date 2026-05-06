@@ -2,6 +2,9 @@
 
 import { Menu } from "lucide-react"
 
+// ✅ UPDATED: Remove all user info to show clean interface for open access
+// Last updated: 2026-05-06 - removing user name/email from header
+
 export default function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
   return (
     <header className="bg-background/80 backdrop-blur-md border-b border-border sticky top-0 z-20">
