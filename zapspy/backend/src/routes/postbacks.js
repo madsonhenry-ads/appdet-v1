@@ -1345,11 +1345,13 @@ router.all('/api/postback/perfectpay', async (req, res) => {
         
         // ==================== PARSE DATES ====================
         // PerfectPay date format: "2019-04-10 18:50:56" in BRT (America/Sao_Paulo, UTC-3)
+        // PerfectPay always sends dates in Brazilian timezone, regardless of app config
         let saleDate = null;
         try {
             if (dateCreated) {
-                const tz = await getTimezone();
-                saleDate = new Date(dateCreated.replace(' ', 'T') + getUTCOffset(tz));
+                // Always parse PerfectPay dates as Brazilian time (BRT = UTC-3)
+                // This is the timezone PerfectPay uses, not the app's configured timezone
+                saleDate = new Date(dateCreated.replace(' ', 'T') + '-03:00');
                 if (isNaN(saleDate.getTime())) saleDate = null;
             }
         } catch (e) { saleDate = null; }
