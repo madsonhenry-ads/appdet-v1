@@ -176,11 +176,12 @@ router.get('/api/admin/clients', authenticateToken, async (req, res) => {
         
         const countQuery = `SELECT COUNT(*) FROM leads l ${whereClause}`;
         
-        // Stats query
+        // Stats query (using configured timezone)
+        const statsToday = `(NOW() AT TIME ZONE '${tz}')::date`;
         const statsQuery = `
-            SELECT 
+            SELECT
                 COUNT(*) as total,
-                COUNT(*) FILTER (WHERE (l.first_purchase_at AT TIME ZONE '${tz}')::date = CURRENT_DATE) as today,
+                COUNT(*) FILTER (WHERE (l.first_purchase_at AT TIME ZONE '${tz}')::date = ${statsToday}) as today,
                 COALESCE(SUM(l.total_spent), 0) as total_revenue,
                 CASE WHEN COUNT(*) > 0 THEN COALESCE(SUM(l.total_spent), 0) / COUNT(*) ELSE 0 END as avg_ticket
             FROM leads l
