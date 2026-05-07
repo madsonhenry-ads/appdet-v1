@@ -559,111 +559,114 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             END
         `;
         
-        // Today's approved revenue + sales
+        // Today's approved revenue + sales (using configured timezone)
+        const todayDate = `(NOW() AT TIME ZONE '${tz}')::date`;
         const todayRevenueQuery = `
             SELECT COALESCE(SUM(${revenueBRL}), 0) as revenue, COUNT(*) as sales
             FROM transactions t
             WHERE t.status = 'approved'
-            AND (t.created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE
+            AND (t.created_at AT TIME ZONE '${tz}')::date = ${todayDate}
             ${langSourceFilter}
         `;
-        
+
         // Today's refunds
         const todayRefundsQuery = `
             SELECT COALESCE(SUM(${revenueBRL}), 0) as refunds, COUNT(*) as refund_count
             FROM transactions t
             WHERE t.status IN ('refunded', 'chargeback')
-            AND (t.created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE
+            AND (t.created_at AT TIME ZONE '${tz}')::date = ${todayDate}
             ${langSourceFilter}
         `;
-        
+
         // Today's costs (BRL)
         const todayCostsQuery = `
-            SELECT COALESCE(SUM(amount), 0) as total FROM financial_costs WHERE cost_date = CURRENT_DATE
+            SELECT COALESCE(SUM(amount), 0) as total FROM financial_costs WHERE cost_date = ${todayDate}
         `;
         
-        // Month's approved revenue + sales
+        // Month's approved revenue + sales (using configured timezone)
+        const monthStart = `date_trunc('month', ${todayDate})`;
         const monthRevenueQuery = `
             SELECT COALESCE(SUM(${revenueBRL}), 0) as revenue, COUNT(*) as sales
             FROM transactions t
             WHERE t.status = 'approved'
-            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('month', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= ${monthStart}
             ${langSourceFilter}
         `;
-        
+
         // Month's refunds
         const monthRefundsQuery = `
             SELECT COALESCE(SUM(${revenueBRL}), 0) as refunds, COUNT(*) as refund_count
             FROM transactions t
             WHERE t.status IN ('refunded', 'chargeback')
-            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('month', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= ${monthStart}
             ${langSourceFilter}
         `;
-        
+
         // Month's costs (BRL)
         const monthCostsQuery = `
-            SELECT COALESCE(SUM(amount), 0) as total FROM financial_costs WHERE cost_date >= date_trunc('month', CURRENT_DATE)::date
+            SELECT COALESCE(SUM(amount), 0) as total FROM financial_costs WHERE cost_date >= ${monthStart}::date
         `;
         
-        // Year's approved revenue + sales
+        // Year's approved revenue + sales (using configured timezone)
+        const yearStart = `date_trunc('year', ${todayDate})`;
         const yearRevenueQuery = `
             SELECT COALESCE(SUM(${revenueBRL}), 0) as revenue, COUNT(*) as sales
             FROM transactions t
             WHERE t.status = 'approved'
-            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('year', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= ${yearStart}
             ${langSourceFilter}
         `;
-        
+
         // Year's refunds
         const yearRefundsQuery = `
             SELECT COALESCE(SUM(${revenueBRL}), 0) as refunds, COUNT(*) as refund_count
             FROM transactions t
             WHERE t.status IN ('refunded', 'chargeback')
-            AND (t.created_at AT TIME ZONE '${tz}')::date >= date_trunc('year', CURRENT_DATE)
+            AND (t.created_at AT TIME ZONE '${tz}')::date >= ${yearStart}
             ${langSourceFilter}
         `;
-        
+
         // Year's costs (BRL)
         const yearCostsQuery = `
-            SELECT COALESCE(SUM(amount), 0) as total FROM financial_costs WHERE cost_date >= date_trunc('year', CURRENT_DATE)::date
+            SELECT COALESCE(SUM(amount), 0) as total FROM financial_costs WHERE cost_date >= ${yearStart}::date
         `;
-        
-        // Daily breakdown
+
+        // Daily breakdown (using configured timezone)
         const safeDays = Math.min(Math.max(parseInt(days) || 30, 1), 365);
-        
+
         const dailyQuery = `
             WITH daily_revenue AS (
-                SELECT 
+                SELECT
                     (t.created_at AT TIME ZONE '${tz}')::date as day,
                     COALESCE(SUM(${revenueBRL}), 0) as revenue,
                     COUNT(*) as sales
                 FROM transactions t
                 WHERE t.status = 'approved'
-                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '${safeDays} days'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= ${todayDate} - INTERVAL '${safeDays} days'
                 ${langSourceFilter}
                 GROUP BY (t.created_at AT TIME ZONE '${tz}')::date
             ),
             daily_refunds AS (
-                SELECT 
+                SELECT
                     (t.created_at AT TIME ZONE '${tz}')::date as day,
                     COALESCE(SUM(${revenueBRL}), 0) as refunds,
                     COUNT(*) as refund_count
                 FROM transactions t
                 WHERE t.status IN ('refunded', 'chargeback')
-                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '${safeDays} days'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= ${todayDate} - INTERVAL '${safeDays} days'
                 ${langSourceFilter}
                 GROUP BY (t.created_at AT TIME ZONE '${tz}')::date
             ),
             daily_costs AS (
                 SELECT cost_date as day, COALESCE(SUM(amount), 0) as costs
                 FROM financial_costs
-                WHERE cost_date >= CURRENT_DATE - INTERVAL '${safeDays} days'
+                WHERE cost_date >= ${todayDate}::date - INTERVAL '${safeDays} days'
                 GROUP BY cost_date
             ),
             date_series AS (
                 SELECT generate_series(
-                    (CURRENT_DATE - INTERVAL '${safeDays} days')::date,
-                    CURRENT_DATE, '1 day'::interval
+                    (${todayDate}::date - INTERVAL '${safeDays} days')::date,
+                    ${todayDate}::date, '1 day'::interval
                 )::date as day
             )
             SELECT 
@@ -681,36 +684,36 @@ router.get('/api/admin/financial/summary', authenticateToken, async (req, res) =
             ORDER BY ds.day DESC
         `;
         
-        // Monthly breakdown (last 12 months)
+        // Monthly breakdown (last 12 months, using configured timezone)
         const monthlyQuery = `
             WITH monthly_revenue AS (
-                SELECT 
+                SELECT
                     date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date as month,
                     COALESCE(SUM(${revenueBRL}), 0) as revenue,
                     COUNT(*) as sales
                 FROM transactions t
                 WHERE t.status = 'approved'
-                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '12 months'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= ${todayDate}::date - INTERVAL '12 months'
                 ${langSourceFilter}
                 GROUP BY date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date
             ),
             monthly_refunds AS (
-                SELECT 
+                SELECT
                     date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date as month,
                     COALESCE(SUM(${revenueBRL}), 0) as refunds,
                     COUNT(*) as refund_count
                 FROM transactions t
                 WHERE t.status IN ('refunded', 'chargeback')
-                AND (t.created_at AT TIME ZONE '${tz}')::date >= CURRENT_DATE - INTERVAL '12 months'
+                AND (t.created_at AT TIME ZONE '${tz}')::date >= ${todayDate}::date - INTERVAL '12 months'
                 ${langSourceFilter}
                 GROUP BY date_trunc('month', (t.created_at AT TIME ZONE '${tz}')::date)::date
             ),
             monthly_costs AS (
-                SELECT 
+                SELECT
                     date_trunc('month', cost_date)::date as month,
                     COALESCE(SUM(amount), 0) as costs
                 FROM financial_costs
-                WHERE cost_date >= CURRENT_DATE - INTERVAL '12 months'
+                WHERE cost_date >= ${todayDate}::date - INTERVAL '12 months'
                 GROUP BY date_trunc('month', cost_date)::date
             ),
             all_months AS (
@@ -1534,12 +1537,13 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
         }
         
         let dateCondition = '';
+        const tzTodayDate = `(NOW() AT TIME ZONE '${tz}')::date`;
         if (startDate && endDate) {
             dateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
         } else if (startDate) {
             dateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date`;
         } else {
-            dateCondition = `AND created_at >= CURRENT_DATE - INTERVAL '30 days'`;
+            dateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= ${tzTodayDate} - INTERVAL '30 days'`;
         }
         
         // Get funnel stats by step
@@ -1594,7 +1598,7 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
         if (startDate && endDate) {
             dailyDateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
         } else {
-            dailyDateCondition = `AND created_at >= CURRENT_DATE - INTERVAL '7 days'`;
+            dailyDateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= ${tzTodayDate} - INTERVAL '7 days'`;
         }
         
         const dailyStats = await pool.query(`
@@ -1637,12 +1641,12 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
         // Get transaction stats (approved/rejected) for the funnel visualization
         let transactionStats = { approved: 0, rejected: 0, pending: 0 };
         try {
-            // Build date filter for transactions (using Brazil timezone)
+            // Build date filter for transactions (using configured timezone)
             let txDateCondition = '';
             if (startDate && endDate) {
                 txDateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= '${startDate}'::date AND (created_at AT TIME ZONE '${tz}')::date <= '${endDate}'::date`;
             } else {
-                txDateCondition = `AND created_at >= CURRENT_DATE - INTERVAL '30 days'`;
+                txDateCondition = `AND (created_at AT TIME ZONE '${tz}')::date >= ${tzTodayDate} - INTERVAL '30 days'`;
             }
             
             // Build language filter for transactions (based on funnel_language column)
@@ -2381,14 +2385,15 @@ router.get('/api/admin/revenue-by-day', authenticateToken, async (req, res) => {
         const cached = getCached(cacheKey, 2 * 60 * 1000);
         if (cached) return res.json(cached);
         
-        // Build date condition - default to last 30 days
+        // Build date condition - default to last 30 days (using configured timezone)
+        const overviewToday = `(NOW() AT TIME ZONE '${tz}')::date`;
         let dateCondition = '';
         let dateParams = [];
         if (startDate && endDate) {
             dateCondition = ` AND (created_at AT TIME ZONE '${tz}')::date >= $1::date AND (created_at AT TIME ZONE '${tz}')::date <= $2::date`;
             dateParams = [startDate, endDate];
         } else {
-            dateCondition = ` AND created_at >= CURRENT_DATE - INTERVAL '30 days'`;
+            dateCondition = ` AND (created_at AT TIME ZONE '${tz}')::date >= ${overviewToday} - INTERVAL '30 days'`;
         }
         
         // Build language condition
@@ -2463,33 +2468,36 @@ router.get('/api/admin/alerts', authenticateToken, async (req, res) => {
         
         const usdToBrl = 1 / parseFloat(process.env.CONVERSION_BRL_TO_USD || '0.18');
         const valueBRL = `CASE WHEN funnel_source = 'perfectpay' THEN CAST(value AS DECIMAL) * ${usdToBrl.toFixed(2)} ELSE CAST(value AS DECIMAL) END`;
-        
+
+        // Use configured timezone for date comparisons
+        const alertsToday = `(NOW() AT TIME ZONE '${tz}')::date`;
+
         // Compare last 7 days vs previous 7 days
         const [currentLeads, prevLeads, currentSales, prevSales, currentRefunds, prevRefunds, currentRevenue, prevRevenue, todayLeads, yesterdayLeads, todaySales, yesterdaySales] = await Promise.all([
             // Leads: current 7 days
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '7 days')::date`),
             // Leads: previous 7 days
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (${alertsToday} - INTERVAL '7 days')::date`),
             // Sales: current 7 days
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '7 days')::date`),
             // Sales: previous 7 days
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (${alertsToday} - INTERVAL '7 days')::date`),
             // Refunds: current 7 days
-            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '7 days')::date`),
             // Refunds: previous 7 days
-            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COUNT(*) as count FROM transactions WHERE status = 'refunded' AND (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (${alertsToday} - INTERVAL '7 days')::date`),
             // Revenue: current 7 days
-            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '7 days')::date`),
             // Revenue: previous 7 days
-            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (CURRENT_DATE - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (CURRENT_DATE - INTERVAL '7 days')::date`),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as revenue FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date >= (${alertsToday} - INTERVAL '14 days')::date AND (created_at AT TIME ZONE '${tz}')::date < (${alertsToday} - INTERVAL '7 days')::date`),
             // Today leads
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date = ${alertsToday}`),
             // Yesterday leads
-            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE - 1`),
+            pool.query(`SELECT COUNT(*) as count FROM leads WHERE (created_at AT TIME ZONE '${tz}')::date = ${alertsToday} - 1`),
             // Today sales
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE`),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = ${alertsToday}`),
             // Yesterday sales
-            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = CURRENT_DATE - 1`)
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (created_at AT TIME ZONE '${tz}')::date = ${alertsToday} - 1`)
         ]);
         
         // Calculate conversion rates
