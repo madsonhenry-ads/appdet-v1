@@ -8,7 +8,7 @@ async function apiRequest(url, token) {
 async function main() {
   try {
     const url = 'https://draculatemer11258320.api-us1.com/api/3/fields?limit=100';
-    const token = '371d6888c7c7926156a602ad9e2ff127799be33b081ae80845b599188975b7902a11591a';
+    const token = '9437b06992638da05d3f1003f974a936eeddb5fdea800ad335ea1ce9bddff34b3f90d402';
 
     console.log('🔍 Checking for Magic Link field...\n');
 
