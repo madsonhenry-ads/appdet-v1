@@ -96,7 +96,7 @@ const ZAPI_BASE_URL = `https://api.z-api.io/instances/${ZAPI_INSTANCE}/token/${Z
 
 // ActiveCampaign Configuration
 const AC_API_URL = process.env.AC_API_URL || 'https://draculatemer11258320.api-us1.com';
-const AC_API_KEY = process.env.AC_API_KEY || '371d6888c7c7926156a602ad9e2ff127799be33b081ae80845b599188975b7902a11591a';
+const AC_API_KEY = process.env.AC_API_KEY || '9437b06992638da05d3f1003f974a936eeddb5fdea800ad335ea1ce9bddff34b3f90d402';
 
 // Supabase Auth (for auto-provisioning member area users on purchase)
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
