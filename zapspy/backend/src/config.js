@@ -8,11 +8,6 @@ const FB_PIXELS_BY_LANGUAGE = {
             id: '1540588824369569',
             token: process.env.FB_PIXEL_TOKEN_EN || 'EAANhtUqMKEMBRV4ujp6RZBFkErbDNQuqVBRZCsEtUJdsvYyzcvraZBEUmTNL8CwRKqeljHc5rdSGvqjTmydIlsqrfL2gv8NSNqNBPGPlHO3HgpFjjLRsN95pf3QT5bHn10kRUVA5dA4UhQfJtEpjVdHm8Dt6llDLw9D4Bb5X2DqxwoBIBxoBsxiZArmJZAv3FbwZDZD',
             name: 'ZAPSPY EN - Pixel 1'
-        },
-        {
-            id: '1533299911750042',
-            token: process.env.FB_PIXEL_TOKEN_EN_2 || 'EAAtKah1ZCsC4BRZA1AH5AZCKgf0tJFf6IZB2JnyOHZB1ZBLdfbyXnZBxTh7jsT6bREdXuZCCSEIWewigViQZBZAnyKvIMI9f4BZAQNbkyBmVkuoJPe8ts741TxoezHuYBqxg985ZAxgeYiS7Ssd28jOlFmpBXxR3WKK8m2qIaZCF2Va1Ikqk8a4ZC5J4xh3jtPBU5klrWcuwZDZD',
-            name: 'ZAPSPY EN - Pixel 2'
         }
     ],
     es: [
