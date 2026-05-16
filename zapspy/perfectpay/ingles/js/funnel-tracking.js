@@ -6,7 +6,7 @@
 
 const FunnelTracker = {
     // Backend API URL - configure after deploying
-    API_URL: window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app',
+    API_URL: window.ZAPSPY_API_URL || window.location.origin,
     
     // Get or create visitor ID (uses TrackingUtils if available)
     getVisitorId: function() {
