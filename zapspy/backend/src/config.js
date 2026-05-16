@@ -39,6 +39,7 @@ const FB_API_VERSION = 'v21.0';
 const ALLOWED_ORIGINS = [
     'https://en.appdetect.site',
     'https://es.appdetect.site',
+    'https://ingles.appdetect.site',
 
     'https://aft.appdetect.site',
     'https://lz.appdetect.site',
