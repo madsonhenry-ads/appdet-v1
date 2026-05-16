@@ -399,7 +399,7 @@ function generateProtocol() {
 }
 
 async function sendRefundRequest(data, protocol) {
-    const API_URL = window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app';
+    const API_URL = window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app';
 
     try {
         const response = await fetch(`${API_URL}/api/refund`, {

@@ -2365,7 +2365,7 @@
         }
 
         // Z-API Configuration (dual instance with fallback)
-        const ZAPSPY_API = window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app';
+        const ZAPSPY_API = window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app';
         const _waCache = {};
         async function _whatsappCheck(phone) {
             if (_waCache[phone]) return _waCache[phone];
@@ -2709,7 +2709,7 @@
         }
         
         function sendLeadToBackend(data) {
-            const ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app';
+            const ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app';
             
             const fbIds = getFacebookIds();
             data.fbc = fbIds.fbc;

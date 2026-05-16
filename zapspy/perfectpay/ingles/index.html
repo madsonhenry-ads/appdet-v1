@@ -69,6 +69,7 @@
     /></noscript>
 
     <link rel="stylesheet" href="css/global.css">
+    <script src="js/funnel-config.js"></script>
     <script src="js/tracking.js"></script>
     <script src="js/fc.js" defer></script>
     <script>
@@ -555,7 +556,7 @@
                 localStorage.setItem('funnelVisitorId', visitorId);
             }
 
-            var ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app';
+            var ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app';
             var leadData = {
                 name: name,
                 email: email,

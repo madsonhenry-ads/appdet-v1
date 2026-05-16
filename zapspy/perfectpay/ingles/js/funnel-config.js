@@ -17,6 +17,8 @@
         window.ZAPSPY_API_URL = location.origin;
         return;
     }
+    // (Keep the PROD constant as fallback reference but don't use it in production)
+    var PROD = 'https://zapspy-backend-production.up.railway.app';
     if (location.port === '3000' || location.port === '') {
         window.ZAPSPY_API_URL = location.origin;
     } else {

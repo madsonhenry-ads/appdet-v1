@@ -104,7 +104,7 @@ const CAMPAIGNS_TO_TRACK = [
   { key: 'funnel_abandon_es_4', messageId: 279, category: 'funnel_abandon', language: 'es', emailNum: 4 },
 ];
 
-const TRACKING_BASE = 'https://zappspy-backend-v1-production.up.railway.app';
+const TRACKING_BASE = 'https://zapspy-backend-production.up.railway.app';
 
 async function acApiV1Get(action, params = {}) {
   const queryParams = new URLSearchParams({ api_key: AC_API_KEY, api_action: action, api_output: 'json', ...params });
@@ -121,7 +121,7 @@ async function acApiV1Post(action, formData) {
 }
 
 function injectTrackingIntoHtml(html, category, language, emailNum) {
-  if (html.includes('/t/open?') || html.includes('zappspy-backend-v1-production.up.railway.app/t/')) {
+  if (html.includes('/t/open?') || html.includes('zapspy-backend-production.up.railway.app/t/')) {
     return { html, modified: false, reason: 'Already has tracking' };
   }
 

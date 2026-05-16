@@ -1802,7 +1802,7 @@ router.get('/api/admin/debug/perfectpay-webhooks', authenticateToken, requireAdm
             memoryCount: recentPerfectPayWebhooks.length,
             dbLogCount: dbLogs.rows.length,
             info: 'PerfectPay webhook debug. Configure webhook URL in PerfectPay dashboard.',
-            webhookUrl: 'https://zappspy-backend-v1-production.up.railway.app/api/postback/perfectpay',
+            webhookUrl: 'https://zapspy-backend-production.up.railway.app/api/postback/perfectpay',
             alternateUrl: 'https://painel.xaimonitor.com/api/postback/perfectpay',
             recentWebhooks: recentPerfectPayWebhooks,
             dbLogs: dbLogs.rows

@@ -3,7 +3,7 @@
  * Captura contacto del usuario antes de redirigir al checkout
  */
 
-const ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app';
+const ZAPSPY_API_URL = window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app';
 
 const EmailCapture = {
     modalShown: false,

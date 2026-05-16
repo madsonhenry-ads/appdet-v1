@@ -12,7 +12,7 @@
 
 const FacebookCAPI = {
     // Sempre usar o backend Railway para CAPI (os funis podem estar em zappdetect.com, afiliado.whatstalker.com, etc.)
-    API_URL: window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app',
+    API_URL: window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app',
 
     // Generate unique event ID for deduplication
     generateEventId: function(eventName) {
