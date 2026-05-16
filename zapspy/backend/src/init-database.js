@@ -649,6 +649,18 @@ async function _initDatabaseCore() {
             console.error('⚠️ Refund cleanup error (non-blocking):', cleanupError.message);
         }
         
+        // ==================== FIX: Normalize leads with funnel_source='login' to 'main' ====================
+        try {
+            const loginFixResult = await pool.query(`
+                UPDATE leads SET funnel_source = 'main' WHERE funnel_source = 'login'
+            `);
+            if (loginFixResult.rowCount > 0) {
+                console.log(`🔧 Fixed ${loginFixResult.rowCount} leads with funnel_source='login' → 'main'`);
+            }
+        } catch (loginFixError) {
+            console.error('⚠️ Lead source fix error (non-blocking):', loginFixError.message);
+        }
+
         // ==================== BACKFILL: Cross-reference refunds with leads/transactions ====================
         try {
             // Find refunds without funnel_language and try to fill from transactions
