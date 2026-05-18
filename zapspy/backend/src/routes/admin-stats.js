@@ -1694,14 +1694,14 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
             };
             
             // Get upsell stats for funnel visualization
-            const enFrontKeywords = "product ILIKE '%Monitor%' OR product ILIKE '%ZappDetect%' OR product ILIKE '%341972%' OR product ILIKE '%330254%'";
-            const enUp1Keywords = "product ILIKE '%Message Vault%' OR product ILIKE '%349241%' OR product ILIKE '%341443%'";
-            const enUp2Keywords = "product ILIKE '%360%' OR product ILIKE '%Tracker%' OR product ILIKE '%349242%' OR product ILIKE '%341444%'";
-            const enUp3Keywords = "product ILIKE '%Instant Access%' OR product ILIKE '%349243%' OR product ILIKE '%341448%'";
-            const enUp4Keywords = "product ILIKE '%X AI - 4%' OR product ILIKE '%PPA253N5%' OR product ILIKE '%PPPBEIE3%'";
-            const enUp5Keywords = "product ILIKE '%X AI - 5%' OR product ILIKE '%PPA253N6%' OR product ILIKE '%PPPBEIE4%'";
-            const enUp6Keywords = "product ILIKE '%X AI - 6%' OR product ILIKE '%PPA253N7%' OR product ILIKE '%PPPBEIE8%'";
-            const enUp7Keywords = "product ILIKE '%X AI - 7%' OR product ILIKE '%PPA253N8%' OR product ILIKE '%PPPBEIE9%'";
+            const enFrontKeywords = "product ILIKE '%Monitor%' OR product ILIKE '%ZappDetect%' OR product ILIKE '%341972%' OR product ILIKE '%330254%' OR product ILIKE '%INF%' OR product ILIKE '%PPPBEGBG%' OR product ILIKE '%PPA253N1%'";
+            const enUp1Keywords = "product ILIKE '%Message Vault%' OR product ILIKE '%349241%' OR product ILIKE '%341443%' OR product ILIKE '%WT%' OR product ILIKE '%PPPBDG0I%' OR product ILIKE '%PPA253N2%'";
+            const enUp2Keywords = "product ILIKE '%360%' OR product ILIKE '%Tracker%' OR product ILIKE '%349242%' OR product ILIKE '%341444%' OR product ILIKE '%TND%' OR product ILIKE '%PPPBDG0J%' OR product ILIKE '%PPA253N3%'";
+            const enUp3Keywords = "product ILIKE '%Instant Access%' OR product ILIKE '%349243%' OR product ILIKE '%341448%' OR product ILIKE '%X AI - 3%' OR product ILIKE '%PPPBEIDH%' OR product ILIKE '%PPA253N4%'";
+            const enUp4Keywords = "product ILIKE '%X AI - 4%' OR product ILIKE '%PPPBEIDL%' OR product ILIKE '%PPA253N5%'";
+            const enUp5Keywords = "product ILIKE '%X AI - 5%' OR product ILIKE '%PPPBEIDM%' OR product ILIKE '%PPA253N6%'";
+            const enUp6Keywords = "product ILIKE '%X AI - 6%' OR product ILIKE '%PPPBEIDN%' OR product ILIKE '%PPA253N7%'";
+            const enUp7Keywords = "product ILIKE '%X AI - 7%' OR product ILIKE '%PPPBEIDP%' OR product ILIKE '%PPA253N8%'";
 
             const esFrontKeywords = "product ILIKE '%Infidelidad%' OR product ILIKE '%349260%' OR product ILIKE '%338375%'";
             const esUp1Keywords = "product ILIKE '%Recuperación%' OR product ILIKE '%349261%' OR product ILIKE '%341452%'";
