@@ -181,8 +181,7 @@ router.post('/api/admin/dispatch/purge-ac-limit', authenticateToken, async (req,
 
         const listNames = [
             ...Object.values(acService.LIST_MAP['checkout_abandoned'] || {}),
-            ...Object.values(acService.LIST_MAP['sale_cancelled'] || {}),
-            ...Object.values(acService.LIST_MAP['lead_captured'] || {})
+            ...Object.values(acService.LIST_MAP['sale_cancelled'] || {})
         ].filter(Boolean);
 
         let totalDeleted = 0;
@@ -250,8 +249,7 @@ router.post('/api/admin/dispatch/purge-ac', authenticateToken, async (req, res) 
 
         const listNames = [
             ...Object.values(acService.LIST_MAP['checkout_abandoned'] || {}),
-            ...Object.values(acService.LIST_MAP['sale_cancelled'] || {}),
-            ...Object.values(acService.LIST_MAP['lead_captured'] || {})
+            ...Object.values(acService.LIST_MAP['sale_cancelled'] || {})
         ].filter(Boolean);
 
         let totalDeleted = 0;
