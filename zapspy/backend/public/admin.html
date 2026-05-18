@@ -1601,13 +1601,23 @@
                                 <span style="font-size: 12px; color: var(--text-muted);">Recomendado: 500 (respeita limite de 5.000 contatos ativos)</span>
                             </div>
 
-                            <!-- Purge AC Contacts -->
+                            <!-- Purge AC Contacts - Limited -->
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px; background: rgba(59, 130, 246, 0.05); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                <div style="flex: 1;">
+                                    <div style="font-size: 13px; font-weight: 600; color: #3b82f6; margin-bottom: 4px;">🗑️ Deletar Contatos (Limitado)</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Deleta até X contatos do ActiveCampaign (padrão: 500). Mais seguro que a limpeza total.</div>
+                                </div>
+                                <input type="number" id="purgeLimit" value="500" min="1" max="2000" style="width: 80px; padding: 8px 12px; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px;">
+                                <button onclick="purgeACContactsLimited()" style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.1); color: #3b82f6; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap;">Deletar</button>
+                            </div>
+
+                            <!-- Purge AC Contacts - All -->
                             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px; background: rgba(239, 68, 68, 0.05); border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2);">
                                 <div style="flex: 1;">
-                                    <div style="font-size: 13px; font-weight: 600; color: #ef4444; margin-bottom: 4px;">🗑️ Limpar Contatos AC</div>
-                                    <div style="font-size: 11px; color: var(--text-muted);">Deleta contatos de recuperação do ActiveCampaign para liberar slots do plano. Contatos já receberam os emails e não precisam mais estar no AC.</div>
+                                    <div style="font-size: 13px; font-weight: 600; color: #ef4444; margin-bottom: 4px;">⚠️ Limpar TODOS Contatos AC</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Deleta TODOS contatos de recuperação do ActiveCampaign. Cuidado!</div>
                                 </div>
-                                <button onclick="purgeACContacts()" style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); color: #ef4444; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap;">Limpar Agora</button>
+                                <button onclick="purgeACContacts()" style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); color: #ef4444; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap;">Limpar Tudo</button>
                             </div>
 
                             <!-- Dispatch Progress -->
@@ -17926,6 +17936,35 @@ Posso ajudar em algo mais? 😊`
         document.getElementById('dispatchProcessed').textContent = status.processed;
         document.getElementById('dispatchSuccess').textContent = status.success;
         document.getElementById('dispatchFailed').textContent = status.failed;
+    }
+
+    async function purgeACContactsLimited() {
+        const limit = parseInt(document.getElementById('purgeLimit').value) || 500;
+        if (!confirm(`⚠️ Isso vai DELETAR até ${limit} contatos das listas de recuperação do ActiveCampaign.\n\nIsso libera slots do plano. Deseja continuar?`)) {
+            return;
+        }
+        try {
+            const token = _acGetToken();
+            _acShowToast('Limpando...', `Deletando até ${limit} contatos do ActiveCampaign...`, 'info');
+            const resp = await fetch(`${_acGetApiUrl()}/api/admin/dispatch/purge-ac-limit`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ confirm: 'PURGE_AC', limit: limit })
+            });
+            const data = await resp.json();
+            if (data.success) {
+                let details = `${data.message}\n\n`;
+                for (const [list, info] of Object.entries(data.lists || {})) {
+                    details += `${list}: ${info.deleted || 0}/${info.found || 0}\n`;
+                }
+                _acShowToast('Limpeza Concluída', `${data.totalDeleted} contatos removidos do AC!`, 'success');
+                alert(`Limpeza Concluída!\n\n${details}`);
+            } else {
+                _acShowToast('Erro', data.error || 'Erro na limpeza', 'error');
+            }
+        } catch (err) {
+            _acShowToast('Erro', err.message, 'error');
+        }
     }
 
     async function purgeACContacts() {

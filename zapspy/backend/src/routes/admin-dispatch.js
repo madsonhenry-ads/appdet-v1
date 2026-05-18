@@ -163,6 +163,75 @@ router.post('/api/admin/dispatch/cancel-funnel', authenticateToken, async (req, 
 
 // ==================== PURGE AC CONTACTS ====================
 
+// POST /api/admin/dispatch/purge-ac-limit - Delete a limited number of contacts from ActiveCampaign (default 500)
+router.post('/api/admin/dispatch/purge-ac-limit', authenticateToken, async (req, res) => {
+    try {
+        const { confirm, limit = 500 } = req.body;
+        if (confirm !== 'PURGE_AC') {
+            return res.json({
+                warning: 'This will DELETE contacts from ActiveCampaign that are in recovery lists.',
+                instruction: 'Send { "confirm": "PURGE_AC", "limit": 500 } to proceed'
+            });
+        }
+
+        const acService = require('../services/activecampaign');
+        if (!acService.isConfigured()) {
+            return res.status(400).json({ error: 'ActiveCampaign not configured' });
+        }
+
+        const listNames = [
+            ...Object.values(acService.LIST_MAP['checkout_abandoned'] || {}),
+            ...Object.values(acService.LIST_MAP['sale_cancelled'] || {}),
+            ...Object.values(acService.LIST_MAP['lead_captured'] || {})
+        ].filter(Boolean);
+
+        let totalDeleted = 0;
+        const listResults = {};
+        let remainingLimit = parseInt(limit);
+
+        for (const listName of listNames) {
+            if (remainingLimit <= 0) break;
+
+            try {
+                const listId = await acService.getOrCreateList(listName);
+                if (!listId) continue;
+
+                console.log(`📋 Processing list: ${listName} (ID: ${listId})`);
+
+                // Get all contacts in this list
+                const contactsInList = await acService.getContactsInList(listId);
+                console.log(`📊 Found ${contactsInList.length} contacts in ${listName}`);
+
+                let deleted = 0;
+                const toDelete = Math.min(contactsInList.length, remainingLimit);
+
+                for (let i = 0; i < toDelete; i++) {
+                    try {
+                        await acService.deleteContact(contactsInList[i].id);
+                        deleted++;
+                        remainingLimit--;
+                        await new Promise(r => setTimeout(r, 200));
+                    } catch (delErr) {
+                        console.error(`Error deleting contact ${contactsInList[i].id}:`, delErr.message);
+                    }
+                }
+
+                listResults[listName] = { found: contactsInList.length, deleted };
+                totalDeleted += deleted;
+            } catch (listErr) {
+                console.error(`Error processing list ${listName}:`, listErr.message);
+                listResults[listName] = { error: listErr.message };
+            }
+        }
+
+        console.log(`🗑️ AC Purge (limit): Deleted ${totalDeleted} contacts from recovery lists`);
+        res.json({ success: true, totalDeleted, lists: listResults, message: `Deleted ${totalDeleted} contacts (limit: ${limit})` });
+    } catch (error) {
+        console.error('Error purging AC contacts:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // POST /api/admin/dispatch/purge-ac - Delete all recovery contacts from ActiveCampaign to free plan slots
 router.post('/api/admin/dispatch/purge-ac', authenticateToken, async (req, res) => {
     try {
@@ -193,19 +262,11 @@ router.post('/api/admin/dispatch/purge-ac', authenticateToken, async (req, res) 
                 const listId = await acService.getOrCreateList(listName);
                 if (!listId) continue;
 
-                let contactsInList = [];
-                let offset = 0;
+                console.log(`📋 Processing list: ${listName} (ID: ${listId})`);
 
-                // Fetch all contacts in this list (paginated)
-                while (true) {
-                    const data = await acService.apiRequest('GET', 
-                        `contacts?listid=${listId}&limit=100&offset=${offset}&status=any`
-                    );
-                    if (!data || !data.contacts || data.contacts.length === 0) break;
-                    contactsInList.push(...data.contacts);
-                    offset += 100;
-                    if (data.contacts.length < 100) break;
-                }
+                // Get all contacts in this list using the proper API endpoint
+                const contactsInList = await acService.getContactsInList(listId);
+                console.log(`📊 Found ${contactsInList.length} contacts in ${listName}`);
 
                 let deleted = 0;
                 for (const contact of contactsInList) {
@@ -214,13 +275,14 @@ router.post('/api/admin/dispatch/purge-ac', authenticateToken, async (req, res) 
                         deleted++;
                         await new Promise(r => setTimeout(r, 200));
                     } catch (delErr) {
-                        console.error(`Error deleting contact ${contact.email}:`, delErr.message);
+                        console.error(`Error deleting contact ${contact.id}:`, delErr.message);
                     }
                 }
 
                 listResults[listName] = { found: contactsInList.length, deleted };
                 totalDeleted += deleted;
             } catch (listErr) {
+                console.error(`Error processing list ${listName}:`, listErr.message);
                 listResults[listName] = { error: listErr.message };
             }
         }

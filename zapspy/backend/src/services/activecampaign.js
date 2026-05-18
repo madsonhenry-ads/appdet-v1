@@ -362,6 +362,34 @@ async function deleteContact(contactId) {
 }
 
 /**
+ * Get all contact-list relationships for a specific list
+ * This is the proper way to find contacts in a list in AC API v3
+ */
+async function getContactsInList(listId) {
+    const contacts = [];
+    let offset = 0;
+
+    while (true) {
+        const data = await apiRequest('GET', `contactLists?listid=${listId}&limit=100&offset=${offset}`);
+        if (!data || !data.contactLists || data.contactLists.length === 0) break;
+
+        for (const cl of data.contactLists) {
+            if (cl.contact) {
+                contacts.push({
+                    id: cl.contact,
+                    listRelationId: cl.id
+                });
+            }
+        }
+
+        if (data.contactLists.length < 100) break;
+        offset += 100;
+    }
+
+    return contacts;
+}
+
+/**
  * Subscribe a contact to a list
  */
 async function subscribeToList(contactId, listId) {
@@ -499,6 +527,7 @@ module.exports = {
     removeTagFromContact,
     subscribeToList,
     deleteContact,
+    getContactsInList,
     getOrCreateTag,
     getOrCreateList,
     getOrCreateField,
