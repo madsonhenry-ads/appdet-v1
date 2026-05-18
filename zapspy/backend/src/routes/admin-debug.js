@@ -1006,7 +1006,7 @@ router.post('/api/admin/test-postback', authenticateToken, requireAdmin, async (
             num_items: 1,
             customer_segmentation: 'new_customer_to_business'
         };
-        const eventSourceUrl = funnelLanguage === 'es' ? 'https://espanhol.zappdetect.com/' : 'https://ingles.zappdetect.com/';
+        const eventSourceUrl = funnelLanguage === 'es' ? 'https://espanhol.appdetect.site/' : 'https://ingles.appdetect.site/';
         const eventId = `test_${chave_unica}`;
         const testCode = funnelLanguage === 'es' ? (process.env.FB_TEST_CODE_ES || 'TEST96875') : (process.env.FB_TEST_CODE_EN || 'TEST23104');
         const capiOptions = { language: funnelLanguage, testEventCode: testCode };
@@ -1635,7 +1635,7 @@ router.get('/api/admin/analytics/monthly-breakdown', authenticateToken, async (r
                 COALESCE(funnel_source, 'main') as funnel_source,
                 status,
                 COUNT(*) as total,
-                COALESCE(SUM(CAST(value AS NUMERIC)), 0) as total_value
+                                COALESCE(SUM(CAST(REGEXP_REPLACE(COALESCE(value,'0'), '[^0-9.]', '', 'g') AS NUMERIC)), 0) as total_value
             FROM transactions
             GROUP BY month, funnel_source, status
             ORDER BY month, funnel_source, status

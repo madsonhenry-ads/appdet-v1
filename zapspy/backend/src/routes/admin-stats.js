@@ -236,7 +236,8 @@ router.get('/api/admin/capi-purchase-logs', authenticateToken, async (req, res) 
             const periodMap = {
                 '30min': '30 minutes', '1h': '1 hour', '2h': '2 hours', '6h': '6 hours',
                 '12h': '12 hours', '24h': '24 hours', '48h': '48 hours', '7d': '7 days',
-                '14d': '14 days', '30d': '30 days'
+                '14d': '14 days', '30d': '30 days',
+                '7days': '7 days', 'today': '24 hours', '30days': '30 days'
             };
             const interval = periodMap[period];
             if (interval) {
@@ -334,7 +335,7 @@ router.get('/api/admin/capi-token-check', authenticateToken, async (req, res) =>
                                 event_time: Math.floor(Date.now() / 1000),
                                 event_id: `token_test_${Date.now()}`,
                                 action_source: 'website',
-                                event_source_url: 'https://perfect.zappdetect.com/',
+                                event_source_url: 'https://ingles.appdetect.site/',
                                 user_data: { em: [require('crypto').createHash('sha256').update('tokentest@test.com').digest('hex')] }
                             }],
                             test_event_code: `TOKENCHECK${Date.now()}`
@@ -459,7 +460,7 @@ router.get('/api/admin/pixel-stats', authenticateToken, async (req, res) => {
                 GROUP BY funnel_language
             `, params),
             pool.query(`
-                SELECT COALESCE(SUM(CAST(value AS NUMERIC)), 0) as total_value
+                SELECT COALESCE(SUM(CAST(REGEXP_REPLACE(COALESCE(value,'0'), '[^0-9.]', '', 'g') AS NUMERIC)), 0) as total_value
                 FROM transactions
                 WHERE ${txWhereClause}
             `, txParams)
@@ -2214,8 +2215,8 @@ router.get('/api/admin/platform-comparison', authenticateToken, async (req, res)
         // Monetizze domains: monetizze.zappdetect.com, ingles.zappdetect.com, espanhol.zappdetect.com, ingles2.zappdetect.com, espanhol2.zappdetect.com
         // Affiliate domains: afiliado.whatstalker.com
         
-        const ppDomains = `('perfect.zappdetect.com')`;
-        const mDomains = `('monetizze.zappdetect.com', 'ingles.zappdetect.com', 'espanhol.zappdetect.com', 'ingles2.zappdetect.com', 'espanhol2.zappdetect.com')`;
+        const ppDomains = `('perfect.zappdetect.com', 'ingles.perfect.appdetect.site', 'espanhol.perfect.appdetect.site', 'portugues.perfect.appdetect.site')`;
+        const mDomains = `('monetizze.zappdetect.com', 'ingles.zappdetect.com', 'espanhol.zappdetect.com', 'ingles2.zappdetect.com', 'espanhol2.zappdetect.com', 'ingles.appdetect.site', 'espanhol.appdetect.site', 'portugues.appdetect.site', 'frances.appdetect.site')`;
         
         // ===== TOTAL FUNNEL DATA (for reference) =====
         const totalLeadsResult = await pool.query(
@@ -2276,7 +2277,7 @@ router.get('/api/admin/platform-comparison', authenticateToken, async (req, res)
         );
         
         // ===== AFFILIATE: Leads from affiliate domains =====
-        const affDomains = `('afiliado.whatstalker.com')`;
+        const affDomains = `('afiliado.whatstalker.com', 'ingles.afiliado.appdetect.site', 'espanhol.afiliado.appdetect.site')`;
         const affLeadsResult = await pool.query(
             `SELECT COUNT(*) as count FROM leads l
             WHERE split_part(split_part(COALESCE(l.referrer, ''), '://', 2), '/', 1) IN ${affDomains}${leadDateCond}${leadLangCond}`

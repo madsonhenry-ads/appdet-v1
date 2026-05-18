@@ -167,7 +167,7 @@ async function sendToFacebookCAPI(eventName, userData, customData = {}, eventSou
     
     // Always include event_source_url (required for best match quality)
     // Default to English funnel domain (must match domain where pixel fires for attribution)
-    eventPayload.event_source_url = eventSourceUrl || 'https://ingles.zappdetect.com/';
+    eventPayload.event_source_url = eventSourceUrl || process.env.DEFAULT_EVENT_SOURCE_URL || 'https://ingles.appdetect.site/';
     
     // Add referrer URL if available (helps with attribution)
     if (userData.referrer) {
@@ -533,23 +533,24 @@ async function sendMissingCAPIPurchases() {
                 };
                 
                 // Build event source URL (MUST match the domain where the pixel fires)
+                const defaultDomain = process.env.DEFAULT_EVENT_SOURCE_DOMAIN || 'ingles.appdetect.site';
                 let eventSourceUrl;
                 if (funnelSource === 'perfectpay') {
-                    eventSourceUrl = funnelLanguage === 'es' 
-                        ? 'https://perfect.zappdetect.com/espanhol/' 
+                    eventSourceUrl = funnelLanguage === 'es'
+                        ? 'https://espanhol.perfect.appdetect.site/'
                         : funnelLanguage === 'pt'
-                        ? 'https://perfect.zappdetect.com/portugues/'
-                        : 'https://perfect.zappdetect.com/ingles/';
+                        ? 'https://portugues.perfect.appdetect.site/'
+                        : 'https://ingles.perfect.appdetect.site/';
                 } else if (funnelSource === 'affiliate') {
-                    eventSourceUrl = funnelLanguage === 'es' 
-                        ? 'https://afiliado.whatstalker.com/espanhol/' 
-                        : 'https://afiliado.whatstalker.com/ingles/';
+                    eventSourceUrl = funnelLanguage === 'es'
+                        ? 'https://espanhol.afiliado.appdetect.site/'
+                        : 'https://ingles.afiliado.appdetect.site/';
                 } else {
-                    eventSourceUrl = funnelLanguage === 'es' 
-                        ? 'https://espanhol.zappdetect.com/' 
+                    eventSourceUrl = funnelLanguage === 'es'
+                        ? 'https://espanhol.appdetect.site/'
                         : funnelLanguage === 'pt'
-                        ? 'https://portugues.zappdetect.com/'
-                        : 'https://ingles.zappdetect.com/';
+                        ? 'https://portugues.appdetect.site/'
+                        : 'https://ingles.appdetect.site/';
                 }
                 
                 // Event ID (status-agnostic for dedup) - use correct prefix per source

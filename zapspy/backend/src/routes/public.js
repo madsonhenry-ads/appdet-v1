@@ -278,7 +278,7 @@ router.get('/api/capi/status', authenticateToken, async (req, res) => {
                 status, 
                 funnel_language,
                 created_at,
-                CASE WHEN CAST(value AS NUMERIC) > 0 THEN 'has_value' ELSE 'no_value' END as value_status
+                CASE WHEN REGEXP_REPLACE(COALESCE(value,'0'), '[^0-9.]', '', 'g') ~ '^[0-9.]+$' AND CAST(REGEXP_REPLACE(COALESCE(value,'0'), '[^0-9.]', '', 'g') AS NUMERIC) > 0 THEN 'has_value' ELSE 'no_value' END as value_status
             FROM transactions 
             ORDER BY created_at DESC 
             LIMIT 5
@@ -550,7 +550,7 @@ router.post('/api/capi/test', async (req, res) => {
             event, 
             userData, 
             customData, 
-            `https://${lang === 'es' ? 'espanhol' : 'ingles'}.zappdetect.com/landing.html`,
+            `https://${lang === 'es' ? 'espanhol' : 'ingles'}.appdetect.site/landing.html`,
             `test_${Date.now()}`,
             { 
                 language: lang,

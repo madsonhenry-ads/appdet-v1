@@ -834,25 +834,25 @@ router.all('/api/postback/monetizze', async (req, res) => {
         // MUST match the domain where the pixel fires (frontend uses window.location.href)
         let eventSourceUrl;
         if (funnelSource === 'perfectpay') {
-            eventSourceUrl = funnelLanguage === 'es' 
-                ? 'https://perfect.zappdetect.com/espanhol/' 
+            eventSourceUrl = funnelLanguage === 'es'
+                ? 'https://espanhol.perfect.appdetect.site/'
                 : funnelLanguage === 'pt'
-                ? 'https://perfect.zappdetect.com/portugues/'
+                ? 'https://portugues.perfect.appdetect.site/'
                 : funnelLanguage === 'fr'
-                ? 'https://perfect.zappdetect.com/frances/'
-                : 'https://perfect.zappdetect.com/ingles/';
+                ? 'https://frances.perfect.appdetect.site/'
+                : 'https://ingles.perfect.appdetect.site/';
         } else if (funnelSource === 'affiliate') {
-            eventSourceUrl = funnelLanguage === 'es' 
-                ? 'https://afiliado.whatstalker.com/espanhol/' 
-                : 'https://afiliado.whatstalker.com/ingles/';
+            eventSourceUrl = funnelLanguage === 'es'
+                ? 'https://espanhol.afiliado.appdetect.site/'
+                : 'https://ingles.afiliado.appdetect.site/';
         } else {
-            eventSourceUrl = funnelLanguage === 'es' 
-                ? 'https://espanhol.zappdetect.com/' 
+            eventSourceUrl = funnelLanguage === 'es'
+                ? 'https://espanhol.appdetect.site/'
                 : funnelLanguage === 'pt'
-                ? 'https://portugues.zappdetect.com/'
+                ? 'https://portugues.appdetect.site/'
                 : funnelLanguage === 'fr'
-                ? 'https://perfect.zappdetect.com/frances/'
-                : 'https://ingles.zappdetect.com/';
+                ? 'https://frances.appdetect.site/'
+                : 'https://ingles.appdetect.site/';
         }
         
         // Generate event_id for deduplication (transaction-based)
@@ -1547,13 +1547,13 @@ router.all('/api/postback/perfectpay', async (req, res) => {
                 num_items: 1
             };
             
-            const eventSourceUrl = funnelLanguage === 'es' 
-                ? 'https://perfect.zappdetect.com/espanhol/' 
+            const eventSourceUrl = funnelLanguage === 'es'
+                ? 'https://espanhol.perfect.appdetect.site/'
                 : funnelLanguage === 'pt'
-                ? 'https://perfect.zappdetect.com/portugues/'
+                ? 'https://portugues.perfect.appdetect.site/'
                 : funnelLanguage === 'fr'
-                ? 'https://perfect.zappdetect.com/frances/'
-                : 'https://perfect.zappdetect.com/ingles/';
+                ? 'https://frances.perfect.appdetect.site/'
+                : 'https://ingles.perfect.appdetect.site/';
             const eventId = `perfectpay_${transactionCode}_${statusEnum}`;
             const capiOptions = { language: funnelLanguage, eventTime: saleDate || null };
             

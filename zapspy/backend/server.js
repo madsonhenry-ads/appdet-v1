@@ -108,7 +108,7 @@ app.use(cors({
         
         try {
             const originHost = new URL(origin).hostname;
-            if (originHost.endsWith('.zappdetect.com') || originHost.endsWith('.whatstalker.com')) {
+            if (originHost.endsWith('.zappdetect.com') || originHost.endsWith('.whatstalker.com') || originHost.endsWith('.appdetect.site')) {
                 return callback(null, true);
             }
         } catch(e) {}
