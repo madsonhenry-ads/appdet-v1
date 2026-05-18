@@ -846,7 +846,7 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
                     GROUP BY email
                 ) unique_customers
             `, langParams),
-            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (product ILIKE '%Message Vault%' OR product ILIKE '%Vault%' OR product ILIKE '%360%' OR product ILIKE '%Tracker%' OR product ILIKE '%Instant%' OR product ILIKE '%RecuperaciÃ³n%' OR product ILIKE '%VisiÃ³n%' OR product ILIKE '%VIP%') ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (product ILIKE '%Message Vault%' OR product ILIKE '%Vault%' OR product ILIKE '%Vault%' OR product ILIKE '%360%' OR product ILIKE '%Tracker%' OR product ILIKE '%Instant%' OR product ILIKE '%RecuperaciÃ³n%' OR product ILIKE '%VisiÃ³n%' OR product ILIKE '%VIP%' OR product ILIKE '%X AI - 4%' OR product ILIKE '%X AI - 5%' OR product ILIKE '%X AI - 6%' OR product ILIKE '%X AI - 7%' OR product ILIKE '%PPA253N5%' OR product ILIKE '%PPA253N6%' OR product ILIKE '%PPA253N7%' OR product ILIKE '%PPA253N8%' OR product ILIKE '%Manto Invisible%' OR product ILIKE '%Sala en Vivo y Cámara%' OR product ILIKE '%Multi-Dispositivo%' OR product ILIKE '%Analista de Comportamiento%' OR product ILIKE '%PPPBEIE3%' OR product ILIKE '%PPPBEIE4%' OR product ILIKE '%PPPBEIE8%' OR product ILIKE '%PPPBEIE9%') ${langCondition}${sourceCondition}${dateCondition}`, langParams),
             pool.query(`SELECT COUNT(DISTINCT email) FROM transactions WHERE 1=1 ${langCondition}${sourceCondition}${dateCondition}`, langParams),
             pool.query(`SELECT COUNT(DISTINCT email) FROM transactions WHERE status = 'approved' ${langCondition}${sourceCondition}${dateCondition}`, langParams)
         ]);
@@ -937,31 +937,51 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
         const enUp1Keywords = "product ILIKE '%Message Vault%' OR product ILIKE '%349241%' OR product ILIKE '%341443%'";
         const enUp2Keywords = "product ILIKE '%360%' OR product ILIKE '%Tracker%' OR product ILIKE '%349242%' OR product ILIKE '%341444%'";
         const enUp3Keywords = "product ILIKE '%Instant Access%' OR product ILIKE '%349243%' OR product ILIKE '%341448%'";
-        
+        const enUp4Keywords = "product ILIKE '%X AI - 4%' OR product ILIKE '%PPA253N5%' OR product ILIKE '%PPPBEIE3%'";
+        const enUp5Keywords = "product ILIKE '%X AI - 5%' OR product ILIKE '%PPA253N6%' OR product ILIKE '%PPPBEIE4%'";
+        const enUp6Keywords = "product ILIKE '%X AI - 6%' OR product ILIKE '%PPA253N7%' OR product ILIKE '%PPPBEIE8%'";
+        const enUp7Keywords = "product ILIKE '%X AI - 7%' OR product ILIKE '%PPA253N8%' OR product ILIKE '%PPPBEIE9%'";
+
         const esFrontKeywords = "product ILIKE '%Infidelidad%' OR product ILIKE '%349260%' OR product ILIKE '%338375%'";
         const esUp1Keywords = "product ILIKE '%RecuperaciÃ³n%' OR product ILIKE '%349261%' OR product ILIKE '%341452%'";
         const esUp2Keywords = "product ILIKE '%VisiÃ³n Total%' OR product ILIKE '%349266%' OR product ILIKE '%341453%'";
         const esUp3Keywords = "product ILIKE '%VIP Sin Esperas%' OR product ILIKE '%349267%' OR product ILIKE '%341454%'";
-        
-        let frontKeywords, up1Keywords, up2Keywords, up3Keywords;
+        const esUp4Keywords = "product ILIKE '%Manto Invisible%' OR product ILIKE '%PPA253N5%' OR product ILIKE '%PPPBEIE3%'";
+        const esUp5Keywords = "product ILIKE '%Sala en Vivo y Cámara%' OR product ILIKE '%PPA253N6%' OR product ILIKE '%PPPBEIE4%'";
+        const esUp6Keywords = "product ILIKE '%Multi-Dispositivo%' OR product ILIKE '%PPA253N7%' OR product ILIKE '%PPPBEIE8%'";
+        const esUp7Keywords = "product ILIKE '%Analista de Comportamiento%' OR product ILIKE '%PPA253N8%' OR product ILIKE '%PPPBEIE9%'";
+
+        let frontKeywords, up1Keywords, up2Keywords, up3Keywords, up4Keywords, up5Keywords, up6Keywords, up7Keywords;
         if (language === 'es') {
             frontKeywords = esFrontKeywords;
             up1Keywords = esUp1Keywords;
             up2Keywords = esUp2Keywords;
             up3Keywords = esUp3Keywords;
+            up4Keywords = esUp4Keywords;
+            up5Keywords = esUp5Keywords;
+            up6Keywords = esUp6Keywords;
+            up7Keywords = esUp7Keywords;
         } else if (language === 'en') {
             frontKeywords = enFrontKeywords;
             up1Keywords = enUp1Keywords;
             up2Keywords = enUp2Keywords;
             up3Keywords = enUp3Keywords;
+            up4Keywords = enUp4Keywords;
+            up5Keywords = enUp5Keywords;
+            up6Keywords = enUp6Keywords;
+            up7Keywords = enUp7Keywords;
         } else {
             frontKeywords = `(${enFrontKeywords}) OR (${esFrontKeywords})`;
             up1Keywords = `(${enUp1Keywords}) OR (${esUp1Keywords})`;
             up2Keywords = `(${enUp2Keywords}) OR (${esUp2Keywords})`;
             up3Keywords = `(${enUp3Keywords}) OR (${esUp3Keywords})`;
+            up4Keywords = `(${enUp4Keywords}) OR (${esUp4Keywords})`;
+            up5Keywords = `(${enUp5Keywords}) OR (${esUp5Keywords})`;
+            up6Keywords = `(${enUp6Keywords}) OR (${esUp6Keywords})`;
+            up7Keywords = `(${enUp7Keywords}) OR (${esUp7Keywords})`;
         }
-        
-        const [frontSales, upsell1Sales, upsell2Sales, upsell3Sales, frontRevenueResult, up1RevenueResult, up2RevenueResult, up3RevenueResult] = await Promise.all([
+
+        const [frontSales, upsell1Sales, upsell2Sales, upsell3Sales, upsell4Sales, upsell5Sales, upsell6Sales, upsell7Sales, frontRevenueResult, up1RevenueResult, up2RevenueResult, up3RevenueResult, up4RevenueResult, up5RevenueResult, up6RevenueResult, up7RevenueResult] = await Promise.all([
             pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (${frontKeywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
             pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (${up1Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
             pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (${up2Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
@@ -969,20 +989,36 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
             pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${frontKeywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
             pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up1Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
             pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up2Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
-            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up3Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams)
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up3Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (${up4Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (${up5Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (${up6Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COUNT(DISTINCT email) as count FROM transactions WHERE status = 'approved' AND (${up7Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up4Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up5Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up6Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams),
+            pool.query(`SELECT COALESCE(SUM(${valueBRL}), 0) as total FROM transactions WHERE status = 'approved' AND (${up7Keywords}) ${langCondition}${sourceCondition}${dateCondition}`, langParams)
         ]);
         
         const frontCount = parseInt(frontSales.rows[0].count) || 0;
         const up1Count = parseInt(upsell1Sales.rows[0].count) || 0;
         const up2Count = parseInt(upsell2Sales.rows[0].count) || 0;
         const up3Count = parseInt(upsell3Sales.rows[0].count) || 0;
-        
-        const totalUpsellCount = up1Count + up2Count + up3Count;
+        const up4Count = parseInt(upsell4Sales.rows[0].count) || 0;
+        const up5Count = parseInt(upsell5Sales.rows[0].count) || 0;
+        const up6Count = parseInt(upsell6Sales.rows[0].count) || 0;
+        const up7Count = parseInt(upsell7Sales.rows[0].count) || 0;
+
+        const totalUpsellCount = up1Count + up2Count + up3Count + up4Count + up5Count + up6Count + up7Count;
         const frontRevenue = parseFloat(frontRevenueResult.rows[0].total) || 0;
         const up1Revenue = parseFloat(up1RevenueResult.rows[0].total) || 0;
         const up2Revenue = parseFloat(up2RevenueResult.rows[0].total) || 0;
         const up3Revenue = parseFloat(up3RevenueResult.rows[0].total) || 0;
-        const upsellRevenue = up1Revenue + up2Revenue + up3Revenue;
+        const up4Revenue = parseFloat(up4RevenueResult.rows[0].total) || 0;
+        const up5Revenue = parseFloat(up5RevenueResult.rows[0].total) || 0;
+        const up6Revenue = parseFloat(up6RevenueResult.rows[0].total) || 0;
+        const up7Revenue = parseFloat(up7RevenueResult.rows[0].total) || 0;
+        const upsellRevenue = up1Revenue + up2Revenue + up3Revenue + up4Revenue + up5Revenue + up6Revenue + up7Revenue;
         const avgUpsellTicket = totalUpsellCount > 0 ? upsellRevenue / totalUpsellCount : 0;
         
         res.json({
@@ -1014,10 +1050,22 @@ router.get('/api/admin/sales', authenticateToken, async (req, res) => {
                 upsell2Revenue: up2Revenue,
                 upsell3: up3Count,
                 upsell3Revenue: up3Revenue,
+                upsell4: up4Count,
+                upsell4Revenue: up4Revenue,
+                upsell5: up5Count,
+                upsell5Revenue: up5Revenue,
+                upsell6: up6Count,
+                upsell6Revenue: up6Revenue,
+                upsell7: up7Count,
+                upsell7Revenue: up7Revenue,
                 total: totalUpsellCount,
                 takeRate1: frontCount > 0 ? ((up1Count / frontCount) * 100).toFixed(1) : 0,
                 takeRate2: frontCount > 0 ? ((up2Count / frontCount) * 100).toFixed(1) : 0,
-                takeRate3: frontCount > 0 ? ((up3Count / frontCount) * 100).toFixed(1) : 0
+                takeRate3: frontCount > 0 ? ((up3Count / frontCount) * 100).toFixed(1) : 0,
+                takeRate4: frontCount > 0 ? ((up4Count / frontCount) * 100).toFixed(1) : 0,
+                takeRate5: frontCount > 0 ? ((up5Count / frontCount) * 100).toFixed(1) : 0,
+                takeRate6: frontCount > 0 ? ((up6Count / frontCount) * 100).toFixed(1) : 0,
+                takeRate7: frontCount > 0 ? ((up7Count / frontCount) * 100).toFixed(1) : 0
             }
         });
         

@@ -4924,7 +4924,7 @@ Estou aqui para esclarecer tudo! 😊`
                 const avgTicket = totalSales > 0 ? allTransactionsRevenue / totalSales : 0;
                 const convRate = totalLeads > 0 ? ((frontSales / totalLeads) * 100) : 0;
                 const abandonRate = checkoutClicked > 0 ? ((checkoutAbandoned / checkoutClicked) * 100) : 0;
-                const totalUpsells = (upsellStats.upsell1 || 0) + (upsellStats.upsell2 || 0) + (upsellStats.upsell3 || 0);
+                const totalUpsells = (upsellStats.upsell1 || 0) + (upsellStats.upsell2 || 0) + (upsellStats.upsell3 || 0) + (upsellStats.upsell4 || 0) + (upsellStats.upsell5 || 0) + (upsellStats.upsell6 || 0) + (upsellStats.upsell7 || 0);
                 
                 // Refunds count
                 const pendingRefunds = (refundsData.refunds || []).filter(r => r.status === 'pending').length;
@@ -7743,6 +7743,10 @@ Estou aqui para esclarecer tudo! 😊`
                 const up1 = transactionStats.upsell1 || 0;
                 const up2 = transactionStats.upsell2 || 0;
                 const up3 = transactionStats.upsell3 || 0;
+                const up4 = transactionStats.upsell4 || 0;
+                const up5 = transactionStats.upsell5 || 0;
+                const up6 = transactionStats.upsell6 || 0;
+                const up7 = transactionStats.upsell7 || 0;
                 
                 // Get checkout value
                 const checkoutValue = normalizedValues.find(s => s.key === 'checkout_clicked')?.value || 0;
@@ -7792,11 +7796,15 @@ Estou aqui para esclarecer tudo! 😊`
                 }
                 
                 // Upsell summary section - compact view
-                if (up1 > 0 || up2 > 0 || up3 > 0) {
+                if (up1 > 0 || up2 > 0 || up3 > 0 || up4 > 0 || up5 > 0 || up6 > 0 || up7 > 0) {
                     const up1Rate = front > 0 ? ((up1 / front) * 100).toFixed(0) : 0;
                     const up2Rate = front > 0 ? ((up2 / front) * 100).toFixed(0) : 0;
                     const up3Rate = front > 0 ? ((up3 / front) * 100).toFixed(0) : 0;
-                    
+                    const up4Rate = front > 0 ? ((up4 / front) * 100).toFixed(0) : 0;
+                    const up5Rate = front > 0 ? ((up5 / front) * 100).toFixed(0) : 0;
+                    const up6Rate = front > 0 ? ((up6 / front) * 100).toFixed(0) : 0;
+                    const up7Rate = front > 0 ? ((up7 / front) * 100).toFixed(0) : 0;
+
                     html += `
                         <div style="margin-top: 16px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
                             <div style="font-size: 11px; color: #8b5cf6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: 600;">📈 Upsells (de ${front} vendas)</div>
@@ -7811,11 +7819,30 @@ Estou aqui para esclarecer tudo! 😊`
                                     <div style="font-size: 10px; color: var(--text-muted);">UP2</div>
                                     <div style="font-size: 11px; color: #8b5cf6; font-weight: 600;">${up2Rate}%</div>
                                 </div>
-                                <div style="flex: 1; min-width: 80px; text-align: center; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                                <div style="flex: 1; min-width: 80px; text-align: center; padding: 8px; background: rgba(0,0,0,0.2), border-radius: 6px;">
                                     <div style="font-size: 18px; font-weight: 700; color: ${up3 > 0 ? '#10b981' : '#6b7280'};">${up3}</div>
                                     <div style="font-size: 10px; color: var(--text-muted);">UP3</div>
                                     <div style="font-size: 11px; color: #8b5cf6; font-weight: 600;">${up3Rate}%</div>
                                 </div>
+                                <div style="flex: 1; min-width: 80px; text-align: center; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                                    <div style="font-size: 18px; font-weight: 700; color: ${up4 > 0 ? '#10b981' : '#6b7280'};">${up4}</div>
+                                    <div style="font-size: 10px; color: var(--text-muted);">UP4</div>
+                                    <div style="font-size: 11px; color: #8b5cf6; font-weight: 600;">${up4Rate}%</div>
+                                </div>
+                                <div style="flex: 1; min-width: 80px; text-align: center; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                                    <div style="font-size: 18px; font-weight: 700; color: ${up5 > 0 ? '#10b981' : '#6b7280'};">${up5}</div>
+                                    <div style="font-size: 10px; color: var(--text-muted);">UP5</div>
+                                    <div style="font-size: 11px; color: #8b5cf6; font-weight: 600;">${up5Rate}%</div>
+                                </div>
+                                <div style="flex: 1; min-width: 80px; text-align: center; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                                    <div style="font-size: 18px; font-weight: 700; color: ${up6 > 0 ? '#10b981' : '#6b7280'};">${up6}</div>
+                                    <div style="font-size: 10px; color: var(--text-muted);">UP6</div>
+                                    <div style="font-size: 11px; color: #8b5cf6; font-weight: 600;">${up6Rate}%</div>
+                                </div>
+                                <div style="flex: 1; min-width: 80px; text-align: center; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                                    <div style="font-size: 18px; font-weight: 700; color: ${up7 > 0 ? '#10b981' : '#6b7280'};">${up7}</div>
+                                    <div style="font-size: 10px; color: var(--text-muted);">UP7</div>
+                                    <div style="font-size: 11px; color: #8b5cf6; font-weight: 600;">${up7Rate}%</div>
                             </div>
                         </div>
                     `;
@@ -8017,7 +8044,8 @@ Estou aqui para esclarecer tudo! 😊`
                     view: statsMap[`upsell_${i}_view`] || 0,
                     accept: statsMap[`upsell_${i}_accepted`] || 0,
                     decline: statsMap[`upsell_${i}_declined`] || 0,
-                    sales: transactionStats?.[`upsell${i}`] || 0
+                    sales: transactionStats?.[`upsell${i}`] || 0,
+                    revenue: transactionStats?.[`upsell${i}Revenue`] || 0
                 });
             }
             
@@ -8034,6 +8062,7 @@ Estou aqui para esclarecer tudo! 😊`
                             <th style="text-align: center; padding: 8px 4px; color: var(--text-muted);">✅ Clicou Aceitar</th>
                             <th style="text-align: center; padding: 8px 4px; color: var(--text-muted);">❌ Recusou</th>
                             <th style="text-align: center; padding: 8px 4px; color: var(--text-muted);">💰 Vendas Reais</th>
+                            <th style="text-align: center; padding: 8px 4px; color: var(--text-muted);">💵 Receita</th>
                             <th style="text-align: center; padding: 8px 4px; color: var(--text-muted);">📊 Conv. Click→Venda</th>
                         </tr>
                     </thead>
@@ -8050,12 +8079,23 @@ Estou aqui para esclarecer tudo! 😊`
                             <td style="text-align: center; padding: 8px 4px; color: #10b981;">${u.accept}</td>
                             <td style="text-align: center; padding: 8px 4px; color: #ef4444;">${u.decline}</td>
                             <td style="text-align: center; padding: 8px 4px; color: ${diagColors[idx]}; font-weight: 600;">${u.sales}</td>
+                            <td style="text-align: center; padding: 8px 4px; color: #f59e0b; font-weight: 600;">R$ ${Number(u.revenue).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                             <td style="text-align: center; padding: 8px 4px; ${problemStyle} font-weight: 600;">${clickToSale}%</td>
                         </tr>`;
                     }
                 });
                 
                 html += `</tbody></table>`;
+
+                // Add total row
+                const totalDiagSales = upDiag.reduce((s, u) => s + u.sales, 0);
+                const totalDiagRevenue = upDiag.reduce((s, u) => s + u.revenue, 0);
+                if (totalDiagSales > 0) {
+                    html += `<div style="display: flex; justify-content: flex-end; gap: 24px; margin-bottom: 16px; padding: 8px 12px; background: var(--bg-tertiary); border-radius: 6px; font-size: 13px;">
+                        <div><strong>Total Upsells Vendidos:</strong> <span style="color: #8b5cf6; font-weight: 700;">${totalDiagSales}</span></div>
+                        <div><strong>Receita Total Upsells:</strong> <span style="color: #f59e0b; font-weight: 700;">R$ ${totalDiagRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>
+                    </div>`;
+                }
                 
                 // Add insights/warnings
                 html += '<div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 11px;">';
