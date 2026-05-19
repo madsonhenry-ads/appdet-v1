@@ -5,9 +5,14 @@
 const FB_PIXELS_BY_LANGUAGE = {
     en: [
         {
-            id: '1540588824369569',
-            token: process.env.FB_PIXEL_TOKEN_EN || 'EAANhtUqMKEMBRV4ujp6RZBFkErbDNQuqVBRZCsEtUJdsvYyzcvraZBEUmTNL8CwRKqeljHc5rdSGvqjTmydIlsqrfL2gv8NSNqNBPGPlHO3HgpFjjLRsN95pf3QT5bHn10kRUVA5dA4UhQfJtEpjVdHm8Dt6llDLw9D4Bb5X2DqxwoBIBxoBsxiZArmJZAv3FbwZDZD',
+            id: '1123687999653173',
+            token: process.env.FB_PIXEL_TOKEN_EN || 'EAAIZBhZBUm41EBQGJiqnIgPUnsW3NZCRIZBtHBEnhrkWm8D8dIrfjDZCqZCfKnG6DHX1IeP6w6ktrEZAzQKzMyGknADSuwWZByNqeRrObpDdGTKiCO2MXWuZC1IqIOPTCVxFDlES2s05aOOVPHK40eAPhhyyd9SgMcQl6aFTym48DHIOvOtZBmHRn5LenXRwgKo3oi4AZDZD',
             name: 'ZAPSPY EN - Pixel 1'
+        },
+        {
+            id: '1533299911750042',
+            token: process.env.FB_PIXEL_TOKEN_EN_2 || 'EAAtKah1ZCsC4BRZA1AH5AZCKgf0tJFf6IZB2JnyOHZB1ZBLdfbyXnZBxTh7jsT6bREdXuZCCSEIWewigViQZBZAnyKvIMI9f4BZAQNbkyBmVkuoJPe8ts741TxoezHuYBqxg985ZAxgeYiS7Ssd28jOlFmpBXxR3WKK8m2qIaZCF2Va1Ikqk8a4ZC5J4xh3jtPBU5klrWcuwZDZD',
+            name: 'ZAPSPY EN - Pixel 2'
         }
     ],
     es: [
