@@ -3,6 +3,7 @@ import { GoogleTagManager } from "@next/third-parties/google"
 import Script from "next/script"
 import { Space_Grotesk, Manrope } from "next/font/google"
 // ✅ ROUTE CLEANUP - May 2026 - removing all user authentication
+import { Providers } from "./providers"
 import "./globals.css"
 
 const spaceGrotesk = Space_Grotesk({
@@ -46,7 +47,7 @@ export default function RootLayout({
             } catch(e) {}
           `
         }} />
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

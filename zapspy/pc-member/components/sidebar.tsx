@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { MessageCircle, Camera, Heart, PlayCircle, CheckSquare, Settings, X } from "lucide-react"
+import { MessageCircle, Camera, Heart, PlayCircle, CheckSquare, Settings, X, ShieldAlert } from "lucide-react"
 
 interface SidebarProps {
   open: boolean
@@ -22,6 +22,7 @@ export default function Sidebar({ open, onToggle, activeTab }: SidebarProps) {
     { id: "intro", label: "Start Here", icon: PlayCircle, path: "/dashboard/intro" },
     { id: "tutorial", label: "Installation Tutorial", icon: CheckSquare, path: "/dashboard/tutorial" },
     { id: "advanced", label: "Advanced Panel", icon: Settings, path: "/dashboard/scanners" },
+    { id: "refund", label: "Request Refund", icon: ShieldAlert, path: "/dashboard/refund" },
   ]
 
   return (

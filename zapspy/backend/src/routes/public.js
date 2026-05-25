@@ -1056,6 +1056,7 @@ router.post('/api/refund', async (req, res) => {
                 funnel_language, value, transaction_id, visitor_id, created_at
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'pending', 'form', 'refund',
                 $12, $13, $14, $15, NOW())
+            ON CONFLICT (protocol) DO NOTHING
         `, [
             protocol,
             fullName,

@@ -37,6 +37,7 @@ export const translations = {
     startHere: "Start Here",
     installationTutorial: "Installation Tutorial",
     advancedPanel: "Advanced Panel",
+    requestRefund: "Request Refund",
   },
   es: {
     // Header
@@ -76,5 +77,6 @@ export const translations = {
     startHere: "Start Here",
     installationTutorial: "Installation Tutorial",
     advancedPanel: "Advanced Panel",
+    requestRefund: "Solicitar Reembolso",
   },
 }
