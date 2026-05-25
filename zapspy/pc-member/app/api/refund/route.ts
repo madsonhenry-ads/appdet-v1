@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-const BACKEND_URL = "https://zapspy-backend-production.up.railway.app"
+const BACKEND_URL = "https://zappspy-backend-v1-production.up.railway.app"
 
 export async function POST(request: NextRequest) {
   try {
