@@ -1782,16 +1782,15 @@
                                         <tr>
                                             <th>Categoria</th>
                                             <th>Idioma</th>
-                                            <th>E-mail #</th>
                                             <th>Enviados</th>
-                                            <th>Aberturas</th>
+                                            <th>Aberturas Únicas</th>
                                             <th>Taxa Abert.</th>
-                                            <th>Cliques</th>
+                                            <th>Cliques Únicos</th>
                                             <th>Taxa Clique</th>
                                         </tr>
                                     </thead>
                                     <tbody id="trackingMetricsTableBody">
-                                        <tr><td colspan="8" style="text-align: center; padding: 20px; color: var(--text-muted);">Clique em "Atualizar" para carregar métricas</td></tr>
+                                        <tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--text-muted);">Clique em "Atualizar" para carregar métricas</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -1803,10 +1802,10 @@
                                     <table class="ac-data-table">
                                         <thead>
                                             <tr>
-                                                <th>Tipo</th>
                                                 <th>E-mail</th>
+                                                <th>Tipo</th>
                                                 <th>Categoria</th>
-                                                <th>E-mail #</th>
+                                                <th>Idioma</th>
                                                 <th>Data</th>
                                             </tr>
                                         </thead>
@@ -18211,40 +18210,36 @@ Posso ajudar em algo mais? 😊`
             const token = _acGetToken();
             const apiUrl = _acGetApiUrl();
 
-            // Load AC native reports (real opens/clicks from ActiveCampaign)
-            const acReportsRes = await fetch(`${apiUrl}/api/admin/tracking/ac-reports`, {
+            // Load metrics from our own tracking database (pixel/click tracking)
+            const summaryRes = await fetch(`${apiUrl}/api/admin/tracking/summary`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            const acReports = await acReportsRes.json();
+            const summaryData = await summaryRes.json();
 
-            if (acReports.success) {
-                const t = acReports.totals || {};
-                document.getElementById('trackTotalSent').textContent = (t.sends || 0).toLocaleString();
-                document.getElementById('trackTotalOpens').textContent = (t.uniqueOpens || 0).toLocaleString();
-                document.getElementById('trackTotalClicks').textContent = (t.uniqueClicks || 0).toLocaleString();
-                document.getElementById('trackOpenRate').textContent = (t.openRate || '0.0') + '%';
-                document.getElementById('trackClickRate').textContent = (t.clickRate || '0.0') + '%';
+            if (summaryData.success) {
+                const t = summaryData.data || {};
+                document.getElementById('trackTotalSent').textContent = (t.total_sent || 0).toLocaleString();
+                document.getElementById('trackTotalOpens').textContent = (t.unique_opens || 0).toLocaleString();
+                document.getElementById('trackTotalClicks').textContent = (t.unique_clicks || 0).toLocaleString();
+                document.getElementById('trackOpenRate').textContent = (t.open_rate || '0.0') + '%';
+                document.getElementById('trackClickRate').textContent = (t.click_rate || '0.0') + '%';
 
-                // Build detailed table from campaigns data
+                // Build detailed table from breakdown data
                 const tbody = document.getElementById('trackingMetricsTableBody');
-                const campaigns = acReports.campaigns || [];
-                const validCampaigns = campaigns.filter(c => c.totals && (c.totals.sends > 0 || c.totals.uniqueOpens > 0));
+                const breakdown = summaryData.breakdown || [];
 
-                if (validCampaigns.length > 0) {
-                    tbody.innerHTML = validCampaigns.map(c => {
-                        const catLabel = categoryLabels[c.category] || c.category;
-                        const lang = (c.language || '').toUpperCase();
-                        const sends = c.totals.sends || 0;
-                        const opens = c.totals.uniqueOpens || 0;
-                        const clicks = c.totals.uniqueClicks || 0;
-                        const bounces = c.totals.bounces || 0;
-                        const unsubs = c.totals.unsubscribes || 0;
+                if (breakdown.length > 0) {
+                    tbody.innerHTML = breakdown.map(row => {
+                        const catLabel = categoryLabels[row.category] || row.category;
+                        const lang = (row.language || '').toUpperCase();
+                        const sends = parseInt(row.total_sent) || 0;
+                        const opens = parseInt(row.unique_opens) || 0;
+                        const clicks = parseInt(row.unique_clicks) || 0;
                         const oRate = sends > 0 ? ((opens / sends) * 100).toFixed(1) + '%' : '0.0%';
                         const cRate = sends > 0 ? ((clicks / sends) * 100).toFixed(1) + '%' : '0.0%';
                         return `<tr>
                             <td>${catLabel}</td>
-                            <td><span class="ac-lang-badge" style="background: ${c.language === 'en' ? '#3b82f6' : '#f59e0b'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${lang}</span></td>
-                            <td style="text-align: center;">${c.emailNum || '-'}</td>
+                            <td><span class="ac-lang-badge" style="background: ${row.language === 'en' ? '#3b82f6' : '#f59e0b'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${lang}</span></td>
                             <td style="text-align: center; font-weight: 600;">${sends.toLocaleString()}</td>
                             <td style="text-align: center; color: #10b981; font-weight: 600;">${opens.toLocaleString()}</td>
                             <td style="text-align: center;">${oRate}</td>
@@ -18253,18 +18248,35 @@ Posso ajudar em algo mais? 😊`
                         </tr>`;
                     }).join('');
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: var(--text-muted);">Nenhuma m\u00e9trica dispon\u00edvel ainda. Os dados aparecer\u00e3o ap\u00f3s os primeiros e-mails serem abertos.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: var(--text-muted);">Nenhuma métrica disponível ainda. Os dados aparecerão após os primeiros e-mails serem abertos.</td></tr>';
                 }
 
-                // Hide events section since we're using AC native data now
+                // Load recent tracking events
+                const eventsRes = await fetch(`${apiUrl}/api/admin/tracking/events?limit=20`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const eventsData = await eventsRes.json();
                 const eventsTbody = document.getElementById('trackingEventsTableBody');
-                eventsTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 12px; color: var(--text-muted);">Dados de abertura e clique fornecidos pelo ActiveCampaign</td></tr>';
+                if (eventsData.success && eventsData.data && eventsData.data.length > 0) {
+                    eventsTbody.innerHTML = eventsData.data.map(e => {
+                        const catLabel = categoryLabels[e.category] || e.category || '-';
+                        return `<tr>
+                            <td>${e.email}</td>
+                            <td><span class="ac-type-badge" style="background: ${e.event_type === 'open' ? '#10b981' : '#f59e0b'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${e.event_type === 'open' ? 'Abertura' : 'Clique'}</span></td>
+                            <td>${catLabel}</td>
+                            <td>${(e.language || '').toUpperCase()}</td>
+                            <td style="font-size: 12px; color: var(--text-muted);">${new Date(e.created_at).toLocaleString('pt-BR')}</td>
+                        </tr>`;
+                    }).join('');
+                } else {
+                    eventsTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 12px; color: var(--text-muted);">Nenhum evento registrado ainda</td></tr>';
+                }
             }
 
-            _acShowToast('M\u00e9tricas', 'M\u00e9tricas do ActiveCampaign atualizadas', 'success');
+            _acShowToast('Métricas', 'Métricas de tracking atualizadas', 'success');
         } catch (error) {
             console.error('Error loading tracking metrics:', error);
-            _acShowToast('Erro', 'Falha ao carregar m\u00e9tricas', 'error');
+            _acShowToast('Erro', 'Falha ao carregar métricas', 'error');
         }
     }
 

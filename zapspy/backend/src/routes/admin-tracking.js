@@ -135,13 +135,25 @@ function injectTrackingIntoHtml(html, category, language, emailNum) {
     modified += `\n${pixel}`;
   }
 
-  // 2. Wrap CTA links with click tracking
+  // 2. Wrap CTA links with click tracking + UTMs
   const linkRegex = /<a\s+([^>]*?)href="(https?:\/\/[^"]+)"([^>]*?)>/gi;
   modified = modified.replace(linkRegex, (match, before, url, after) => {
     if (url.includes('%UNSUBSCRIBELINK%') || url.startsWith('mailto:') || url.includes('/privacy') || url.includes('/t/click') || url.includes('zapspy-funnel-production')) {
       return match;
     }
-    const trackedUrl = `${TRACKING_BASE}/t/click?e=%EMAIL%&c=${category}&l=${language}&n=${emailNum}&url=${encodeURIComponent(url)}`;
+    // Add UTMs to the original URL
+    let targetUrl = url;
+    if (url.includes('go.centerpag.com')) {
+      try {
+        const u = new URL(url);
+        u.searchParams.set('utm_source', 'activecampaign');
+        u.searchParams.set('utm_medium', 'email');
+        u.searchParams.set('utm_campaign', `recovery_${category}_${language}`);
+        u.searchParams.set('utm_content', `email${emailNum}`);
+        targetUrl = u.toString();
+      } catch (e) {}
+    }
+    const trackedUrl = `${TRACKING_BASE}/t/click?e=%EMAIL%&c=${category}&l=${language}&n=${emailNum}&url=${encodeURIComponent(targetUrl)}`;
     return `<a ${before}href="${trackedUrl}"${after}>`;
   });
 
@@ -389,7 +401,7 @@ router.get('/api/admin/tracking/verify-html/:messageId', authenticateToken, asyn
   }
 });
 
-// ==================== UPDATE CHECKOUT LINKS ====================
+// ==================== UPDATE CHECKOUT LINKS ==================
 
 // Link mapping: progressive discounts for all categories
 const CHECKOUT_LINKS = {
@@ -406,6 +418,16 @@ const CHECKOUT_LINKS = {
     4: 'https://go.centerpag.com/PPU38CQ85II', // $9
   }
 };
+
+// Build checkout URL with UTM tracking params
+function buildCheckoutUrl(baseUrl, category, language, emailNum) {
+  const url = new URL(baseUrl);
+  url.searchParams.set('utm_source', 'activecampaign');
+  url.searchParams.set('utm_medium', 'email');
+  url.searchParams.set('utm_campaign', `recovery_${category}_${language}`);
+  url.searchParams.set('utm_content', `email${emailNum}`);
+  return url.toString();
+}
 
 // POST /api/admin/tracking/update-links — Update all campaign templates with correct checkout links
 router.post('/api/admin/tracking/update-links', authenticateToken, async (req, res) => {
@@ -425,34 +447,28 @@ router.post('/api/admin/tracking/update-links', authenticateToken, async (req, r
           continue;
         }
 
-        const correctLink = CHECKOUT_LINKS[language][emailNum];
+        const baseLink = CHECKOUT_LINKS[language][emailNum];
+        const correctLink = buildCheckoutUrl(baseLink, category, language, emailNum);
         let updatedHtml = currentHtml;
         let changes = [];
 
         // Replace broken placeholders {{checkout_link_30off}} and {{checkout_link_50off}}
         if (updatedHtml.includes('{{checkout_link_30off}}')) {
           updatedHtml = updatedHtml.replace(/\{\{checkout_link_30off\}\}/g, correctLink);
-          changes.push('Replaced {{checkout_link_30off}}');
+          changes.push('Replaced {{checkout_link_30off}} with UTM-tracked link');
         }
         if (updatedHtml.includes('{{checkout_link_50off}}')) {
           updatedHtml = updatedHtml.replace(/\{\{checkout_link_50off\}\}/g, correctLink);
-          changes.push('Replaced {{checkout_link_50off}}');
+          changes.push('Replaced {{checkout_link_50off}} with UTM-tracked link');
         }
 
         // Replace wrong checkout links with correct ones for this email number
         // For E2: replace full-price links with discount links
         if (emailNum === 2) {
-          const fullPriceLink = CHECKOUT_LINKS[language][1]; // full price link
-          if (updatedHtml.includes(fullPriceLink) && fullPriceLink !== correctLink) {
-            updatedHtml = updatedHtml.split(fullPriceLink).join(correctLink);
-            changes.push(`Replaced full-price link with discount link`);
-          }
-          // Also check inside tracked URLs (encoded)
-          const encodedFull = encodeURIComponent(fullPriceLink);
-          const encodedCorrect = encodeURIComponent(correctLink);
-          if (updatedHtml.includes(encodedFull) && encodedFull !== encodedCorrect) {
-            updatedHtml = updatedHtml.split(encodedFull).join(encodedCorrect);
-            changes.push(`Replaced encoded full-price link with discount link`);
+          const fullPriceBase = CHECKOUT_LINKS[language][1]; // full price link
+          if (updatedHtml.includes(fullPriceBase) && fullPriceBase !== baseLink) {
+            updatedHtml = updatedHtml.split(fullPriceBase).join(correctLink);
+            changes.push(`Replaced full-price link with UTM-tracked discount link`);
           }
         }
 
@@ -471,10 +487,10 @@ router.post('/api/admin/tracking/update-links', authenticateToken, async (req, r
         if (!updatedHtml.includes('/t/click?')) {
           const linkRegex = /<a\s+([^>]*?)href="(https?:\/\/go\.centerpag\.com[^"]+)"([^>]*?)>/gi;
           updatedHtml = updatedHtml.replace(linkRegex, (match, before, url, after) => {
-            const trackedUrl = `${TRACKING_BASE}/t/click?e=%EMAIL%&c=${category}&l=${language}&n=${emailNum}&url=${encodeURIComponent(url)}`;
+            const trackedUrl = `${TRACKING_BASE}/t/click?e=%EMAIL%&c=${category}&l=${language}&n=${emailNum}&url=${encodeURIComponent(correctLink)}`;
             return `<a ${before}href="${trackedUrl}"${after}>`;
           });
-          changes.push('Wrapped CTA links with click tracking');
+          changes.push('Wrapped CTA links with UTM click tracking');
         }
 
         if (changes.length === 0) {
