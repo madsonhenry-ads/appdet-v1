@@ -8,7 +8,7 @@
  */
 
 const UpsellTracker = {
-    API_URL: window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app',
+    API_URL: window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app',
     pageLoadTime: Date.now(),
     scrollDepth: 0,
     

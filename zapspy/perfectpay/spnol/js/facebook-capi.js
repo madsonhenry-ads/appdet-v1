@@ -9,7 +9,7 @@
 
 const FacebookCAPI = {
     // Siempre usar el backend Railway para CAPI (los funnels pueden estar en otro dominio)
-    API_URL: window.ZAPSPY_API_URL || 'https://zapspy-backend-production.up.railway.app',
+    API_URL: window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app',
 
     generateEventId: function(eventName) {
         const timestamp = Date.now();

@@ -7,7 +7,7 @@
  * (ex.: Live Server). Assim /api/whatsapp-check bate no backend local e os logs aparecem no terminal.
  */
 (function() {
-    var PROD = 'https://zapspy-backend-production.up.railway.app';
+    var PROD = 'https://zappspy-backend-v1-production.up.railway.app';
     if (typeof location === 'undefined' || location.protocol === 'file:') {
         window.ZAPSPY_API_URL = PROD;
         return;

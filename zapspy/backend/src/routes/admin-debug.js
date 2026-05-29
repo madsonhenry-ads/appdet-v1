@@ -390,7 +390,7 @@ router.get('/api/admin/debug/postbacks', authenticateToken, requireAdmin, async 
         memoryCount: recentPostbacks.length,
         dbLogCount: dbLogs.length,
         info: 'Memory postbacks are lost on server restart. DB logs persist. Check if Monetizze is sending postbacks to the correct URL.',
-        expectedUrl: 'https://zapspy-backend-production.up.railway.app/api/postback/monetizze',
+        expectedUrl: 'https://zappspy-backend-v1-production.up.railway.app/api/postback/monetizze',
         alternateUrl: 'https://painel.xaimonitor.com/api/postback/monetizze',
         postbacks: postbacksWithValueInfo,
         dbLogs,
