@@ -228,11 +228,14 @@ app.use('/en', express.static(path.join(funnelPath, 'ingles')));
 app.use('/es', express.static(path.join(funnelPath, 'espanhol')));
 app.use('/pt', express.static(path.join(funnelPath, 'portugues')));
 app.use('/fr', express.static(path.join(funnelPath, 'frances')));
+app.use('/ingles2', express.static(path.join(funnelPath, 'ingles2')));
 
 // Domain-based routing
 app.use((req, res, next) => {
     const host = req.hostname || req.headers.host || '';
-    if (host.includes('ingles') || host.includes('ingles.zappdetect')) {
+    if (host.startsWith('en.') || host === 'en.appdetect.site') {
+        express.static(path.join(funnelPath, 'ingles2'))(req, res, next);
+    } else if (host.includes('ingles') || host.includes('ingles.zappdetect')) {
         express.static(path.join(funnelPath, 'ingles'))(req, res, next);
     } else if (host.includes('espanhol') || host.includes('espanhol.zappdetect')) {
         express.static(path.join(funnelPath, 'espanhol'))(req, res, next);
