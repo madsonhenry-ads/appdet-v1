@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Request - Whats Spy</title>
+    <meta name="description" content="Request a refund for your Whats Spy purchase. Fast and secure processing.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    var userData = {};
+    try {
+        var em = localStorage.getItem('userEmail');
+        var ph = localStorage.getItem('userWhatsApp');
+        var fn = localStorage.getItem('userName');
+        var ct = localStorage.getItem('userCity');
+        var co = localStorage.getItem('userCountryCode');
+        var ge = localStorage.getItem('targetGender');
+        var st = localStorage.getItem('userState');
+        if (em) userData.em = em.toLowerCase().trim();
+        if (ph) userData.ph = ph.replace(/\D/g, '');
+        if (fn) {
+            var names = fn.trim().split(' ');
+            userData.fn = names[0].toLowerCase();
+            if (names.length > 1) userData.ln = names.slice(1).join(' ').toLowerCase();
+        }
+        if (ct) userData.ct = ct.toLowerCase().replace(/[^a-z]/g, '');
+        if (co) userData.country = co.toLowerCase();
+        if (ge) userData.ge = ge === 'female' ? 'f' : 'm';
+        if (st) userData.st = st.toLowerCase().replace(/[^a-z]/g, '');
+    } catch(e) {}
+    fbq('init', '1123687999653173', userData);
+    fbq('init', '1533299911750042', userData);
+    var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    fbq('track', 'PageView', {}, { eventID: pvId });
+    window._fbPageViewFired = true;
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1123687999653173&ev=PageView&noscript=1"
+    /></noscript>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1533299911750042&ev=PageView&noscript=1"
+    /></noscript>
+</head>
+<body>
+    <!-- STEP 0: Security Validation Screen -->
+    <div id="validationScreen" class="validation-screen">
+        <div class="validation-container">
+            <div class="validation-shield">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke="#10b981" stroke-width="2"/></svg>
+            </div>
+            <h2 class="validation-title">Security Verification</h2>
+            <p class="validation-subtitle">We are verifying your purchase data for security purposes. Please do not close this page.</p>
+            
+            <div class="validation-steps">
+                <div class="v-step active" id="vStep1">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Verifying purchase records...</span>
+                </div>
+                <div class="v-step" id="vStep2">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Validating account information...</span>
+                </div>
+                <div class="v-step" id="vStep3">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Checking eligibility status...</span>
+                </div>
+                <div class="v-step" id="vStep4">
+                    <div class="v-step-icon"><div class="v-spinner"></div></div>
+                    <span>Preparing secure form...</span>
+                </div>
+            </div>
+
+            <div class="validation-progress">
+                <div class="validation-progress-bar" id="validationBar"></div>
+            </div>
+            <div class="validation-percent" id="validationPercent">0%</div>
+
+            <div class="validation-notice">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 16v-4M12 8h.01"/></svg>
+                <span>This verification is required to prevent fraudulent requests and protect your account.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN FORM (hidden until validation completes) -->
+    <div class="page-container" id="mainContent" style="display:none;">
+        <header class="header">
+            <h1 class="page-title">Refund Request</h1>
+        </header>
+
+        <!-- Progress Steps: 4 steps now -->
+        <div class="progress-container">
+            <div class="progress-step active" data-step="1">
+                <div class="step-number">1</div>
+                <span class="step-label">Personal</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="2">
+                <div class="step-number">2</div>
+                <span class="step-label">Purchase</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="3">
+                <div class="step-number">3</div>
+                <span class="step-label">Feedback</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="4">
+                <div class="step-number">4</div>
+                <span class="step-label">Validation</span>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="notice-box">
+                <div class="notice-icon">ℹ</div>
+                <div class="notice-content">
+                    <h3>Important</h3>
+                    <p>To process your refund, we need to validate your purchase information. Please fill in all fields carefully to ensure quick processing.</p>
+                </div>
+            </div>
+
+            <form id="refundForm">
+                <!-- Step 1: Personal Info -->
+                <div class="form-step active" data-step="1">
+                    <h2 class="section-title">Personal Information</h2>
+                    <p class="section-subtitle">All fields are required for purchase validation</p>
+
+                    <div class="form-group">
+                        <label for="fullName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                        <span class="error-message" id="fullNameError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Purchase Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="Enter the email used for purchase" required>
+                        <span class="helper-text">Use the same email registered for the purchase</span>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone/WhatsApp <span class="required">*</span></label>
+                        <div class="phone-input-container">
+                            <div class="country-selector" id="countrySelector">
+                                <span class="selected-country" id="selectedCountry">
+                                    <span class="flag">🇺🇸</span>
+                                    <span class="code">+1</span>
+                                    <span class="arrow">▼</span>
+                                </span>
+                                <div class="country-dropdown" id="countryDropdown">
+                                    <input type="text" class="country-search" placeholder="🔍 Search country..." id="countrySearch">
+                                    <div class="country-list" id="countryList"></div>
+                                </div>
+                            </div>
+                            <input type="tel" id="phone" name="phone" placeholder="Phone number" required>
+                        </div>
+                        <span class="helper-text">For contact about the refund</span>
+                        <span class="error-message" id="phoneError"></span>
+                    </div>
+
+                    <button type="button" class="btn-primary" onclick="nextStep(2)">
+                        Continue <span class="btn-arrow">→</span>
+                    </button>
+                </div>
+
+                <!-- Step 2: Purchase Details -->
+                <div class="form-step" data-step="2">
+                    <h2 class="section-title">Purchase Details</h2>
+                    <p class="section-subtitle">Help us locate your purchase quickly</p>
+
+                    <div class="form-group">
+                        <label for="purchaseDate">Purchase Date <span class="required">*</span></label>
+                        <input type="date" id="purchaseDate" name="purchaseDate" required>
+                        <span class="error-message" id="purchaseDateError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reason">Refund Reason <span class="required">*</span></label>
+                        <select id="reason" name="reason" required>
+                            <option value="">Select the main reason</option>
+                            <option value="not_expected">Product did not deliver expected results</option>
+                            <option value="technical">Technical difficulty accessing the product</option>
+                            <option value="duplicate">Duplicate charge on card</option>
+                            <option value="unauthorized">I did not authorize this purchase</option>
+                            <option value="changed_mind">Changed my mind about the purchase</option>
+                            <option value="no_access">Did not receive access to product</option>
+                            <option value="other">Other reason</option>
+                        </select>
+                        <span class="helper-text">Select the reason that best describes your situation</span>
+                        <span class="error-message" id="reasonError"></span>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="prevStep(1)">
+                            <span class="btn-arrow">←</span> Back
+                        </button>
+                        <button type="button" class="btn-primary" onclick="nextStep(3)">
+                            Continue <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Detailed Feedback (NEW - friction step) -->
+                <div class="form-step" data-step="3">
+                    <h2 class="section-title">Detailed Feedback</h2>
+                    <p class="section-subtitle">Our team needs this information to process your request</p>
+
+                    <div class="feedback-notice">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <div>
+                            <strong>Required for analysis</strong>
+                            <p>For our management team to review your case, please describe in maximum detail what happened. Incomplete descriptions will delay processing.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="details">Describe what happened in detail <span class="required">*</span></label>
+                        <textarea id="details" name="details" placeholder="Please explain in detail: What was the issue? When did it start? What did you try to resolve it? What result did you expect versus what happened?&#10;&#10;The more information you provide, the faster our team can analyze and process your request." rows="8" required></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span> / 50 characters minimum
+                            <span class="char-status" id="charStatus">⚠ More details needed</span>
+                        </div>
+                        <span class="error-message" id="detailsError"></span>
+                    </div>
+
+                    <div class="security-notice">
+                        <span class="lock-icon">🔒</span>
+                        Your information is protected and will only be used to process the refund
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="prevStep(2)">
+                            <span class="btn-arrow">←</span> Back
+                        </button>
+                        <button type="submit" class="btn-primary" id="submitBtn">
+                            Submit Request <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation - WhatsApp Bridge -->
+                <div class="form-step" data-step="4">
+                    <div class="confirmation-container">
+                        <div class="confirmation-status">
+                            <div class="status-icon pending">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            </div>
+                            <h2 class="confirmation-title">Request Received. <span class="text-warning">Validation Pending.</span></h2>
+                        </div>
+                        
+                        <div class="protocol-box">
+                            <span class="protocol-label">Protocol Number</span>
+                            <div class="protocol-number" id="protocolNumber">REF-000000</div>
+                            <button type="button" class="btn-copy" onclick="copyProtocol()">
+                                📋 Copy Protocol
+                            </button>
+                        </div>
+
+                        <div class="confirmation-message">
+                            <p>Your refund request has been registered. To proceed with the analysis and <strong>validate your identity</strong>, the next <strong>mandatory</strong> step is to confirm your request with one of our agents on WhatsApp.</p>
+                        </div>
+
+                        <div class="warning-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            <p><strong>Requests not confirmed on WhatsApp within 24 hours will be automatically cancelled for security reasons.</strong></p>
+                        </div>
+
+                        <a href="#" id="whatsappBtn" class="btn-whatsapp" target="_blank" rel="noopener">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                            <div class="btn-whatsapp-text">
+                                <strong>Confirm Request on WhatsApp Now</strong>
+                                <span>Mandatory step to proceed with the refund</span>
+                            </div>
+                        </a>
+
+                        <div class="summary-box">
+                            <div class="summary-item">
+                                <span class="summary-label">Name:</span>
+                                <span class="summary-value" id="summaryName">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Email:</span>
+                                <span class="summary-value" id="summaryEmail">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Status:</span>
+                                <span class="summary-value status-pending">⏳ Awaiting WhatsApp Confirmation</span>
+                            </div>
+                        </div>
+
+                        <div class="next-steps">
+                            <h3>What happens next?</h3>
+                            <div class="next-step-item">
+                                <div class="next-step-num">1</div>
+                                <div>
+                                    <strong>Confirm on WhatsApp</strong>
+                                    <span>Click the button above to speak with an agent and validate your identity</span>
+                                </div>
+                            </div>
+                            <div class="next-step-item">
+                                <div class="next-step-num">2</div>
+                                <div>
+                                    <strong>Identity Verification</strong>
+                                    <span>Our agent will verify your purchase data for security</span>
+                                </div>
+                            </div>
+                            <div class="next-step-item">
+                                <div class="next-step-num">3</div>
+                                <div>
+                                    <strong>Refund Processing</strong>
+                                    <span>After verification, the refund will be processed within 7 business days</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="note-box">
+                            <strong>⚠️ Important:</strong> If you do not confirm your request on WhatsApp, it will be automatically cancelled after 24 hours. This measure exists to prevent fraud and protect our customers.
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2026 Whats Spy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="../privacy.html">Privacy Policy</a>
+                <a href="../terms.html">Terms of Service</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="../js/fc.js"></script>
+    <script>
+        if (typeof FacebookCAPI !== 'undefined') {
+            FacebookCAPI.init('Refund Page');
+            FacebookCAPI.trackViewContent('Refund Page', 'Funnel - Refund', 47);
+        }
+    </script>
+</body>
+</html>

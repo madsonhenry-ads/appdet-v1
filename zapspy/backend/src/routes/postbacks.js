@@ -957,9 +957,10 @@ router.all('/api/postback/monetizze', async (req, res) => {
                 if (existing.rows.length === 0) {
                     await pool.query(`
                         INSERT INTO refund_requests (
-                            protocol, full_name, email, phone, product, reason, 
+                            protocol, full_name, email, phone, product, reason,
                             status, source, refund_type, transaction_id, value, funnel_language, created_at
                         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
+                        ON CONFLICT (protocol) DO NOTHING
                     `, [
                         refundProtocol,
                         buyerName || 'N/A',
@@ -974,7 +975,7 @@ router.all('/api/postback/monetizze', async (req, res) => {
                         parseFloat(transactionValue) || 0,
                         funnelLanguage
                     ]);
-                    
+
                     console.log(`📥 ${refundType.toUpperCase()} registered: ${refundProtocol} - ${finalEmail} - ${productName}`);
                 }
             } catch (refundError) {
@@ -1618,9 +1619,10 @@ router.all('/api/postback/perfectpay', async (req, res) => {
                 if (existing.rows.length === 0) {
                     await pool.query(`
                         INSERT INTO refund_requests (
-                            protocol, full_name, email, phone, product, reason, 
+                            protocol, full_name, email, phone, product, reason,
                             status, source, refund_type, transaction_id, value, funnel_language, created_at
                         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW())
+                        ON CONFLICT (protocol) DO NOTHING
                     `, [
                         refundProtocol,
                         buyerName || 'N/A',

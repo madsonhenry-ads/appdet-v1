@@ -903,9 +903,10 @@ router.post('/api/admin/sync-monetizze', authenticateToken, requireAdmin, async 
                         if (existing.rows.length === 0) {
                             await pool.query(`
                                 INSERT INTO refund_requests (
-                                    protocol, full_name, email, phone, product, reason, 
+                                    protocol, full_name, email, phone, product, reason,
                                     status, source, refund_type, transaction_id, value, funnel_language, created_at
                                 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, COALESCE($13, NOW()))
+                                ON CONFLICT (protocol) DO NOTHING
                             `, [
                                 refundProtocol, name || 'N/A', email, phone || null, productName,
                                 refundType === 'chargeback' ? 'Chargeback - Disputa de cartão' : 'Reembolso via Monetizze',

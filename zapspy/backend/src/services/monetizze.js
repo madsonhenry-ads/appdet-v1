@@ -412,9 +412,10 @@ async function syncMonetizzeSalesCore(startDate, endDate) {
                     if (existing.rows.length === 0) {
                         await pool.query(`
                             INSERT INTO refund_requests (
-                                protocol, full_name, email, phone, product, reason, 
+                                protocol, full_name, email, phone, product, reason,
                                 status, source, refund_type, transaction_id, value, funnel_language, created_at
                             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, COALESCE($13, NOW()))
+                            ON CONFLICT (protocol) DO NOTHING
                         `, [
                             refundProtocol,
                             name || 'N/A',
@@ -430,7 +431,7 @@ async function syncMonetizzeSalesCore(startDate, endDate) {
                             funnelLanguage,
                             saleDate
                         ]);
-                        
+
                         console.log(`📥 SYNC: ${refundType.toUpperCase()} registered: ${refundProtocol} - ${email} - ${productName}`);
                     } else {
                         // Update existing entry if status changed (e.g., refund -> chargeback)
