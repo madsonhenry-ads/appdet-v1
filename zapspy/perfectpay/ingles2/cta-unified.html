@@ -2115,9 +2115,9 @@ img,video,iframe{max-width:100%;height:auto;}
                     var dpList = document.getElementById('datingProfilesList');
                     if (!dpList) return;
                     var isFemale = typeof gender !== 'undefined' && gender === 'female';
-                    var img1 = isFemale ? '10mulher.jpg' : '10homem.jpg';
-                    var img2 = isFemale ? '6mulher.jpg' : '6homem.jpg';
-                    var img3 = isFemale ? '5mulher.jpg' : '5homem.jpg';
+                    var img1 = isFemale ? 'mulher9.jpg' : 'homem5.jpg';
+                    var img2 = isFemale ? 'mulher6.jpg' : 'homem4.jpg';
+                    var img3 = isFemale ? 'mulher5.jpg' : 'homem3.jpg';
                     var html = '<div class="dating-profile-card"><div class="dp-icon dp-tinder">🔥</div><div class="dp-info"><div class="dp-name">Tinder <span class="dp-badge dp-found">SCANNED</span></div><div class="dp-detail blurred">Profile registered with this number</div><div class="dp-detail blurred">4 photos uploaded · Recent swipe activity</div></div><div class="dp-photo" style="background-image:url(imagens/'+img3+')"></div></div>';
                     html += '<div class="dating-profile-card"><div class="dp-icon dp-bumble">🐝</div><div class="dp-info"><div class="dp-name">Bumble <span class="dp-badge dp-found">SCANNED</span></div><div class="dp-detail blurred">Verified dating profile found</div><div class="dp-detail blurred">Photo gallery · Connection history available</div></div><div class="dp-photo" style="background-image:url(imagens/'+img2+')"></div></div>';
                     html += '<div class="dating-profile-card"><div class="dp-icon dp-hinge">H</div><div class="dp-info"><div class="dp-name">Hinge <span class="dp-badge dp-not-found">NOT FOUND</span></div><div class="dp-detail blurred">No active profile detected</div><div class="dp-detail blurred">Number not linked to account</div></div></div>';
@@ -2643,24 +2643,24 @@ img,video,iframe{max-width:100%;height:auto;}
         if (gender === 'female') {
             frequentContactImg.src = 'imagens/spy-male-7.jpg';
             frequentContactName.innerHTML = '<span class="hidden">M. J.</span>';
-            var html = '';
-            var maleImgs = ['1homem.webp','2homem.webp','3homem.webp','motel2.webp','4homem.webp','5homem.webp','6homem.webp','motel1.webp','7homem.webp','8homem.webp','9homem.webp','10homem.webp'];
-            for (var i = 0; i < maleImgs.length; i++) {
-                var isLarge = i === 0 ? ' large' : '';
-                html += '<div class="media-item' + isLarge + '"><picture><source type="image/webp" srcset="imagens/' + maleImgs[i] + '"><img src="imagens/' + maleImgs[i].replace('.webp','.jpg') + '" alt="" loading="lazy" decoding="async"></picture><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>';
-            }
-            mediaGrid.innerHTML = html;
+            mediaGrid.innerHTML =
+                '<div class="media-item large"><img src="imagens/spy-male-1.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-2.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-3.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-4.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-5.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-6.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>';
         } else {
             // User spying on male (default), show female photos
             frequentContactImg.src = 'imagens/spy-female-7.jpg';
             frequentContactName.innerHTML = '<span class="hidden">J. S.</span>';
-            var html = '';
-            var femImgs = ['1mulher.webp','2mulher.webp','3mulher.webp','motel3.webp','4mulher.webp','5mulher.webp','6mulher.webp','motel1.webp','7mulher.webp','8mulher.webp','9mulher.webp','10mulher.webp'];
-            for (var i = 0; i < femImgs.length; i++) {
-                var isLarge = i === 0 ? ' large' : '';
-                html += '<div class="media-item' + isLarge + '"><picture><source type="image/webp" srcset="imagens/' + femImgs[i] + '"><img src="imagens/' + femImgs[i].replace('.webp','.jpg') + '" alt="" loading="lazy" decoding="async"></picture><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>';
-            }
-            mediaGrid.innerHTML = html;
+            mediaGrid.innerHTML =
+                '<div class="media-item large"><img src="imagens/spy-female-1.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-2.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-3.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-4.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-5.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-6.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>';
         }
 
         // Populate dating profiles
