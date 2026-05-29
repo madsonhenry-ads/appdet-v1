@@ -891,8 +891,8 @@ img,video,iframe{max-width:100%;height:auto;}
                         FunnelTracker.track(FunnelTracker.events.GENDER_SELECTED, { gender: gender, source: 'dashboard_modal' });
                     }
                     window.location.href = (typeof TrackingUtils!=='undefined')
-                        ? TrackingUtils.appendUTMs('landing.html?gender=' + gender)
-                        : 'landing.html?gender=' + gender;
+                        ? TrackingUtils.appendUTMs('phone.html?gender=' + gender)
+                        : 'phone.html?gender=' + gender;
                 });
             });
 
@@ -909,7 +909,7 @@ img,video,iframe{max-width:100%;height:auto;}
                 if (typeof window.__wsGpOpen === 'function') { window.__wsGpOpen(); }
                 return;
             }
-            window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs('landing.html') : 'landing.html';
+            window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs('phone.html') : 'phone.html';
         }
 
         function showLocked(featureName, emoji) {

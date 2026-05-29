@@ -2352,102 +2352,151 @@ img,video,iframe{max-width:100%;height:auto;}
             </div>
         </div>
 
-        <!-- Pricing / Checkout Two-Tier -->
-        <div id="pricing" style="margin:32px 0 24px;border:1px solid rgba(233,30,99,0.3);border-radius:16px;background:rgba(233,30,99,0.03);padding:24px 20px;position:relative;">
-            <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;font-size:12px;font-weight:800;padding:4px 16px;border-radius:20px;letter-spacing:1px;white-space:nowrap;box-shadow:0 4px 12px rgba(233,30,99,0.4);border:1px solid rgba(255,255,255,0.2);">LIMITED TIME OFFER</div>
-            
-            <h2 style="text-align:center;font-size:24px;font-weight:800;color:#fff;margin:0 0 20px;">Choose your plan</h2>
-            
-            <!-- Basic Plan -->
-            <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:16px;margin-bottom:16px;cursor:pointer;position:relative;transition:all 0.2s;" onclick="selectPlan('basic')" id="planBasic">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                    <div style="font-size:18px;font-weight:700;color:#fff;">Basic Scan</div>
-                    <div style="text-align:right;">
-                        <div style="font-size:12px;color:#8e8e93;text-decoration:line-through;" class="pl-original" data-usd="97">$97</div>
-                        <div style="font-size:20px;font-weight:800;color:#22c55e;" class="pl-price" data-usd="37">$37</div>
-                    </div>
-                </div>
-                <ul style="list-style:none;padding:0;margin:0;font-size:13px;color:#e5e5ea;">
-                    <li style="margin-bottom:6px;">✔️ Recover deleted messages</li>
-                    <li style="margin-bottom:6px;">✔️ Access 1 WhatsApp number</li>
-                    <li style="opacity:0.4;">❌ View hidden photos/videos</li>
-                    <li style="opacity:0.4;">❌ Real-time location tracking</li>
-                </ul>
+        <!-- CTA Social Proof -->
+        <div class="cta-social" data-cta-social="" style="text-align:center;font-size:13px;color:#fbbf24;margin: 16px 8px 24px;padding:10px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px;letter-spacing:0.2px;">★★★★★ <strong>4.9</strong> · <strong>2,847</strong> verified buyers</div>
+
+        <!-- Pricing -->
+        <div class="pricing-section" id="pricing">
+            <h2 class="tiers-title">Choose your level of access</h2>
+            <p class="tiers-sub">2 plans, 1 result: <strong>the truth</strong>. Pick what fits you.</p>
+
+            <div class="tier-trust-bar">
+                <span class="ttb-dot"></span>
+                <span><strong>73%</strong> of users picked <strong>Complete</strong> this week — best balance of price &amp; answers</span>
             </div>
 
-            <!-- Complete Plan (Selected by default) -->
-            <div style="background:rgba(233,30,99,0.1);border:2px solid #e91e63;border-radius:12px;padding:16px;margin-bottom:20px;cursor:pointer;position:relative;transition:all 0.2s;box-shadow:0 0 20px rgba(233,30,99,0.15);" onclick="selectPlan('complete')" id="planComplete">
-                <div style="position:absolute;top:-10px;right:12px;background:#e91e63;color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;text-transform:uppercase;">Most Popular</div>
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                    <div style="font-size:18px;font-weight:700;color:#fff;">Full Access + Bonus</div>
-                    <div style="text-align:right;">
-                        <div style="font-size:12px;color:#8e8e93;text-decoration:line-through;" class="pl-original" data-usd="197">$197</div>
-                        <div style="font-size:24px;font-weight:800;color:#22c55e;" class="pl-price" data-usd="97">$97</div>
+            <div class="tier-grid" data-tier-grid="">
+                <div class="tier-card" data-tier="basic" onclick="selectTier('basic')" role="button" tabindex="0">
+                    <span class="tier-stamp starter">Starter</span>
+                    <div class="tier-icon-wrap">🔍</div>
+                    <h3 class="tier-name">Basic</h3>
+                    <p class="tier-tagline">For peace of mind.</p>
+                    <div class="tier-anchor-wrap">
+                        <span class="tier-anchor">$97</span>
+                        <div class="tier-price"><span class="tier-currency">$</span>37</div>
                     </div>
+                    <div style="text-align:center;"><span class="tier-save">Save $60 · 62% off</span></div>
+                    <div class="tier-tag">30-day access · 1 number</div>
+                    <p class="tier-perday" style="text-align:center;font-size:11px;color:rgba(255,255,255,0.55);margin:6px 0 0;">≈ <strong style="color:rgba(255,255,255,0.85);">$1.23/day</strong> for 30 days</p>
+                    <ul class="tier-features">
+                        <li><span class="ico ico-ok">✅</span><span>Deleted messages <span class="dim">(last 30 days)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Photos &amp; media history</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Email support <span class="dim">(24-48h)</span></span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">Voice notes</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">Real-time alerts</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">GPS history</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">PDF Evidence Report</span></li>
+                        <li class="bonus"><span class="ico">⏱</span><span><strong>BONUS:</strong> Online Monitor 24/7 <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($29 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🎁</span><span><strong>BONUS:</strong> Truth Toolkit (templates &amp; scripts)</span></li>
+                        <li><span class="ico ico-neutral">🛡️</span><span>7-day money-back guarantee</span></li>
+                    </ul>
+                    <button class="tier-cta" onclick="purchaseTier('basic', event)">Get Basic — $37 →</button>
                 </div>
-                <ul style="list-style:none;padding:0;margin:0;font-size:13px;color:#e5e5ea;">
-                    <li style="margin-bottom:6px;">✔️ <strong>Everything in Basic</strong></li>
-                    <li style="margin-bottom:6px;">✔️ Monitor up to <strong>3 numbers</strong></li>
-                    <li style="margin-bottom:6px;">✔️ View all hidden photos/videos</li>
-                    <li style="margin-bottom:6px;">✔️ Live GPS location tracking</li>
-                    <li style="color:#e91e63;font-weight:600;margin-top:8px;">🎁 Includes 4 FREE Bonuses</li>
-                </ul>
+
+                <div class="tier-card recommended selected" data-tier="complete" onclick="selectTier('complete')" role="button" tabindex="0">
+                    <div class="tier-badge">★ MOST CHOSEN • 73%</div>
+                    <span class="tier-stamp popular">Best value</span>
+                    <div class="tier-icon-wrap">⚡</div>
+                    <h3 class="tier-name">Complete</h3>
+                    <p class="tier-tagline">For real answers — for life.</p>
+                    <div class="tier-anchor-wrap">
+                        <span class="tier-anchor">$197</span>
+                        <div class="tier-price"><span class="tier-currency">$</span>97</div>
+                    </div>
+                    <div style="text-align:center;"><span class="tier-save">Save $100 · 50% off</span></div>
+                    <div class="tier-tag">Lifetime · 3 numbers</div>
+                    <p class="tier-perday" style="text-align:center;font-size:11px;color:rgba(34,197,94,0.85);margin:6px 0 0;">≈ <strong>$0.27/day</strong> over 1 year — less than a coffee</p>
+                    <ul class="tier-features">
+                        <li><span class="ico ico-ok">✅</span><span>Everything in Basic, <strong>plus:</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Deleted messages <span class="dim">(<strong>Lifetime</strong>)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Voice notes recovery</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Real-time push alerts</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>GPS history <span class="dim">(<strong>Lifetime</strong>)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span><strong>PDF Evidence Report — Notarized</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span><strong>Unlimited numbers</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Priority chat support <span class="dim">(&lt;4h)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>1:1 call with case analyst</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Lawyer-referral network access</span></li>
+                        <li class="bonus"><span class="ico">🎁</span><span><strong>BONUS:</strong> Truth Toolkit (templates &amp; scripts)</span></li>
+                        <li class="bonus"><span class="ico">📷</span><span><strong>BONUS:</strong> Instagram Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($97 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🎵</span><span><strong>BONUS:</strong> TikTok Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($87 value)</span></span></li>
+                        <li class="bonus"><span class="ico">👻</span><span><strong>BONUS:</strong> Snapchat Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($67 value)</span></span></li>
+                        <li class="bonus"><span class="ico">📍</span><span><strong>BONUS:</strong> Real-Time GPS Tracker <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($67 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🔐</span><span><strong>BONUS:</strong> Encrypted evidence vault</span></li>
+                        <li class="bonus"><span class="ico">🏆</span><span><strong>BONUS:</strong> VIP lifetime updates</span></li>
+                        <li class="bonus"><span class="ico">🔔</span><span><strong>BONUS:</strong> Instant Alerts <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($47 value)</span></span></li>
+                        <li><span class="ico ico-neutral">🛡️</span><span><strong>60-day money-back guarantee</strong></span></li>
+                    </ul>
+                    <p class="tier-spots"><span class="dot"></span>Only 47 Complete spots left this week</p>
+                    <button class="tier-cta" onclick="purchaseTier('complete', event)">Get Complete — $97 →</button>
+                </div>
             </div>
 
-            <button class="cta-button" id="mainCtaBtn" onclick="handlePurchase()" style="background:linear-gradient(135deg,#e91e63,#c2185b);box-shadow:0 8px 24px rgba(233,30,99,0.3);width:100%;" aria-label="Unlock full access to Whats Spy">
-                <span class="cta-button-icon">🔓</span> <span id="ctaBtnText">Unlock Full Access Now</span><br><span id="ctaBtnPhone" style="font-size:12px;font-weight:400;opacity:0.85;"></span>
-            </button>
-            <p class="cta-subtext" style="color:#8e8e93;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0110 0v4"></path>
-                </svg>
-                Secure payment • Instant automatic access
-            </p>
+            <div class="payment-methods" aria-label="Accepted payment methods" style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap;">
+                <span class="payment-method" title="Visa" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 64 22" width="44" height="14" aria-label="Visa"><path fill="#1A1F71" d="M27.4 21.4h-5.2L25.5.6h5.2zm21-20.3a13 13 0 0 0-4.7-.9c-5.1 0-8.7 2.7-8.7 6.6 0 2.9 2.6 4.5 4.6 5.4 2 1 2.7 1.6 2.7 2.5 0 1.4-1.7 2-3.2 2a10.6 10.6 0 0 1-4.9-1l-.7-.4-.7 4.6c1.2.5 3.5 1 5.9 1 5.4 0 8.9-2.7 8.9-6.8 0-2.3-1.4-4-4.4-5.4-1.8-.9-2.9-1.5-2.9-2.5 0-.8 1-1.7 3-1.7a9.4 9.4 0 0 1 4 .8l.5.2.7-4.4zm13.1-.5h-4c-1.3 0-2.2.4-2.8 1.7l-7.7 18.6h5.4l1.1-3h6.6l.6 3h4.8L62 .6zm-6.5 13.4 2.7-7c-.1.1.6-1.5.9-2.5l.5 2.3 1.6 7.2zM18.3.6 13.1 14.7l-.6-2.8c-1-3.3-4-6.8-7.4-8.6L9.8 21.4h5.4l8-20.8z"></path></svg>
+                </span>
+                <span class="payment-method" title="Mastercard" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 36 22" width="34" height="20" aria-label="Mastercard"><circle cx="13" cy="11" r="9" fill="#EB001B"></circle><circle cx="23" cy="11" r="9" fill="#F79E1B"></circle><path fill="#FF5F00" d="M18 4.4a9 9 0 0 0 0 13.2 9 9 0 0 0 0-13.2z"></path></svg>
+                </span>
+                <span class="payment-method" title="American Express" style="background:#016FD0;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <span style="color:#fff;font:800 9px/1 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:0.6px;">AMERICAN<br>EXPRESS</span>
+                </span>
+                <span class="payment-method" title="PayPal" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 64 22" width="48" height="14" aria-label="PayPal"><path fill="#003087" d="M11.7 5.2H6.5c-.4 0-.7.3-.8.6L3.6 19.7c0 .3.1.5.4.5h2.6c.3 0 .6-.2.7-.5l.6-3.7c0-.3.4-.6.7-.6h1.6c3.5 0 5.5-1.7 6-5 .3-1.5 0-2.6-.6-3.4-.7-.9-2-1.8-3.9-1.8zm.6 4.9c-.3 1.9-1.7 1.9-3.1 1.9h-.8l.6-3.5c0-.2.2-.4.4-.4h.4c1 0 1.9 0 2.4.6.3.4.4.9.1 1.4z"></path><path fill="#003087" d="M28.5 10h-2.6c-.2 0-.4.2-.4.4l-.1.7-.2-.3c-.6-.8-1.8-1-3-1-2.9 0-5.4 2.2-5.9 5.3-.3 1.6.1 3 1 4 .8.9 2 1.3 3.5 1.3 2.3 0 3.6-1.5 3.6-1.5l-.1.7c0 .3.1.5.4.5h2.4c.4 0 .7-.3.8-.6l1.4-9c0-.3-.2-.5-.5-.5zm-3.7 5.1c-.3 1.5-1.5 2.6-3 2.6-.8 0-1.4-.3-1.8-.7-.4-.5-.5-1.1-.4-1.8.3-1.5 1.4-2.6 3-2.6.7 0 1.3.2 1.7.7.4.5.5 1.1.5 1.8z"></path><path fill="#009CDE" d="M42.4 10h-2.6c-.3 0-.5.1-.7.3l-3.6 5.3-1.5-5.1c-.1-.3-.4-.5-.7-.5h-2.6c-.3 0-.5.3-.4.6l2.9 8.5-2.7 3.8c-.2.3 0 .7.4.7h2.6c.2 0 .5-.1.6-.3L42.7 10.7c.2-.3 0-.7-.3-.7zm9.3-4.8h-5.2c-.4 0-.7.3-.8.6l-2.1 13.4c0 .3.1.5.4.5h2.7c.2 0 .5-.2.5-.4l.6-3.8c0-.3.4-.6.7-.6h1.6c3.5 0 5.5-1.7 6-5 .3-1.5 0-2.6-.6-3.4-.7-.9-2-1.7-3.8-1.7zm.6 4.9c-.3 1.9-1.7 1.9-3.1 1.9h-.8l.6-3.5c0-.2.2-.4.4-.4h.4c1 0 1.9 0 2.4.6.3.4.4.9.1 1.4zm15-.1H64.8c-.2 0-.4.2-.4.4l-.1.7-.2-.3c-.6-.8-1.8-1-3-1-2.9 0-5.4 2.2-5.9 5.3-.3 1.6.1 3 1 4 .8.9 2 1.3 3.5 1.3 2.3 0 3.6-1.5 3.6-1.5l-.1.7c0 .3.1.5.4.5h2.4c.4 0 .7-.3.8-.6l1.4-9c0-.3-.1-.5-.4-.5zm-3.7 5.1c-.3 1.5-1.5 2.6-3 2.6-.8 0-1.4-.3-1.8-.7-.4-.5-.5-1.1-.4-1.8.3-1.5 1.4-2.6 3-2.6.7 0 1.3.2 1.7.7.4.5.5 1.1.5 1.8z"></path></svg>
+                </span>
+                <span class="payment-method" title="Apple Pay" style="background:#000;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 64 24" width="44" height="18" aria-label="Apple Pay"><path fill="#fff" d="M11.6 5.4c-.7.8-1.7 1.4-2.8 1.3-.1-1.1.4-2.2 1.1-2.9.7-.8 1.8-1.4 2.7-1.4.1 1.1-.3 2.2-1 3zm1 1.5c-1.5-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.7 1.1 8.9.7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7 1.3 0 1.7.7 2.9.7 1.2 0 2-1.1 2.7-2.2.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.4-.9-2.4-3.6 0-2.3 1.9-3.4 2-3.4-1.1-1.5-2.7-1.7-3.2-1.7zm8.8-3.8v17h2.7v-5.8h3.6c3.3 0 5.6-2.3 5.6-5.6 0-3.3-2.3-5.6-5.5-5.6h-6.4zm2.7 2.2h3c2.2 0 3.5 1.2 3.5 3.4s-1.3 3.4-3.5 3.4h-3V5.3zm14.5 14.9c1.7 0 3.3-.9 4-2.3v2h2.5v-8.5c0-2.5-2-4.1-5-4.1-2.8 0-4.9 1.6-5 3.8h2.4c.2-1.1 1.1-1.8 2.5-1.8 1.6 0 2.5.8 2.5 2.2v1l-3.4.2c-3.1.2-4.8 1.4-4.8 3.6 0 2.2 1.7 3.6 4.3 3.6zm.7-2c-1.4 0-2.3-.7-2.3-1.7 0-1 .9-1.7 2.6-1.8l3-.2v1c0 1.5-1.4 2.7-3.3 2.7zm9.4 5.7c2.5 0 3.7-1 4.7-3.8l4.5-12.6h-2.7l-3 9.7-3-9.7h-2.8l4.4 12.1-.2.7c-.4 1.3-1 1.8-2.2 1.8-.2 0-.6 0-.7-.1V24c.2 0 .8.1 1 .1z"></path></svg>
+                </span>
+            </div>
+
+            <!-- Side-by-side plan matrix -->
+            <div class="plan-matrix" style="margin:20px 8px 18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;">
+                <div style="padding:14px 16px 10px;text-align:center;">
+                    <h3 style="color:#fff;font-size:15px;font-weight:700;margin:0 0 4px;letter-spacing:0.2px;">Compare both plans</h3>
+                    <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:0;">All prices one-time. No subscription.</p>
+                </div>
+                <div class="pm-scroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                    <table style="width:100%;min-width:520px;border-collapse:collapse;font-size:12.5px;color:rgba(255,255,255,0.85);">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,0.04);">
+                                <th style="text-align:left;padding:10px 12px;font-weight:600;color:rgba(255,255,255,0.55);font-size:11px;text-transform:uppercase;letter-spacing:0.6px;">Feature</th>
+                                <th style="padding:10px 8px;text-align:center;font-weight:700;color:#9ca3af;">Basic<br><span style="font-size:11px;font-weight:500;color:#9ca3af;">$37</span></th>
+                                <th style="padding:10px 8px;text-align:center;font-weight:800;color:#22c55e;background:rgba(34,197,94,0.06);">Complete<br><span style="font-size:11px;font-weight:600;color:#22c55e;">$97 ★</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Deleted messages</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">30 days</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong style="color:#22c55e;">Lifetime</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Photos &amp; media</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#22c55e;">✓</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;">✓</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Voice notes</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;">✓</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Real-time alerts</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;">✓</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">GPS history</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong>Lifetime</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">PDF Evidence Report</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;"><strong>Notarized</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Numbers tracked</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">1</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong>Unlimited</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Support</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">Email 24-48h</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);">Chat &lt;4h</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Money-back</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">7 days</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong style="color:#22c55e;">60 days</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <h3>What changes after you have the truth</h3>
+                <div class="comp-row head"><div>Without Whats Spy</div><div>With Whats Spy</div></div><div class="comp-row"><div class="col-without">❌ Days of insomnia staring at the ceiling</div><div class="col-with">✅ Clear answer in 2 minutes</div></div><div class="comp-row"><div class="col-without">❌ Snoop their phone (they catch you)</div><div class="col-with">✅ 100% remote — they never know</div></div><div class="comp-row"><div class="col-without">❌ Argue without proof, look paranoid</div><div class="col-with">✅ Screenshots &amp; timestamps as evidence</div></div><div class="comp-row"><div class="col-without">❌ Wonder again tomorrow</div><div class="col-with">✅ Closure tonight — for good</div></div>
+            </div>
+
+            <div class="closure-guarantee dual">
+                <div class="cg-icon">🛡️</div>
+                <div>
+                    <h4>Double Guarantee</h4>
+                    <div class="dg-row"><strong>1. Result Guarantee — 7 days</strong>If after 7 days you don't have a clear answer about what's going on, we refund 100% AND you keep all bonuses ($394 value).</div>
+                    <div class="dg-row"><strong>2. Satisfaction Guarantee — 30/60 days</strong>Even after 7 days, change your mind for any reason and we refund 100%.</div>
+                    <p class="dg-foot">* 7 days for Basic, 60 days for Complete.</p>
+                </div>
+            </div>
+
+            <p class="loss-microcopy">Tomorrow you'll still be wondering. Or you'll know.</p>
         </div>
-
-        <script>
-        // Store selected plan globally
-        window.selectedPlan = 'complete';
-        window.productValue = 97;
-        window.checkoutCode = 'PPU38CQB3RK'; // Default Complete plan code
-
-        function selectPlan(plan) {
-            window.selectedPlan = plan;
-            var basic = document.getElementById('planBasic');
-            var comp = document.getElementById('planComplete');
-            
-            if (plan === 'basic') {
-                basic.style.background = 'rgba(233,30,99,0.1)';
-                basic.style.border = '2px solid #e91e63';
-                basic.style.boxShadow = '0 0 20px rgba(233,30,99,0.15)';
-                
-                comp.style.background = 'rgba(255,255,255,0.05)';
-                comp.style.border = '1px solid rgba(255,255,255,0.1)';
-                comp.style.boxShadow = 'none';
-                
-                window.productValue = 37;
-                window.checkoutCode = 'PPU38CQ9Q3O'; // Set this to actual Basic plan link if needed
-                document.getElementById('ctaBtnText').textContent = 'Unlock Basic Scan Now';
-            } else {
-                comp.style.background = 'rgba(233,30,99,0.1)';
-                comp.style.border = '2px solid #e91e63';
-                comp.style.boxShadow = '0 0 20px rgba(233,30,99,0.15)';
-                
-                basic.style.background = 'rgba(255,255,255,0.05)';
-                basic.style.border = '1px solid rgba(255,255,255,0.1)';
-                basic.style.boxShadow = 'none';
-                
-                window.productValue = 97;
-                window.checkoutCode = 'PPU38CQB3RK'; // Complete plan code
-                document.getElementById('ctaBtnText').textContent = 'Unlock Full Access Now';
-            }
-            // Trigger Price Localization logic to update newly selected prices if the function is available
-            if (typeof updateLocalizedPrices === 'function') {
-                updateLocalizedPrices();
-            }
-        }
-        </script>
 
         <!-- Testimonials -->
         <div class="testimonials-section">
@@ -2771,18 +2820,33 @@ img,video,iframe{max-width:100%;height:auto;}
             element.parentElement.classList.toggle('open');
         }
 
-        // Handle purchase - fire AddToCart on CTA click, then show popup
-        var addToCartFired = false;
-        function handlePurchase() {
-            if (!addToCartFired) {
-                addToCartFired = true;
-                var val = window.productValue || 37;
-                if (typeof FacebookCAPI !== 'undefined') {
-                    FacebookCAPI.trackAddToCart(val, 'Whats Spy VIP Access');
-                } else if (typeof fbq !== 'undefined') {
-                    var eid = 'AddToCart_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    fbq('track', 'AddToCart', { content_name: 'Whats Spy VIP Access', currency: 'USD', value: val }, { eventID: eid });
-                }
+        // Tier selection and purchase
+        window.selectedTier = 'complete';
+        window.productValue = 97;
+        window.checkoutCode = 'PPU38CQAMBB';
+
+        function selectTier(tier) {
+            window.selectedTier = tier;
+            document.querySelectorAll('.tier-card').forEach(function(c) {
+                c.classList.toggle('selected', c.dataset.tier === tier);
+            });
+            if (tier === 'basic') {
+                window.productValue = 37;
+                window.checkoutCode = 'PPU38CQ7KHI';
+            } else {
+                window.productValue = 97;
+                window.checkoutCode = 'PPU38CQAMBB';
+            }
+        }
+
+        function purchaseTier(tier, event) {
+            event.stopPropagation();
+            selectTier(tier);
+            if (typeof FacebookCAPI !== 'undefined') {
+                FacebookCAPI.trackAddToCart(window.productValue, 'Whats Spy VIP Access');
+            } else if (typeof fbq !== 'undefined') {
+                var eid = 'AddToCart_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                fbq('track', 'AddToCart', { content_name: 'Whats Spy VIP Access', currency: 'USD', value: window.productValue }, { eventID: eid });
             }
             showResponsibilityPopup();
         }
@@ -2790,15 +2854,6 @@ img,video,iframe{max-width:100%;height:auto;}
         function showResponsibilityPopup() {
             var popup = document.getElementById('responsibilityPopup');
             if (!popup) { proceedToCheckout(); return; }
-
-            var cb = document.getElementById('rpCheckbox');
-            var btn = document.getElementById('rpAcceptBtn');
-            if (cb) { cb.checked = false; }
-            if (btn) { btn.disabled = true; btn.classList.remove('rp-active'); }
-
-            popup.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-
             var nameEl = document.getElementById('rpUserName');
             var uName = localStorage.getItem('userName') || '';
             if (uName && nameEl) {
@@ -2806,10 +2861,8 @@ img,video,iframe{max-width:100%;height:auto;}
                 firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
                 nameEl.textContent = firstName;
             }
-
-            var slotsEl = document.getElementById('rpSlots');
-            var slots = parseInt(localStorage.getItem('accessSlots')) || 3;
-            if (slotsEl) slotsEl.textContent = slots;
+            popup.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
 
         function closeResponsibilityPopup() {
@@ -2818,33 +2871,21 @@ img,video,iframe{max-width:100%;height:auto;}
             document.body.style.overflow = '';
         }
 
-        function toggleRpAccept() {
-            var cb = document.getElementById('rpCheckbox');
-            var btn = document.getElementById('rpAcceptBtn');
-            if (cb && btn) {
-                btn.disabled = !cb.checked;
-                btn.classList.toggle('rp-active', cb.checked);
-            }
-        }
-
-        function acceptResponsibility() {
-            var cb = document.getElementById('rpCheckbox');
-            if (!cb || !cb.checked) return;
+        function confirmAndProceed() {
             var modal = document.querySelector('.rp-modal');
             if (modal) {
-                var lang = (document.documentElement.lang || '').substring(0, 2).toLowerCase();
                 var msgs = {
                     en: ['Redirecting to secure checkout...', 'Please wait, do not close this page.'],
                     es: ['Redirigiendo al checkout seguro...', 'Por favor espera, no cierres esta página.'],
                     fr: ['Redirection vers le paiement sécurisé...', 'Veuillez patienter, ne fermez pas cette page.'],
                     pt: ['Redirecionando para o checkout seguro...', 'Por favor aguarde, não feche esta página.']
                 };
+                var lang = (document.documentElement.lang || '').substring(0, 2).toLowerCase();
                 var m = msgs[lang] || msgs.en;
                 modal.innerHTML = '<div style="text-align:center;padding:48px 24px;">' +
                     '<div style="width:48px;height:48px;border:4px solid rgba(255,255,255,0.1);border-top-color:#22c55e;border-radius:50%;animation:rp-spin .8s linear infinite;margin:0 auto;"></div>' +
                     '<h3 style="color:#fff;margin:24px 0 8px;font-size:18px;">' + m[0] + '</h3>' +
-                    '<p style="color:rgba(255,255,255,0.5);font-size:13px;">' + m[1] + '</p>' +
-                    '</div>';
+                    '<p style="color:rgba(255,255,255,0.5);font-size:13px;">' + m[1] + '</p></div>';
                 if (!document.getElementById('rpSpinStyle')) {
                     var s = document.createElement('style');
                     s.id = 'rpSpinStyle';
@@ -2854,15 +2895,16 @@ img,video,iframe{max-width:100%;height:auto;}
             }
             proceedToCheckout();
         }
-        
+
         // Proceed to checkout with all tracking
         var checkoutLocked = false;
+        window.addEventListener("pageshow", function(e) { if (e.persisted) { checkoutLocked = false; } });
         function proceedToCheckout() {
             if (checkoutLocked) return;
             checkoutLocked = true;
-            // Get current product value
-            const currentValue = window.productValue || 37;
-            const currentCheckoutCode = window.checkoutCode || 'PPU38CQ9Q3O';
+            setTimeout(function() { checkoutLocked = false; }, 6000);
+            const currentValue = window.productValue || 97;
+            const currentCheckoutCode = window.checkoutCode || 'PPU38CQAMBB';
             
             console.log('🛒 proceedToCheckout: firing InitiateCheckout...', { FacebookCAPI: typeof FacebookCAPI, fbq: typeof fbq, value: currentValue });
             if (typeof FacebookCAPI !== 'undefined') {

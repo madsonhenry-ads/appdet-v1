@@ -2481,6 +2481,15 @@
             window._vslLoaded = true;
             var vc = document.getElementById('vslContainer');
             if (!vc) return;
+            var player = document.createElement('vturb-smartplayer');
+            player.id = 'vid-69d4f6d649922114cb89b55b';
+            player.style.cssText = 'display:block;margin:0 auto;width:100%;';
+            vc.appendChild(player);
+            var s = document.createElement('script');
+            s.src = 'https://scripts.converteai.net/d331dfa7-f65a-427e-934f-2c0eb96fde35/players/69d4f6d649922114cb89b55b/v4/player.js';
+            s.async = true;
+            document.head.appendChild(s);
+            try { if (typeof _trackVSL === 'function') _trackVSL(); } catch(_){}
             vc.style.display = 'block';
         }
 
@@ -2490,6 +2499,7 @@
             if (vc) {
                 vc.querySelectorAll('video, audio, iframe').forEach(function(el) {
                     if (el.pause) el.pause();
+                    if (el.src) el.src = '';
                 });
                 vc.style.display = 'none';
             }
@@ -3330,7 +3340,7 @@
                         const gender = urlParams.get('gender') || localStorage.getItem('targetGender') || '';
                         const genderParam = gender ? '&gender=' + gender : '';
                         destroyVSL();
-                        window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs('cta-unified.html?phone=' + encodeURIComponent(currentPhone) + genderParam) : 'cta-unified.html?phone=' + encodeURIComponent(currentPhone) + genderParam;
+                        window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs('conversas.html?phone=' + encodeURIComponent(currentPhone) + genderParam) : 'conversas.html?phone=' + encodeURIComponent(currentPhone) + genderParam;
                     }, 1500);
                     return;
                 }
