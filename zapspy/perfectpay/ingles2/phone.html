@@ -2358,7 +2358,9 @@
                     <div class="bf-log" id="bfLog"></div>
                 </div>
             </div>
-            <div id="vslContainer" style="background:#0a0a0a;border-radius:14px;overflow:hidden;max-width:100%;margin-top:16px;"></div>
+            <div id="vslContainer" style="background:#0a0a0a;border-radius:14px;overflow:hidden;max-width:100%;margin-top:16px;display:none;">
+                <iframe src="https://play.tynk.ai/p/4527683d-e208-498a-b0d7-bfa92bf41ae1" style="width:100%;aspect-ratio:16/9;border:0;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
         </div>
 
         <!-- Screen 4: Hacking Terminal -->
@@ -2479,12 +2481,7 @@
             window._vslLoaded = true;
             var vc = document.getElementById('vslContainer');
             if (!vc) return;
-            var frame = document.createElement('iframe');
-            frame.src = "https://play.tynk.ai/p/4527683d-e208-498a-b0d7-bfa92bf41ae1";
-            frame.style.cssText = 'width:100%;aspect-ratio:16/9;border:0;display:block;';
-            frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-            frame.allowFullscreen = true;
-            vc.appendChild(frame);
+            vc.style.display = 'block';
         }
 
         function destroyVSL() {
@@ -2493,7 +2490,6 @@
             if (vc) {
                 vc.querySelectorAll('video, audio, iframe').forEach(function(el) {
                     if (el.pause) el.pause();
-                    if (el.src) el.src = '';
                 });
                 vc.style.display = 'none';
             }
