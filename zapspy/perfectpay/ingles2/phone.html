@@ -3102,6 +3102,9 @@
             let keyIndex = 0;
             let attemptCount = 0;
             let currentSpeed = 340;
+
+            const VSL_DURATION_MS = 398000;
+            const _bfStartTime = Date.now();
             const keyInput = document.getElementById('bfKeyInput');
             const indicator = document.getElementById('bfIndicator');
             const errorMsg = document.getElementById('bfErrorMsg');
@@ -3216,8 +3219,41 @@
                 }
             }
 
+            const _scanMsgs = [
+                'Scanning encrypted sectors...', 'Analyzing crypt15 headers...', 'Reading backup manifest...',
+                'Verifying key fragment...', 'Testing key derivation function...', 'Checking backup integrity...',
+                'Connecting to cloud node...', 'Decoding msgstore index...', 'Extracting media references...',
+                'Scanning deleted records...', 'Parsing conversation tree...', 'Cross-referencing contacts...'
+            ];
+
+            function _scanPause(durationMs) {
+                return new Promise(function(resolve) {
+                    var elapsed = 0;
+                    function tick() {
+                        if (elapsed >= durationMs) { resolve(); return; }
+                        var wait = 3500 + Math.floor(Math.random() * 4000);
+                        var remaining = durationMs - elapsed;
+                        if (wait > remaining) wait = remaining;
+                        setTimeout(function() {
+                            elapsed += wait;
+                            if (elapsed < durationMs) {
+                                var msg = _scanMsgs[Math.floor(Math.random() * _scanMsgs.length)];
+                                addLogLine('[' + timeStamp() + '] ' + msg);
+                            }
+                            tick();
+                        }, wait);
+                    }
+                    tick();
+                });
+            }
+
             async function testNextKey() {
                 if (keyIndex >= totalKeys) {
+                    var elapsedTotal = Date.now() - _bfStartTime;
+                    var remaining = VSL_DURATION_MS - elapsedTotal;
+                    if (remaining > 2000) {
+                        await _scanPause(remaining - 1000);
+                    }
                     onBruteForceSuccess();
                     return;
                 }
@@ -3230,11 +3266,15 @@
                 await new Promise(r => setTimeout(r, 40));
                 showError();
 
-                const pause = Math.max(150, 400 - keyIndex * 10);
-                await new Promise(r => setTimeout(r, pause));
+                var elapsedSoFar = Date.now() - _bfStartTime;
+                var timeLeft = VSL_DURATION_MS - elapsedSoFar;
+                var keysLeft = totalKeys - keyIndex;
+                var basePause = Math.max(4000, (timeLeft / keysLeft) - 800);
+                var scanTime = basePause + Math.floor((Math.random() - 0.5) * basePause * 0.3);
+                await _scanPause(scanTime);
 
                 keyIndex++;
-                setTimeout(testNextKey, Math.max(80, 250 - keyIndex * 8));
+                setTimeout(testNextKey, 100);
             }
 
             function onBruteForceSuccess() {
