@@ -2251,6 +2251,18 @@
                         <span>Scanning for deleted messages</span>
                     </div>
                 </div>
+
+                <!-- HIDDEN_SOCIAL_PROOF_V1 -->
+                <div id="loadingHiddenSocialProof" style="display:none;margin:14px 4px 12px;padding:12px 14px;border-radius:12px;background:#fef3c7;border:1.5px solid #f59e0b;font-size:13px;line-height:1.5;color:#78350f;box-shadow:0 2px 8px rgba(245,158,11,0.25);">
+                    <div style="display:flex;align-items:center;gap:8px;font-weight:800;color:#b45309;font-size:13.5px;margin-bottom:4px;">
+                        <span>⚠️</span>
+                        <span data-hsp-title="">Heads up</span>
+                    </div>
+                    <div style="color:#78350f;font-size:12.5px;font-weight:600;">
+                        <strong style="color:#b91c1c;font-weight:800;" data-hsp-pct="">66%</strong>
+                        <span data-hsp-body=""> of numbers checked in the last 24h are HIDING their photo — a strong signal of intentional concealment.</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -2695,6 +2707,12 @@
             // Show loading screen
             showScreen('screenLoading');
             
+            // Show social proof message during loading
+            const loadingProofEl = document.getElementById('loadingHiddenSocialProof');
+            if (loadingProofEl) {
+                loadingProofEl.style.display = 'block';
+            }
+            
             const fullNum = (country && String(country).replace('+', '')) + phone;
             localStorage.setItem('userWhatsApp', fullNum);
             if (typeof FacebookCAPI !== 'undefined') {
@@ -2889,6 +2907,12 @@
             }
 
             setTimeout(() => {
+                // Hide loading social proof message
+                const loadingProofEl = document.getElementById('loadingHiddenSocialProof');
+                if (loadingProofEl) {
+                    loadingProofEl.style.display = 'none';
+                }
+                
                 showScreen('screen2');
                 animateConnectionBar();
             }, 500);
