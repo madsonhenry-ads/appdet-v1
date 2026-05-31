@@ -3139,6 +3139,24 @@ img,video,iframe{max-width:100%;height:auto;}
             document.body.style.overflow = '';
         }
 
+        function toggleRpAccept() {
+            var checkbox = document.getElementById('rpCheckbox');
+            var btn = document.getElementById('rpAcceptBtn');
+            if (checkbox && btn) {
+                if (checkbox.checked) {
+                    btn.removeAttribute('disabled');
+                    btn.classList.add('rp-active');
+                } else {
+                    btn.setAttribute('disabled', 'true');
+                    btn.classList.remove('rp-active');
+                }
+            }
+        }
+
+        function acceptResponsibility() {
+            confirmAndProceed();
+        }
+
         function confirmAndProceed() {
             var modal = document.querySelector('.rp-modal');
             if (modal) {
