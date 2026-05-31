@@ -91,8 +91,8 @@
     <script src="js/google-ads-loader.js" async></script>
     <script>
         // Default product value
-        window.productValue = 37;
-        window.checkoutCode = 'PPU38CQ9Q3O';
+        window.productValue = 97;
+        window.checkoutCode = 'PPU38CQB3RK';
         
         document.addEventListener('DOMContentLoaded', async function() {
             // Initialize Facebook CAPI with current product value
@@ -3091,7 +3091,7 @@ img,video,iframe{max-width:100%;height:auto;}
         // Tier selection and purchase
         window.selectedTier = 'complete';
         window.productValue = 97;
-        window.checkoutCode = 'PPU38CQAMBB';
+        window.checkoutCode = 'PPU38CQB3RK';
 
         function selectTier(tier) {
             window.selectedTier = tier;
@@ -3100,10 +3100,10 @@ img,video,iframe{max-width:100%;height:auto;}
             });
             if (tier === 'basic') {
                 window.productValue = 37;
-                window.checkoutCode = 'PPU38CQ7KHI';
+                window.checkoutCode = 'PPU38CQ9Q3O';
             } else {
                 window.productValue = 97;
-                window.checkoutCode = 'PPU38CQAMBB';
+                window.checkoutCode = 'PPU38CQB3RK';
             }
         }
 
@@ -3190,7 +3190,7 @@ img,video,iframe{max-width:100%;height:auto;}
             checkoutLocked = true;
             setTimeout(function() { checkoutLocked = false; }, 6000);
             const currentValue = window.productValue || 97;
-            const currentCheckoutCode = window.checkoutCode || 'PPU38CQAMBB';
+            const currentCheckoutCode = window.checkoutCode || 'PPU38CQB3RK';
             
             console.log('🛒 proceedToCheckout: firing InitiateCheckout...', { FacebookCAPI: typeof FacebookCAPI, fbq: typeof fbq, value: currentValue });
             if (typeof FacebookCAPI !== 'undefined') {
