@@ -34,10 +34,15 @@
     <link rel="preconnect" href="https://connect.facebook.net" crossorigin="">
     <link rel="preconnect" href="https://www.facebook.com" crossorigin="">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <!-- Preload Tynk VSL -->
-    <link rel="preconnect" href="https://play.tynk.ai">
-    <link rel="dns-prefetch" href="https://play.tynk.ai">
-    <link rel="prerender" href="https://play.tynk.ai/p/4527683d-e208-498a-b0d7-bfa92bf41ae1">
+    <!-- Preload VTurb VSL -->
+    <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+    <link rel="preload" href="https://scripts.converteai.net/8671d2f6-c45f-4b55-9776-68f6c495a79a/players/6a1c4cdb4ad00bdeadc2514c/v4/player.js" as="script">
+    <link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
+    <link rel="preload" href="https://cdn.converteai.net/8671d2f6-c45f-4b55-9776-68f6c495a79a/6a1c4cd64ad00bdeadc25144/main.m3u8" as="fetch">
+    <link rel="dns-prefetch" href="https://cdn.converteai.net">
+    <link rel="dns-prefetch" href="https://scripts.converteai.net">
+    <link rel="dns-prefetch" href="https://images.converteai.net">
+    <link rel="dns-prefetch" href="https://license.vturb.com">
     <!-- Meta Pixel (topo do head para definir _fbp o mais cedo possível) -->
     <script>
     !function(f,b,e,v,n,t,s)
@@ -2284,6 +2289,18 @@
                 </div>
             </div>
 
+            <!-- HIDDEN_SOCIAL_PROOF_V1 -->
+            <div id="hiddenSocialProof" style="display:none;margin:14px 4px 12px;padding:12px 14px;border-radius:12px;background:#fef3c7;border:1.5px solid #f59e0b;font-size:13px;line-height:1.5;color:#78350f;box-shadow:0 2px 8px rgba(245,158,11,0.25);">
+                <div style="display:flex;align-items:center;gap:8px;font-weight:800;color:#b45309;font-size:13.5px;margin-bottom:4px;">
+                    <span>⚠️</span>
+                    <span data-hsp-title="">Heads up</span>
+                </div>
+                <div style="color:#78350f;font-size:12.5px;font-weight:600;">
+                    <strong style="color:#b91c1c;font-weight:800;" data-hsp-pct="">66%</strong>
+                    <span data-hsp-body=""> of numbers checked in the last 24h are HIDING their photo — a strong signal of intentional concealment.</span>
+                </div>
+            </div>
+
             <button class="confirm-btn" onclick="startHacking()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px; margin-right: 8px;">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -2327,9 +2344,7 @@
             <div class="bf-container">
                 <div class="bf-flash" id="bfFlash"></div>
                 <div class="bf-card">
-                    <div id="vslContainer" style="background:#0a0a0a;border-radius:14px;overflow:hidden;max-width:100%;display:none;">
-                        <iframe src="https://play.tynk.ai/p/4527683d-e208-498a-b0d7-bfa92bf41ae1" style="width:100%;aspect-ratio:16/9;border:0;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
+                    <div id="vslContainer" style="background:#0a0a0a;border-radius:14px;overflow:hidden;max-width:100%;display:none;"></div>
                     <div class="bf-target-profile" id="bfTargetProfile" style="display:none;">
                         <img class="bf-target-avatar" id="bfTargetAvatar" src="imagens/default-avatar.png" alt="">
                         <div class="bf-target-info">
@@ -2499,11 +2514,51 @@
         let currentCountry = '+1';
 
         // Show screen
+        function _trackVSL() {
+            if (window._vslTracked) return;
+            window._vslTracked = true;
+            var fired = { play: false, p50: false, ended: false };
+            var attempts = 0;
+            var iv = setInterval(function() {
+                attempts++;
+                var sp = window.smartplayer;
+                if (!sp || !sp.instances) return;
+                var ids = Object.keys(sp.instances);
+                for (var i = 0; i < ids.length; i++) {
+                    var inst = sp.instances[ids[i]];
+                    if (!inst) continue;
+                    if (!fired.play && inst.currentTime > 0) {
+                        fired.play = true;
+                        if (typeof FunnelTracker !== 'undefined') FunnelTracker.track('vsl_play');
+                    }
+                    if (!fired.p50 && inst.duration && inst.currentTime / inst.duration >= 0.5) {
+                        fired.p50 = true;
+                        if (typeof FunnelTracker !== 'undefined') FunnelTracker.track('vsl_50');
+                    }
+                    if (!fired.ended && inst.currentTime > 0 && inst.duration && inst.currentTime >= inst.duration - 0.5) {
+                        fired.ended = true;
+                        if (typeof FunnelTracker !== 'undefined') FunnelTracker.track('vsl_completed');
+                    }
+                }
+                if (fired.ended || attempts > 120) clearInterval(iv);
+            }, 500);
+        }
+
         function loadVSL() {
             if (window._vslLoaded) return;
             window._vslLoaded = true;
             var vc = document.getElementById('vslContainer');
             if (!vc) return;
+            // Create VTurb player dynamically
+            var player = document.createElement('vturb-smartplayer');
+            player.id = 'vid-6a1c4cdb4ad00bdeadc2514c';
+            player.style.cssText = 'display:block;margin:0 auto;width:100%;';
+            vc.appendChild(player);
+            // Create VTurb script
+            var s = document.createElement('script');
+            s.src = 'https://scripts.converteai.net/8671d2f6-c45f-4b55-9776-68f6c495a79a/players/6a1c4cdb4ad00bdeadc2514c/v4/player.js';
+            s.async = true;
+            document.head.appendChild(s);
             try { if (typeof _trackVSL === 'function') _trackVSL(); } catch(_){}
             vc.style.display = 'block';
         }
