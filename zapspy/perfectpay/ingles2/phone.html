@@ -2912,8 +2912,15 @@
                 if (loadingProofEl) {
                     loadingProofEl.style.display = 'none';
                 }
-                
+
                 showScreen('screen2');
+
+                // Show social proof message on screen2
+                const hiddenProofEl = document.getElementById('hiddenSocialProof');
+                if (hiddenProofEl) {
+                    hiddenProofEl.style.display = 'block';
+                }
+
                 animateConnectionBar();
             }, 500);
         }
