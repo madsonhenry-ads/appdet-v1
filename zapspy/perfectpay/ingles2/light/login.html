@@ -98,7 +98,8 @@
             }
         });
     </script>
-    <script src="../js/tracking-utils.js" defer></script>
+    <script src="../js/tracking-utils.js"></script>
+    <script>if(typeof TrackingUtils!=='undefined')TrackingUtils.captureUTMs();</script>
     <script src="../js/funnel-tracking.js" defer></script>
 
     <style>
@@ -639,6 +640,13 @@ img,video,iframe{max-width:100%;height:auto;}
                     currency: 'USD'
                 });
             }
+
+            /* FUNNEL_EMAIL_CAPTURED_V1 */
+            try {
+                if (typeof FunnelTracker !== 'undefined' && FunnelTracker.events) {
+                    FunnelTracker.track(FunnelTracker.events.EMAIL_CAPTURED);
+                }
+            } catch (e) {}
 
             var btn = document.getElementById('loginBtn');
             btn.classList.add('loading');

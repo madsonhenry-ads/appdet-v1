@@ -562,7 +562,7 @@ img,video,iframe{max-width:100%;height:auto;}
             </div>
             <div class="unlock-banner-text">
                 <strong id="lockedCount">23 locked messages</strong>
-                <span>Including <span id="evidenceCount">5</span> evidence</span>
+                <span>Including <span id="evidenceCount">5</span> **flagged items**</span>
             </div>
         </div>
         <button class="unlock-banner-btn" onclick="goToCTA()" aria-label="Unlock hidden messages">Unlock</button>
@@ -653,7 +653,7 @@ img,video,iframe{max-width:100%;height:auto;}
                 }
 
                 let tags = '';
-                if (msg.evidence) tags += '<div class="evidence-tag">🔴 EVIDENCE FOUND</div>';
+                if (msg.evidence) tags += '<div class="evidence-tag">🔴 FLAGGED -- HIGH RISK</div>';
                 if (msg.deleted) tags += '<div class="deleted-tag">🗑️ DELETED MESSAGE</div>';
 
                 container.innerHTML += `
@@ -675,9 +675,9 @@ img,video,iframe{max-width:100%;height:auto;}
 
         function showModal(type) {
             const texts = {
-                photo: 'This <strong>PHOTO</strong> was marked as evidence. May contain compromising content.',
-                video: 'This <strong>VIDEO</strong> was marked as evidence. May contain intimate content.',
-                audio: 'This <strong>AUDIO</strong> was marked as evidence. May contain important confessions.',
+                photo: 'This <strong>PHOTO</strong> was flagged as high-risk. May contain compromising content.',
+                video: 'This <strong>VIDEO</strong> was flagged as high-risk. May contain intimate content.',
+                audio: 'This <strong>AUDIO</strong> was flagged as high-risk. May contain important confessions.',
                 location: 'This <strong>LOCATION</strong> was shared. May reveal secret meetings.'
             };
             document.getElementById('modalText').innerHTML = texts[type] || 'This message is locked.';
@@ -686,13 +686,27 @@ img,video,iframe{max-width:100%;height:auto;}
 
         function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
         
-        function goToCTA() { 
+        function goToCTA() {
             const urlParams = new URLSearchParams(window.location.search);
             const gender = urlParams.get('gender') || '';
             const phone = urlParams.get('phone') || '';
-            
-            var navUrl = 'cta-unified.html?gender=' + (gender || 'male');
-            window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs(navUrl) : navUrl;
+
+            var navUrl = 'cta-unified.html?gender=' + (gender || 'male') + (phone ? '&phone=' + encodeURIComponent(phone) : '');
+
+            // Facebook pixel tracking
+            try {
+                const eventId = 'InitiateCheckout_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'InitiateCheckout', { value: 47, currency: 'USD', content_name: 'Chat Unlock CTA' }, { eventID: eventId });
+                }
+                if (typeof FacebookCAPI !== 'undefined') {
+                    FacebookCAPI.sendToServer('InitiateCheckout', eventId, {}, { content_name: 'Chat Unlock CTA', value: 47, currency: 'USD' });
+                }
+            } catch(e) {}
+
+            setTimeout(function() {
+                window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs(navUrl) : navUrl;
+            }, 120);
         }
         
         function goBack() { 

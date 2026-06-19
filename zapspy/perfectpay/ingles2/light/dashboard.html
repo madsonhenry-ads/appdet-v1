@@ -762,6 +762,45 @@ img,video,iframe{max-width:100%;height:auto;}
         </div>
     </div>
 
+    <!-- Gender Picker Modal -->
+    <style>
+    #wsGpOverlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:20px;}
+    #wsGpOverlay.show{display:flex;}
+    #wsGpCard{background:#1c1c1e;border-radius:24px;padding:32px 28px 24px;max-width:380px;width:100%;text-align:center;animation:wsgpIn 0.3s ease-out;}
+    @keyframes wsgpIn{from{transform:scale(0.9) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+    #wsGpTitle{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-0.5px;}
+    #wsGpSub{font-size:14px;color:#8696a0;margin-bottom:24px;line-height:1.5;}
+    .ws-gp-btn{display:flex;align-items:center;gap:14px;width:100%;padding:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;cursor:pointer;text-align:left;transition:all 0.2s ease;margin-bottom:10px;}
+    .ws-gp-btn:hover{background:rgba(0,168,132,0.1);border-color:rgba(0,168,132,0.3);}
+    .ws-gp-ico{font-size:28px;flex-shrink:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border-radius:50%;}
+    .ws-gp-text{flex:1;min-width:0;}
+    .ws-gp-name{display:block;font-size:16px;font-weight:700;color:#fff;margin-bottom:2px;}
+    .ws-gp-sub{display:block;font-size:12px;color:#8696a0;}
+    .ws-gp-arr{font-size:18px;color:#00A884;flex-shrink:0;}
+    </style>
+    <div id="wsGpOverlay">
+        <div id="wsGpCard">
+            <div id="wsGpTitle">Who do you want to check?</div>
+            <div id="wsGpSub">We'll show suspicious contacts of the opposite sex.</div>
+            <button class="ws-gp-btn" data-gender="male">
+                <div class="ws-gp-ico">👨</div>
+                <div class="ws-gp-text">
+                    <span class="ws-gp-name">A Man</span>
+                    <span class="ws-gp-sub">Husband, boyfriend, ex...</span>
+                </div>
+                <div class="ws-gp-arr">→</div>
+            </button>
+            <button class="ws-gp-btn" data-gender="female">
+                <div class="ws-gp-ico">👩</div>
+                <div class="ws-gp-text">
+                    <span class="ws-gp-name">A Woman</span>
+                    <span class="ws-gp-sub">Wife, girlfriend, ex...</span>
+                </div>
+                <div class="ws-gp-arr">→</div>
+            </button>
+        </div>
+    </div>
+
     <div class="locked-overlay" id="lockedOverlay" onclick="closeLocked(event)">
         <div class="locked-modal">
             <div class="locked-modal-emoji" id="lockedEmoji">🔒</div>
@@ -832,8 +871,48 @@ img,video,iframe{max-width:100%;height:auto;}
             tick();
         })();
 
+        // Gender Picker
+        (function() {
+            var wsGpOverlay = document.getElementById('wsGpOverlay');
+
+            window.__wsGpOpen = function() {
+                wsGpOverlay.classList.add('show');
+            };
+
+            wsGpOverlay.addEventListener('click', function(e) {
+                if (e.target === wsGpOverlay) {
+                    wsGpOverlay.classList.remove('show');
+                }
+            });
+
+            document.querySelectorAll('.ws-gp-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var gender = this.getAttribute('data-gender');
+                    localStorage.setItem('targetGender', gender);
+                    wsGpOverlay.classList.remove('show');
+                    if (typeof FunnelTracker !== 'undefined' && FunnelTracker && FunnelTracker.events) {
+                        FunnelTracker.track(FunnelTracker.events.GENDER_SELECTED, { gender: gender, source: 'dashboard_modal' });
+                    }
+                    window.location.href = (typeof TrackingUtils!=='undefined')
+                        ? TrackingUtils.appendUTMs('phone.html?gender=' + gender)
+                        : 'phone.html?gender=' + gender;
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && wsGpOverlay.classList.contains('show')) {
+                    wsGpOverlay.classList.remove('show');
+                }
+            });
+        })();
+
         function openWhatsApp() {
-            window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs('landing.html') : 'landing.html';
+            var gender = localStorage.getItem('targetGender');
+            if (!gender) {
+                if (typeof window.__wsGpOpen === 'function') { window.__wsGpOpen(); }
+                return;
+            }
+            window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs('phone.html') : 'phone.html';
         }
 
         function showLocked(featureName, emoji) {

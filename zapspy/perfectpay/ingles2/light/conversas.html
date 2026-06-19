@@ -2287,6 +2287,42 @@ img,video,iframe{max-width:100%;height:auto;}
                     <span class="wa-duration">Duration: 2:47</span>
                     <span class="wa-lock">🔒 Unlock to listen</span>
                 </div>`;
+            var playBtn = div.querySelector('.wa-play-btn');
+            if (playBtn) {
+                playBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var btn = this;
+                    if (btn.dataset.playing) return;
+                    btn.dataset.playing = '1';
+                    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+                    try {
+                        if (typeof WhatsAppAudio !== 'undefined' && WhatsAppAudio.audioContext) {
+                            var ctx = WhatsAppAudio.audioContext;
+                            if (ctx.state !== 'suspended') {
+                                var bufferSize = ctx.sampleRate * 2;
+                                var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                                var data = buffer.getChannelData(0);
+                                for (var i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.03;
+                                var source = ctx.createBufferSource();
+                                source.buffer = buffer;
+                                var gain = ctx.createGain();
+                                gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+                                source.connect(gain);
+                                gain.connect(ctx.destination);
+                                source.start();
+                                source.stop(ctx.currentTime + 2.5);
+                            }
+                        }
+                    } catch(ex) {}
+                    setTimeout(function() {
+                        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>';
+                        delete btn.dataset.playing;
+                        openConversation({name: 'Audio', blur: 'full', tags: ['deleted']});
+                    }, 2500);
+                });
+            }
+            div.onclick = () => openConversation({name: 'Audio', blur: 'full', tags: ['deleted']});
             return div;
         }
 
