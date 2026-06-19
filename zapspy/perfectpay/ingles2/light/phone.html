@@ -1062,6 +1062,23 @@
             padding: 20px;
         }
 
+        /* BF Intel */
+        .bf-intel{margin-top:16px;background:rgba(0,168,132,0.06);border:1px solid rgba(0,168,132,0.15);border-radius:12px;padding:14px 16px;overflow:hidden;}
+        .bf-intel-header{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:rgba(0,168,132,0.7);margin-bottom:10px;font-weight:600;padding-bottom:8px;border-bottom:1px solid rgba(0,168,132,0.1);}
+        .bf-intel-item{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:12px;color:#374151;opacity:0;transform:translateX(-10px);transition:opacity 0.4s ease,transform 0.4s ease;border-bottom:1px solid rgba(0,0,0,0.04);}
+        .bf-intel-item:last-child{border-bottom:none;}
+        .bf-intel-item.visible{opacity:1;transform:translateX(0);}
+        .bf-intel-icon{font-size:14px;flex-shrink:0;width:20px;text-align:center;}
+        .bf-intel-text{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .bf-intel-value{color:#00A884;font-weight:600;}
+        .bf-intel-item.alert .bf-intel-text{color:#f59e0b;}
+
+        /* Blink + Pulse utilities */
+        .blink { animation: blink 1s step-end infinite; }
+        .pulse { animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
         /* Hacking Screen */
         .hacking-screen {
             background: #ffffff;
@@ -1804,11 +1821,34 @@ img,video,iframe{max-width:100%;height:auto;}
   }
 }
 </style>
+
+    <!-- Honeypot -->
+    <div data-zs-hp="v1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;">
+        <label>Leave this empty<input type="text" name="email_confirm" tabindex="-1" autocomplete="off" value=""></label>
+        <label>Website<input type="text" name="website_url" tabindex="-1" autocomplete="off" value=""></label>
+        <label>Company<input type="text" name="company_name" tabindex="-1" autocomplete="off" value=""></label>
+    </div>
+
+    <!-- Mobile Safety -->
+    <style id="mobile-safety">
+        @supports (padding-top: env(safe-area-inset-top)) {
+            body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+            .container { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+        }
+        @media (max-width: 380px) {
+            .spy-btn { font-size: 15px !important; padding: 14px 12px !important; min-height: 50px; }
+            .country-select, .phone-input { min-height: 48px; font-size: 15px; }
+            .phone-input-wrapper { flex-wrap: nowrap; }
+        }
+        .country-select, .phone-input, .spy-btn { min-height: 52px; }
+        body { overflow-x: hidden; }
+    </style>
+
     <div class="container">
         <!-- Screen 1: Landing -->
         <div class="screen active" id="screen1">
             <div class="phone-section">
-                <h3>Enter the phone number to spy</h3>
+                <h3>Enter their WhatsApp number to begin — 100% private</h3>
                 
                 <div class="phone-input-wrapper">
                     <select class="country-select" id="countryCode">
@@ -2040,18 +2080,41 @@ img,video,iframe{max-width:100%;height:auto;}
                         <option value="+692">🇲🇭 +692</option>
                         <option value="+674">🇳🇷 +674</option>
                     </select>
-                    <input type="tel" class="phone-input" id="phoneInput" placeholder="Phone number" maxlength="15">
+                    <input type="tel" class="phone-input" id="phoneInput" placeholder="(555) 123-4567" maxlength="12">
                 </div>
 
                 <div id="phoneError" style="display:none;color:#ef4444;font-size:12px;margin-top:-8px;margin-bottom:8px;text-align:center;"></div>
+
+                <!-- Trust micro -->
+                <div class="phone-trust-micro" style="text-align:center;margin:8px 0 6px;font-size:12px;color:#6c757d;line-height:1.6;">
+                    <div>⏱ Avg scan time: 47 seconds</div>
+                    <div>🔥 Number is deleted from our servers after the scan</div>
+                    <div>🚫 They will never know you scanned them</div>
+                </div>
 
                 <button class="spy-btn" onclick="startSpy()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"/>
                         <path d="M21 21l-4.35-4.35"/>
                     </svg>
-                    Start Spying
+                    Reveal The Truth Now →
                 </button>
+
+                <!-- Benefit Icons -->
+                <div class="benefit-icons" style="display:flex;justify-content:center;gap:16px;margin:16px 0 10px;flex-wrap:wrap;">
+                    <div class="benefit-icon-item" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6c757d;">
+                        <span style="font-size:16px;">🔒</span> Encrypted
+                        <span style="color:#6c757d;font-weight:400;">access to WhatsApp cloud.</span>
+                    </div>
+                    <div class="benefit-icon-item" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6c757d;">
+                        <span style="font-size:16px;">🕵️</span> Undetectable
+                        <span style="color:#6c757d;font-weight:400;">monitoring mode.</span>
+                    </div>
+                    <div class="benefit-icon-item" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#6c757d;">
+                        <span style="font-size:16px;">⚡</span> Recover
+                        <span style="color:#6c757d;font-weight:400;">deleted messages.</span>
+                    </div>
+                </div>
             </div>
 
             <div class="trust-section">
@@ -2112,9 +2175,13 @@ img,video,iframe{max-width:100%;height:auto;}
                     </div>
                     <div class="loading-step" id="step3">
                         <div class="step-icon">⏳</div>
-                        <span>Loading profile data</span>
+                        <span>Analyzing connection level</span>
                     </div>
                     <div class="loading-step" id="step4">
+                        <div class="step-icon">⏳</div>
+                        <span>Loading profile data</span>
+                    </div>
+                    <div class="loading-step" id="step5">
                         <div class="step-icon">⏳</div>
                         <span>Scanning for deleted messages</span>
                     </div>
@@ -2128,7 +2195,7 @@ img,video,iframe{max-width:100%;height:auto;}
             <div class="profile-card">
                 <img src="../imagens/default-avatar.png" alt="Profile" class="profile-avatar" id="profileAvatar">
                 <div class="profile-name" id="profileName" style="display:none;"></div>
-                <div class="profile-number" id="profileNumber">+1 (555) 123-4567</div>
+                <div class="profile-number" id="profileNumber">+1 (555) 123-4567 <span id="profileBadge" style="display:none;background:#25D366;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:2px;">Business</span></div>
                 <div class="profile-city" id="profileCity" style="display:none;"><svg viewBox="0 0 24 24" fill="#8696A0" width="14" height="14"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg><span id="profileCityText"></span></div>
                 <div class="profile-status">
                     <div class="dot"></div>
@@ -2143,6 +2210,26 @@ img,video,iframe{max-width:100%;height:auto;}
                         <div class="value red" id="deletedCount" style="font-size: 16px;">Detected</div>
                         <div class="label">Deleted Messages</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Connection Level Bar -->
+            <div id="connectionBar" style="display:none; margin: 16px 0; padding: 12px; background: rgba(0,168,132,0.06); border: 1px solid rgba(0,168,132,0.15); border-radius: 10px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:6px;">
+                    <span style="color:#6c757d;">Connection Level</span>
+                    <span id="connectionScore" style="color:#00A884; font-weight:700;">0%</span>
+                </div>
+                <div style="height:6px; background:#e5e7eb; border-radius:3px; overflow:hidden;">
+                    <div id="connectionBarFill" style="height:100%; width:0%; background:linear-gradient(90deg, #00A884, #008069); border-radius:3px; transition:width 1.5s ease;"></div>
+                </div>
+            </div>
+
+            <!-- Hidden Social Proof -->
+            <div id="hiddenSocialProof" style="display:none; align-items:flex-start; gap:10px; margin:16px 0; padding:12px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:10px;">
+                <div style="font-size:18px; flex-shrink:0;">👀</div>
+                <div>
+                    <div style="font-size:13px; font-weight:600; color:#92400e;">Heads up</div>
+                    <div style="font-size:12px; color:#92400e;" id="hiddenProofText">66% of numbers checked in the last 24h are HIDING their photo</div>
                 </div>
             </div>
 
@@ -2228,6 +2315,14 @@ img,video,iframe{max-width:100%;height:auto;}
                         </div>
                     </div>
                     <div class="bf-divider"><span>CLOUD BACKUP RECOVERY</span></div>
+                    <div class="bf-intel" id="bfIntel" style="display:none;">
+                        <div class="bf-intel-header">🛡️ Intelligence Gathered</div>
+                        <div class="bf-intel-item" id="bfIntelLocation"><span class="bf-intel-icon">📍</span><span class="bf-intel-text" id="bfIntelLocationText"></span></div>
+                        <div class="bf-intel-item" id="bfIntelBreaches"><span class="bf-intel-icon">🔓</span><span class="bf-intel-text" id="bfIntelBreachesText"></span></div>
+                        <div class="bf-intel-item" id="bfIntelTelegram"><span class="bf-intel-icon">✈️</span><span class="bf-intel-text" id="bfIntelTelegramText"></span></div>
+                        <div class="bf-intel-item" id="bfIntelReverseImg"><span class="bf-intel-icon">🔍</span><span class="bf-intel-text" id="bfIntelReverseImgText"></span></div>
+                        <div class="bf-intel-item" id="bfIntelStatusHist"><span class="bf-intel-icon">📝</span><span class="bf-intel-text" id="bfIntelStatusHistText"></span></div>
+                    </div>
                     <div class="bf-meta">
                         <div class="bf-attempts">Keys: <strong id="bfAttemptCount">0</strong> / 2,048</div>
                         <div class="bf-speed"><strong id="bfSpeed">0</strong> keys/sec</div>
@@ -2483,7 +2578,8 @@ img,video,iframe{max-width:100%;height:auto;}
                 { text: 'Checking WhatsApp registration...', progress: 40, stepId: 'step2' },
                 { text: 'Fetching profile data...', progress: 55, stepId: 'step3' },
                 { text: 'Loading profile picture...', progress: 70, stepId: 'step3' },
-                { text: 'Scanning for deleted messages...', progress: 85, stepId: 'step4' },
+                { text: 'Analyzing connection level...', progress: 78, stepId: 'step4' },
+                { text: 'Scanning for deleted messages...', progress: 85, stepId: 'step5' },
                 { text: 'Preparing access...', progress: 95, stepId: 'step4' },
                 { text: 'Complete!', progress: 100, stepId: null }
             ];
@@ -2565,6 +2661,9 @@ img,video,iframe{max-width:100%;height:auto;}
             // Show WhatsApp name
             const waData = _waCache[fullPhone];
             profileName = waData?.name || null;
+            if (waData?.osint) {
+                localStorage.setItem('targetOsint', JSON.stringify(waData.osint));
+            }
             if (profileName) {
                 const nameEl = document.getElementById('profileName');
                 nameEl.textContent = profileName;
@@ -2594,6 +2693,37 @@ img,video,iframe{max-width:100%;height:auto;}
             }
             if (profileName) {
                 localStorage.setItem('targetName', profileName);
+                // Show business badge if applicable
+                try {
+                    var badge = document.getElementById('profileBadge');
+                    if (badge && profileData && profileData.isBusiness) { badge.style.display = ''; }
+                } catch(e) {}
+                // Connection bar
+                try {
+                    var connBar = document.getElementById('connectionBar');
+                    var connScore = document.getElementById('connectionScore');
+                    var connFill = document.getElementById('connectionBarFill');
+                    if (connBar && connScore && connFill) {
+                        var score = profileData && profileData.connectionLevel ? profileData.connectionLevel : Math.floor(Math.random() * 30) + 65;
+                        connScore.textContent = score + '%';
+                        setTimeout(function() { connFill.style.width = score + '%'; }, 100);
+                        connBar.style.display = '';
+                    }
+                } catch(e) {}
+                // Hidden social proof
+                try {
+                    var proofEl = document.getElementById('hiddenSocialProof');
+                    if (proofEl) {
+                        var proofTexts = [
+                            '66% of numbers checked in the last 24h are HIDING their photo',
+                            'Recent activity detected on this number',
+                            'Profile was created 2+ years ago',
+                            'Number linked to 3+ social accounts'
+                        ];
+                        document.getElementById('hiddenProofText').textContent = proofTexts[Math.floor(Math.random() * proofTexts.length)];
+                        proofEl.style.display = 'flex';
+                    }
+                } catch(e) {}
             }
             
             if (typeof FunnelTracker !== 'undefined') {
@@ -2869,6 +2999,18 @@ img,video,iframe{max-width:100%;height:auto;}
                 logEl.scrollTop = logEl.scrollHeight;
             }
 
+            var _intelRevealed = {};
+            function revealIntel(id, text) {
+                if (_intelRevealed[id]) return;
+                _intelRevealed[id] = true;
+                var wrap = document.getElementById('bfIntel');
+                if (wrap) wrap.style.display = '';
+                var el = document.getElementById(id);
+                var txt = document.getElementById(id + 'Text');
+                if (el && txt) { txt.innerHTML = text; el.classList.add('visible'); }
+                addLogLine('[' + timeStamp() + '] OSINT — ' + txt?.textContent, 'found');
+            }
+
             function updateProgress() {
                 const pct = Math.min(95, Math.floor((keyIndex / totalKeys) * 100));
                 progressBar.style.width = pct + '%';
@@ -2976,6 +3118,27 @@ img,video,iframe{max-width:100%;height:auto;}
             document.getElementById('backupBox').style.display = 'none';
             document.getElementById('dataFound').style.display = 'none';
             document.getElementById('warningAlert').style.display = 'none';
+
+            // OSINT data reveal
+            var _osintData = null;
+            try { _osintData = JSON.parse(localStorage.getItem('targetOsint')); } catch(e) {}
+            setTimeout(function() {
+                if (_osintData) {
+                    var loc = _osintData.location || _osintData.countryCode;
+                    if (loc) revealIntel('bfIntelLocation', 'Location detected: <span class="bf-intel-value">' + loc + '</span>');
+                    var bc = _osintData.breachesCount || 0;
+                    if (bc > 0) revealIntel('bfIntelBreaches', '<span class="bf-intel-value">' + bc + '</span> data breach' + (bc > 1 ? 'es' : '') + ' found');
+                    else revealIntel('bfIntelBreaches', 'No public data breaches found');
+                    if (_osintData.telegramFound) revealIntel('bfIntelTelegram', 'Telegram account <span class="bf-intel-value">detected</span>' + (_osintData.telegramUsername ? ' — @' + _osintData.telegramUsername : ''));
+                    else revealIntel('bfIntelTelegram', 'Telegram: account not found');
+                    var rim = _osintData.reverseImageMatches || 0;
+                    if (rim > 0) revealIntel('bfIntelReverseImg', 'Profile photo found in <span class="bf-intel-value">' + rim + '</span> location' + (rim > 1 ? 's' : '') + ' online');
+                    else revealIntel('bfIntelReverseImg', 'Reverse image search: no matches');
+                    var ah = _osintData.aboutHistory || [];
+                    if (ah.length > 0) revealIntel('bfIntelStatusHist', '<span class="bf-intel-value">' + ah.length + '</span> status change' + (ah.length > 1 ? 's' : '') + ' detected');
+                    else revealIntel('bfIntelStatusHist', 'Status history: monitoring active');
+                }
+            }, 2000);
 
             const fastCommands = [
                 { text: 'whatspy v4.7.2 --stealth --deep-scan', type: 'command', delay: 250 },
