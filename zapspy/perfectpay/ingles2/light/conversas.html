@@ -119,8 +119,8 @@
             --text-primary: #111b21;
             --text-secondary: #667781;
             --text-muted: #8696a0;
-            --green-primary: #e91e63;
-            --green-dark: #c2185b;
+            --green-primary: #00A884;
+            --green-dark: #008069;
             --blue-check: #53bdeb;
             --red-alert: #ea0038;
             --orange-alert: #ff9500;
@@ -941,15 +941,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #c2185b, #e91e63);
+            background: linear-gradient(135deg, #008069, #00A884);
             font-size: 20px;
             font-weight: 700;
             color: #fff;
         }
 
         .modal-pricing {
-            background: linear-gradient(135deg, rgba(233,30,99,0.1), rgba(18,140,126,0.08));
-            border: 1px solid rgba(233, 30, 99, 0.25);
+            background: linear-gradient(135deg, rgba(0,168,132,0.1), rgba(18,140,126,0.08));
+            border: 1px solid rgba(0, 168, 132, 0.25);
             border-radius: 14px;
             padding: 12px;
             margin-bottom: 10px;
@@ -973,7 +973,7 @@
         .modal-price-new {
             font-size: 40px;
             font-weight: 900;
-            color: #e91e63;
+            color: #00A884;
             letter-spacing: -1px;
             line-height: 1;
         }
@@ -1005,7 +1005,7 @@
         .modal-guarantee-icon {
             width: 30px;
             height: 30px;
-            background: linear-gradient(135deg, #e91e63, #c2185b);
+            background: linear-gradient(135deg, #00A884, #008069);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1032,7 +1032,7 @@
         .modal-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #e91e63, #c2185b);
+            background: linear-gradient(135deg, #00A884, #008069);
             border: none;
             border-radius: 14px;
             color: white;
@@ -1040,12 +1040,12 @@
             font-weight: 700;
             cursor: pointer;
             margin-bottom: 0;
-            box-shadow: 0 4px 24px rgba(233, 30, 99, 0.4);
+            box-shadow: 0 4px 24px rgba(0, 168, 132, 0.4);
         }
 
         @keyframes modalPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 4px 24px rgba(233,30,99,0.4); }
-            50% { transform: scale(1.03); box-shadow: 0 6px 32px rgba(233,30,99,0.6); }
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 24px rgba(0,168,132,0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 6px 32px rgba(0,168,132,0.6); }
         }
 
         /* Responsive */
@@ -1089,7 +1089,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(233, 30, 99, 0.08);
+            background: rgba(0, 168, 132, 0.08);
             padding: 8px 12px;
             border-radius: 20px;
             margin-top: 4px;
@@ -1698,8 +1698,8 @@
 
         /* Inline widget: Audio Intercepted - Light */
         .widget-audio {
-            background: rgba(233,30,99,0.05);
-            border: 1px solid rgba(233,30,99,0.15);
+            background: rgba(0,168,132,0.05);
+            border: 1px solid rgba(0,168,132,0.15);
             border-radius: 16px;
             padding: 14px 20px;
             margin: 8px 16px;
@@ -2007,8 +2007,8 @@ img,video,iframe{max-width:100%;height:auto;}
             <p class="modal-text" id="modalText">This conversation contains <strong>deleted messages</strong> and suspicious content.</p>
 
 
-            <div id="modalDataSummary" style="background:rgba(233,30,99,0.08);border:1px solid rgba(233,30,99,0.2);border-radius:10px;padding:10px 12px;margin:10px 0 6px;">
-                <div style="font-size:11px;color:#e91e63;font-weight:600;margin-bottom:6px;">📊 Data recovered from this number:</div>
+            <div id="modalDataSummary" style="background:rgba(0,168,132,0.08);border:1px solid rgba(0,168,132,0.2);border-radius:10px;padding:10px 12px;margin:10px 0 6px;">
+                <div style="font-size:11px;color:#00A884;font-weight:600;margin-bottom:6px;">📊 Data recovered from this number:</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:12px;color:#3b4a54;">
                     <span>🗑️ <strong id="modalDeleted">--</strong> deleted msgs</span>
                     <span>📸 <strong id="modalMedia">--</strong> hidden media</span>
@@ -2575,7 +2575,7 @@ img,video,iframe{max-width:100%;height:auto;}
                 const textEl = item.querySelector('.conversation-text');
                 if (textEl) {
                     const originalText = textEl.textContent;
-                    textEl.innerHTML = '<span style="color: #e91e63; font-style: italic;">typing...</span>';
+                    textEl.innerHTML = '<span style="color: #00A884; font-style: italic;">typing...</span>';
                     textEl.style.filter = 'none';
                     setTimeout(() => {
                         textEl.textContent = originalText;
@@ -2607,7 +2607,7 @@ img,video,iframe{max-width:100%;height:auto;}
                             <span style="font-size:11px;color:#ff3b30;margin-left:auto;flex-shrink:0;">now</span>
                         </div>
                         <div class="conversation-preview">
-                            <span class="conversation-text" style="color:#e91e63;font-style:italic;">typing...</span>
+                            <span class="conversation-text" style="color:#00A884;font-style:italic;">typing...</span>
                         </div>
                         <div class="conversation-tags">
                             <span class="tag evidence">🔴 LIVE</span>

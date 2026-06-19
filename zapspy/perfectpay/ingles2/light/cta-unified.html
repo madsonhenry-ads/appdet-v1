@@ -92,10 +92,11 @@
     <script src="../js/funnel-tracking.js" defer></script>
     <script src="../js/fc.js" defer></script>
     <script>
-        // Default product value
-        window.productValue = 37;
-        window.checkoutCode = 'PPU38CQ9Q3O';
-        
+        // Default product value (Complete tier)
+        window.selectedTier = 'complete';
+        window.productValue = 97;
+        window.checkoutCode = 'PPU38CQB3RK';
+
         document.addEventListener('DOMContentLoaded', async function() {
             // Initialize Facebook CAPI with current product value
             if (typeof FacebookCAPI !== 'undefined') {
@@ -265,7 +266,7 @@
         }
 
         .main-title .gradient {
-            background: linear-gradient(135deg, #e91e63, #c2185b);
+            background: linear-gradient(135deg, #00A884, #008069);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -291,7 +292,7 @@
             width: 70px;
             height: 70px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #e91e63, #c2185b);
+            background: linear-gradient(135deg, #00A884, #008069);
             padding: 3px;
             flex-shrink: 0;
             position: relative;
@@ -304,7 +305,7 @@
             left: -4px;
             right: -4px;
             bottom: -4px;
-            border: 2px solid #e91e63;
+            border: 2px solid #00A884;
             border-radius: 50%;
             animation: profile-ring 2s infinite;
             opacity: 0;
@@ -347,7 +348,7 @@
 
         .profile-phone {
             font-size: 14px;
-            color: #c2185b;
+            color: #008069;
             margin-bottom: 4px;
         }
 
@@ -361,8 +362,8 @@
 
         /* Success Badge */
         .success-badge {
-            background: linear-gradient(135deg, rgba(233, 30, 99, 0.06), rgba(233, 30, 99, 0.02));
-            border: 1px solid rgba(233, 30, 99, 0.12);
+            background: linear-gradient(135deg, rgba(0, 168, 132, 0.06), rgba(0, 168, 132, 0.02));
+            border: 1px solid rgba(0, 168, 132, 0.12);
             border-radius: 16px;
             padding: 20px;
             text-align: center;
@@ -378,7 +379,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(233, 30, 99, 0.03), transparent);
+            background: conic-gradient(from 0deg, transparent, rgba(0, 168, 132, 0.03), transparent);
             animation: badge-sweep 4s linear infinite;
         }
 
@@ -389,7 +390,7 @@
         .badge-title {
             font-size: 16px;
             font-weight: 800;
-            color: #e91e63;
+            color: #00A884;
             margin-bottom: 8px;
             letter-spacing: -0.3px;
             position: relative;
@@ -425,7 +426,7 @@
         .trust-badge svg {
             width: 14px;
             height: 14px;
-            color: #e91e63;
+            color: #00A884;
         }
 
         /* Features */
@@ -456,7 +457,7 @@
         .feature-icon {
             width: 22px;
             height: 22px;
-            color: #e91e63;
+            color: #00A884;
         }
 
         .feature-title {
@@ -575,8 +576,8 @@
         }
 
         .dp-found {
-            background: rgba(233, 30, 99, 0.15);
-            color: #e91e63;
+            background: rgba(0, 168, 132, 0.15);
+            color: #00A884;
         }
 
         .dp-not-found {
@@ -758,7 +759,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(233,30,99,0.08);
+            background: rgba(0,168,132,0.08);
             border-radius: 16px;
             padding: 4px 10px;
             filter: blur(1px);
@@ -772,7 +773,7 @@
         }
         .conv-audio-bar span {
             width: 2.5px;
-            background: #e91e63;
+            background: #00A884;
             border-radius: 1px;
         }
 
@@ -1039,171 +1040,230 @@
             font-weight: 600;
         }
 
-        /* Pricing Section */
+        /* === TIER CARDS (Light Theme) === */
         .pricing-section {
             background: #ffffff;
-            border: 2px solid #e91e63;
+            border: 2px solid rgba(0,0,0,0.08);
             border-radius: 20px;
             padding: 24px 20px;
             text-align: center;
             margin-bottom: 24px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 16px rgba(233, 30, 99, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
 
-        .pricing-section::before {
-            content: 'BEST VALUE';
-            position: absolute;
-            top: 12px;
-            right: -30px;
-            background: #dc2626;
-            color: white;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 40px;
-            transform: rotate(45deg);
-        }
-
-        .discount-badge {
-            display: inline-block;
-            background: #dc2626;
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-        }
-
-        .price-original {
-            font-size: 20px;
-            color: #9ca3af;
-            text-decoration: line-through;
-            margin-bottom: 4px;
-        }
-
-        .price-current {
-            font-size: 52px;
+        .tiers-title {
+            font-size: 24px;
             font-weight: 800;
             color: #1a1a1a;
             margin-bottom: 4px;
         }
 
-        .price-savings {
+        .tiers-sub {
             font-size: 14px;
-            color: #16a34a;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .price-info {
-            font-size: 12px;
-            color: #6c757d;
+            color: #6b7280;
             margin-bottom: 16px;
         }
 
-        .cta-button {
-            width: 100%;
-            padding: 22px 24px;
-            background: linear-gradient(135deg, #e91e63 0%, #d81b60 50%, #c2185b 100%);
-            border: none;
-            border-radius: 16px;
-            color: white;
-            font-size: 20px;
-            font-weight: 800;
-            cursor: pointer;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: megaPulse 2s ease-in-out infinite;
-            box-shadow: 
-                0 4px 14px rgba(233, 30, 99, 0.3),
-                0 2px 6px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        .tier-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin: 22px auto 8px;
+            max-width: 480px;
+        }
+        @media (min-width: 1024px) {
+            .tier-grid {
+                grid-template-columns: repeat(2, 1fr);
+                align-items: stretch;
+                max-width: 820px;
+                gap: 28px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        .tier-card {
             position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes megaPulse {
-            0%, 100% { 
-                transform: scale(1);
-                box-shadow: 
-                    0 4px 14px rgba(233, 30, 99, 0.3),
-                    0 2px 6px rgba(0, 0, 0, 0.08);
-            }
-            50% { 
-                transform: scale(1.03);
-                box-shadow: 
-                    0 6px 20px rgba(233, 30, 99, 0.4),
-                    0 4px 10px rgba(0, 0, 0, 0.1);
-            }
-        }
-
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 
-                0 8px 24px rgba(233, 30, 99, 0.5),
-                0 4px 12px rgba(0, 0, 0, 0.12);
-            animation: none;
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: btn-shimmer 1.5s infinite;
-        }
-
-        .cta-button-icon {
-            display: inline-block;
-            margin-right: 10px;
-            animation: iconShake 0.5s ease-in-out infinite;
-        }
-
-        @keyframes iconShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            75% { transform: translateX(3px); }
-        }
-
-        @keyframes btn-shimmer {
-            0% { left: -100%; }
-            100% { left: 200%; }
-        }
-
-        @keyframes ctaShake {
-            0%, 100% { transform: translateX(0); }
-            15% { transform: translateX(-6px) rotate(-1deg); }
-            30% { transform: translateX(5px) rotate(1deg); }
-            45% { transform: translateX(-4px) rotate(-0.5deg); }
-            60% { transform: translateX(3px) rotate(0.5deg); }
-            75% { transform: translateX(-2px); }
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .cta-subtext {
-            font-size: 11px;
-            color: #9ca3af;
+            border: 2px solid rgba(0,0,0,0.08);
+            border-radius: 16px;
+            padding: 28px 18px 18px;
+            background: #ffffff;
+            transition: all 0.25s ease;
+            cursor: pointer;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
+        .tier-card:hover { transform: translateY(-3px); border-color: rgba(34,197,94,0.5); }
+        .tier-card.selected {
+            border-color: #22c55e;
+            background: rgba(34,197,94,0.04);
+            box-shadow: 0 0 25px rgba(34,197,94,0.15);
+        }
+        .tier-card.recommended {
+            border-color: #22c55e;
+            background: linear-gradient(180deg, rgba(34,197,94,0.04), #ffffff);
+            box-shadow: 0 0 30px rgba(34,197,94,0.12);
+            animation: tierGlow 2.6s ease-in-out infinite;
+            transform: scale(1.02);
+            z-index: 2;
+        }
+        @media (min-width: 720px) {
+            .tier-card.recommended { transform: scale(1.04); }
+        }
+        @keyframes tierGlow {
+            0%, 100% { box-shadow: 0 0 25px rgba(34,197,94,0.12); }
+            50%      { box-shadow: 0 0 38px rgba(34,197,94,0.25); }
+        }
+        .tier-badge {
+            position: absolute;
+            top: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            padding: 5px 12px;
+            border-radius: 100px;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+        }
+        .tier-stamp {
+            position: absolute; top: 14px; right: 14px;
+            font-size: 9px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
+            padding: 3px 8px; border-radius: 6px; opacity: 0.85;
+        }
+        .tier-stamp.starter { background: #f3f4f6; color: #6b7280; }
+        .tier-stamp.popular { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+        .tier-name { font-size: 18px; font-weight: 700; color: #1a1a1a; margin: 4px 0 6px; text-align: center; }
+        .tier-tagline { text-align: center; font-size: 12px; color: #6b7280; font-style: italic; margin: 0 0 10px; min-height: 16px; }
+        .tier-icon-wrap {
+            position: relative; display: flex; align-items: center; justify-content: center;
+            width: 56px; height: 56px; margin: 0 auto 8px; border-radius: 14px;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04), 0 6px 14px rgba(15,23,42,0.06);
+            font-size: 28px;
+        }
+        .tier-card.recommended .tier-icon-wrap {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 8px 22px rgba(16,185,129,0.35), inset 0 0 0 1px rgba(255,255,255,0.2);
+        }
+        .tier-anchor-wrap { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-top: 4px; }
+        .tier-anchor { font-size: 16px; color: #9ca3af; text-decoration: line-through; font-weight: 600; }
+        .tier-price { font-size: 38px; font-weight: 800; color: #1a1a1a; line-height: 1; margin: 4px 0 4px; text-align: center; }
+        .tier-currency { font-size: 18px; vertical-align: top; opacity: 0.7; margin-right: 2px; }
+        .tier-save {
+            display: inline-block; background: #fef3c7; color: #92400e; padding: 2px 8px;
+            border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
+            text-transform: uppercase; margin: 6px auto 0; vertical-align: middle;
+        }
+        .tier-card.recommended .tier-save { background: #dcfce7; color: #166534; }
+        .tier-tag { font-size: 12px; color: #6b7280; text-align: center; margin-bottom: 14px; font-weight: 500; }
+        .tier-features { list-style: none; padding: 0; margin: 0 0 16px; font-size: 13px; line-height: 1.55; color: #374151; flex: 1; }
+        .tier-features li { padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: flex-start; gap: 8px; }
+        .tier-features li:last-child { border-bottom: none; }
+        .tier-features .ico { flex-shrink: 0; width: 16px; text-align: center; font-size: 12px; }
+        .tier-features li .dim { color: #9ca3af; font-size: 12px; }
+        .tier-features li.bonus { background: linear-gradient(90deg, rgba(251,191,36,0.10), transparent); border-left: 2px solid #f59e0b; padding-left: 8px; margin: 4px -8px; border-radius: 0 6px 6px 0; }
+        .tier-features li.bonus .ico { color: #d97706; }
+        .tier-cta {
+            display: block;
+            width: 100%;
+            margin-top: 18px;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+            background: rgba(0,0,0,0.04);
+            color: #374151;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        .tier-cta:hover { transform: translateY(-1px); background: rgba(0,0,0,0.08); }
+        .tier-card.recommended .tier-cta {
+            background: linear-gradient(135deg,#22c55e,#16a34a);
+            color: #fff;
+            border: none;
+            box-shadow: 0 8px 24px rgba(34,197,94,0.35);
+        }
+        .tier-card.recommended .tier-cta:hover {
+            box-shadow: 0 12px 30px rgba(34,197,94,0.45);
+        }
+        .tier-trust-bar {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02));
+            border: 1px solid rgba(34,197,94,0.25);
+            border-radius: 100px; padding: 8px 18px; margin: 6px auto 14px;
+            font-size: 12px; color: #047857; font-weight: 600; max-width: max-content;
+        }
+        .tier-trust-bar .ttb-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: ttbPulse 1.6s ease-in-out infinite; }
+        @keyframes ttbPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .tier-trust-bar strong { color: #065f46; font-weight: 800; }
+        .tier-spots { text-align: center; font-size: 11px; color: #b45309; margin: 8px 0 0; font-weight: 600; }
+        .tier-spots .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; margin-right: 4px; vertical-align: middle; animation: ttbPulse 1.6s ease-in-out infinite; }
 
-        .cta-subtext svg {
-            width: 14px;
-            height: 14px;
-            color: #e91e63;
+        /* QS Banner */
+        .qs-banner {
+            display: none; align-items: center; justify-content: center; gap: 10px;
+            padding: 10px 14px; font-size: 13px; font-weight: 600;
+            background: #fef2f2; border-bottom: 1px solid rgba(239,68,68,0.2);
+            color: #dc2626;
         }
+        .qs-banner.qs-moderate { background: #fffbeb; color: #d97706; border-color: rgba(245,158,11,0.2); }
+        .qs-banner.qs-low { background: #f0fdf4; color: #16a34a; border-color: rgba(22,163,74,0.2); }
+        .qs-prefix { font-weight: 500; opacity: 0.8; }
+        .qs-num { font-weight: 800; }
+        .qs-label { font-size: 11px; opacity: 0.75; }
+
+        /* Countdown Timer */
+        .countdown-bar { text-align: center; margin: 16px 0; padding: 12px; background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: 12px; }
+        .countdown-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .countdown-timer { font-size: 32px; font-weight: 800; color: #dc2626; }
+        .countdown-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+        /* OSINT Section */
+        .osint-section { margin: 16px 0; padding: 16px; background: #ffffff; border: 1px solid rgba(0,0,0,0.08); border-radius: 14px; }
+        .osint-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .osint-header-icon { font-size: 22px; }
+        .osint-header-text { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+        .osint-header-sub { font-size: 11px; color: #6b7280; }
+        .osint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+        /* CTA Main Title */
+        .cta-main-title { text-align:center; font-size:22px; font-weight:800; color:#1a1a1a; margin:0 0 16px 0; line-height:1.3; letter-spacing:-0.3px; }
+
+        /* Comparison Table */
+        .comparison-table { margin: 20px 8px; padding: 20px; background: #ffffff; border: 1px solid rgba(0,0,0,0.08); border-radius: 14px; }
+        .comparison-table h3 { font-size: 16px; font-weight: 700; color: #1a1a1a; margin: 0 0 14px; text-align: center; }
+        .comp-row { display: flex; gap: 12px; margin-bottom: 8px; }
+        .comp-row.head { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 12px; }
+        .comp-row.head > div { flex: 1; text-align: center; padding: 6px 0; border-bottom: 2px solid rgba(0,168,132,0.2); }
+        .comp-row.head > div:last-child { border-color: #00A884; color: #00A884; }
+        .comp-row > div { flex: 1; padding: 8px 10px; font-size: 13px; color: #374151; background: rgba(0,0,0,0.02); border-radius: 8px; }
+        .comp-row .col-with { background: rgba(0,168,132,0.06); color: #065f46; font-weight: 500; }
+
+        /* Closure Guarantee */
+        .closure-guarantee { display: flex; gap: 12px; margin: 20px 8px; padding: 16px; background: rgba(0,168,132,0.04); border: 1px solid rgba(0,168,132,0.15); border-radius: 14px; }
+        .closure-guarantee.dual { align-items: flex-start; }
+        .closure-guarantee h4 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin: 0 0 8px; }
+        .cg-icon { font-size: 28px; flex-shrink: 0; }
+        .dg-row { font-size: 12.5px; color: #374151; margin-bottom: 8px; line-height: 1.5; }
+        .dg-foot { font-size: 11px; color: #6b7280; font-style: italic; margin: 8px 0 0; }
+
+        /* Loss Microcopy */
+        .loss-microcopy { text-align: center; font-size: 15px; font-weight: 700; color: #00A884; margin: 20px 8px 8px; letter-spacing: 0.2px; }
+
+        /* Activity Alert */
+        .activity-alert{position:fixed;top:50px;left:50%;transform:translateX(-50%) translateY(-100px);background:rgba(0,168,132,0.95);color:#fff;padding:10px 18px;border-radius:12px;font-size:12px;font-weight:600;z-index:200;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);white-space:nowrap;box-shadow:0 4px 20px rgba(0,168,132,0.4);}
+        .activity-alert.show{transform:translateX(-50%) translateY(0);}
+        .activity-alert .alert-dot{display:inline-block;width:6px;height:6px;background:#fff;border-radius:50%;margin-right:6px;animation:pulse-dot 1s infinite;}
+        @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.3}}
 
         /* Bonus Section */
         .bonus-section {
@@ -1289,7 +1349,7 @@
         }
 
         .bonus-icon.monitor {
-            background: linear-gradient(135deg, #e91e63, #c2185b);
+            background: linear-gradient(135deg, #00A884, #008069);
             color: white;
         }
 
@@ -1644,8 +1704,8 @@
             .container {
                 padding: 55px 12px 130px;
             }
-            .price-current {
-                font-size: 42px;
+            .tier-price {
+                font-size: 32px;
             }
             .live-counter-bar {
                 font-size: 11px;
@@ -1666,7 +1726,7 @@
         .access-expiry-fill {
             height: 100%;
             width: 100%;
-            background: linear-gradient(90deg, #e91e63, #e91e63);
+            background: linear-gradient(90deg, #00A884, #00A884);
             transition: width 1s linear, background 1s ease;
             border-radius: 0 2px 2px 0;
         }
@@ -1786,7 +1846,7 @@
         .exit-cta {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+            background: linear-gradient(135deg, #00A884 0%, #008069 100%);
             border: none;
             border-radius: 12px;
             color: white;
@@ -1849,8 +1909,117 @@ img,video,iframe{max-width:100%;height:auto;}
     <!-- Social Proof Container -->
     <div id="socialProofContainer"></div>
 
-    <!-- Timer Bar -->
-    <!-- Timer bar removido -->
+    <!-- Quick Scan Banner -->
+    <div class="qs-banner" id="qsBanner" role="status" aria-live="polite">
+        <span class="qs-prefix">Your Suspicion Score:</span>
+        <span class="qs-num"><span id="qsNum">0</span>/100</span>
+        <span class="qs-label" id="qsLabel">—</span>
+    </div>
+    <script>
+    (function () {
+        try {
+            var raw = parseInt(localStorage.getItem('quizSuspicionScore') || '0', 10);
+            if (!raw || raw < 1) {
+                var qs = new URLSearchParams(window.location.search);
+                var qsScore = parseInt(qs.get('score') || '0', 10);
+                if (qsScore && qsScore > 0) { raw = qsScore; try { localStorage.setItem('quizSuspicionScore', String(raw)); } catch(e) {} }
+            }
+            if (!raw || raw < 1) return;
+            var key = raw >= 75 ? 'high' : (raw >= 50 ? 'moderate' : 'low');
+            var labels = { high: 'HIGH RISK', moderate: 'MODERATE', low: 'LOW' };
+            var banner = document.getElementById('qsBanner');
+            var numEl = document.getElementById('qsNum');
+            var labEl = document.getElementById('qsLabel');
+            if (!banner) return;
+            banner.classList.remove('qs-moderate','qs-low');
+            if (key === 'moderate') banner.classList.add('qs-moderate');
+            if (key === 'low') banner.classList.add('qs-low');
+            if (labEl) labEl.textContent = labels[key];
+            banner.style.display = 'flex';
+            if (numEl) {
+                var start = 0; var end = raw; var dur = 1200; var t0 = Date.now();
+                (function tick() {
+                    var t = Math.min(1, (Date.now() - t0) / dur);
+                    var v = Math.round(start + (end - start) * t);
+                    numEl.textContent = v;
+                    if (t < 1) requestAnimationFrame(tick);
+                })();
+            }
+        } catch (e) {}
+    })();
+    </script>
+
+    <!-- Price Localization Banner -->
+    <style>
+    .pl-banner {
+        display: none; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+        padding: 10px 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 12px; line-height: 1.3; color: #374151;
+        background: #f9fafb;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .pl-banner .pl-prefix { color: #6b7280; font-weight: 600; }
+    .pl-banner .pl-tier { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: rgba(0,168,132,0.08); color: #00A884; font-weight: 700; }
+    .pl-banner .pl-tier .pl-tier-name { color: #6b7280; font-weight: 600; }
+    .pl-banner .pl-billed { color: #6b7280; font-size: 11px; opacity: 0.85; }
+    @media (max-width: 480px) { .pl-banner { font-size: 11px; gap: 8px; padding: 8px 10px; } }
+    </style>
+    <div class="pl-banner" id="plBanner" role="note" aria-live="polite">
+        <span class="pl-prefix">💰 Approx. in your currency:</span>
+        <span class="pl-tier"><span class="pl-tier-name">Basic</span> <span id="plBasic">—</span></span>
+        <span class="pl-tier"><span class="pl-tier-name">Complete</span> <span id="plComplete">—</span></span>
+        <span class="pl-billed">· Billed in USD</span>
+    </div>
+    <script>
+    (function () {
+        var EUR_COUNTRIES = ['AT','BE','CY','DE','EE','ES','FI','FR','GR','IE','IT','LT','LU','LV','MT','NL','PT','SI','SK'];
+        var CCY_BY_COUNTRY = {
+            BR:'BRL', MX:'MXN', AR:'ARS', CO:'COP', CL:'CLP', PE:'PEN', UY:'UYU', VE:'VES',
+            GB:'GBP', CH:'CHF', CA:'CAD', AU:'AUD', NZ:'NZD', JP:'JPY', IN:'INR', ZA:'ZAR',
+            SE:'SEK', NO:'NOK', DK:'DKK', PL:'PLN', CZ:'CZK', HU:'HUF', RO:'RON', BG:'BGN', TR:'TRY',
+            AE:'AED', SA:'SAR', IL:'ILS', EG:'EGP', NG:'NGN', KE:'KES', PK:'PKR', BD:'BDT', VN:'VND', TH:'THB', ID:'IDR', MY:'MYR', PH:'PHP', SG:'SGD', HK:'HKD', TW:'TWD', KR:'KRW', CN:'CNY'
+        };
+        var FX = {
+            USD:1, EUR:0.92, GBP:0.79, BRL:5.05, MXN:17.5, ARS:1010, COP:4100, CLP:945, PEN:3.75, UYU:39, VES:36,
+            CHF:0.88, CAD:1.36, AUD:1.52, NZD:1.66, JPY:155, INR:83, ZAR:18.5,
+            SEK:10.5, NOK:10.7, DKK:6.85, PLN:3.95, CZK:23, HUF:355, RON:4.55, BGN:1.80, TRY:33,
+            AED:3.67, SAR:3.75, ILS:3.65, EGP:48, NGN:1500, KES:130, PKR:278, BDT:110, VND:24500, THB:35, IDR:15700, MYR:4.7, PHP:56, SGD:1.34, HKD:7.81, TWD:32, KRW:1340, CNY:7.20
+        };
+        var SYMBOL = {
+            EUR:'€', GBP:'£', BRL:'R$', MXN:'Mex$', ARS:'AR$', COP:'COL$', CLP:'CLP$', PEN:'S/', UYU:'$U', VES:'Bs.',
+            CHF:'CHF', CAD:'C$', AUD:'A$', NZD:'NZ$', JPY:'¥', INR:'₹', ZAR:'R',
+            SEK:'kr', NOK:'kr', DKK:'kr', PLN:'zł', CZK:'Kč', HUF:'Ft', RON:'lei', BGN:'лв', TRY:'₺',
+            AED:'AED', SAR:'SAR', ILS:'₪', EGP:'E£', NGN:'₦', KES:'KSh', PKR:'₨', BDT:'৳', VND:'₫', THB:'฿', IDR:'Rp', MYR:'RM', PHP:'₱', SGD:'S$', HKD:'HK$', TWD:'NT$', KRW:'₩', CNY:'¥'
+        };
+        function fmt(value, ccy) {
+            var sym = SYMBOL[ccy] || ccy + ' ';
+            var rounded;
+            if (value >= 1000) rounded = Math.round(value / 10) * 10;
+            else if (value >= 100) rounded = Math.round(value);
+            else rounded = Math.round(value * 100) / 100;
+            var s = (ccy === 'JPY' || ccy === 'IDR' || ccy === 'VND' || ccy === 'KRW' || ccy === 'COP' || ccy === 'CLP' || ccy === 'HUF') ? Math.round(rounded).toString() : rounded.toFixed(rounded >= 100 ? 0 : 2);
+            return '~' + sym + s;
+        }
+        function apply(country) {
+            var ccy = (country === 'BR' || country === 'MX' || country === 'AR' || country === 'CO' || country === 'CL') ? CCY_BY_COUNTRY[country]
+                      : (EUR_COUNTRIES.indexOf(country) !== -1 ? 'EUR' : (CCY_BY_COUNTRY[country] || null));
+            if (!ccy || !FX[ccy] || ccy === 'USD') return;
+            var rate = FX[ccy];
+            var b = document.getElementById('plBasic');
+            var c = document.getElementById('plComplete');
+            var banner = document.getElementById('plBanner');
+            if (!b || !c || !banner) return;
+            b.textContent = fmt(37 * rate, ccy);
+            c.textContent = fmt(97 * rate, ccy);
+            banner.style.display = 'flex';
+            try { localStorage.setItem('plCountry', country); localStorage.setItem('plCcy', ccy); } catch (e) {}
+        }
+        try { var cached = localStorage.getItem('plCountry'); if (cached) apply(cached); } catch (e) {}
+        fetch('/api/geo').then(function (r) { return r.json(); }).then(function (d) {
+            if (d && d.country_code) apply(d.country_code);
+        }).catch(function () {});
+    })();
+    </script>
 
     <div class="container">
         <!-- Scarcity Banner -->
@@ -1863,8 +2032,8 @@ img,video,iframe{max-width:100%;height:auto;}
                 </svg>
             </div>
             <div class="scarcity-text">
-                <strong>Only <span id="slotsLeft">3</span> slots left for this number!</strong>
-                <span>High demand - Access may be blocked soon</span>
+                <strong>Only <span id="slotsLeft">3</span> full unlocks left<span id="scarcityCity"></span> today!</strong>
+                <span id="scarcitySub">High demand - Access may be blocked soon</span>
             </div>
         </div>
 
@@ -1879,18 +2048,69 @@ img,video,iframe{max-width:100%;height:auto;}
                     </div>
                 </div>
                 <div class="profile-info">
-                    <div class="profile-name" id="profileTargetName">Target Person</div>
-                    <div class="profile-phone" id="targetPhone">+** (***) ***-4567</div>
+                    <div class="profile-name" id="profileTargetName">Monitored Target</div>
+                    <div class="profile-phone" id="targetPhone">+1 (555) 123-4567</div>
                     <div class="profile-location" id="profileLocation" style="display:none;">
                         <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" style="width:12px;height:12px;flex-shrink:0;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
                         <span id="profileLocationText"></span>
                     </div>
                 </div>
             </div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:10px;font-size:11px;color:#22c55e;">
+                <span style="display:inline-block;width:6px;height:6px;background:#22c55e;border-radius:50%;animation:ctaPulse 1.5s infinite;"></span>
+                Connection active
+            </div>
         </div>
 
+        <!-- Countdown Timer -->
+        <div class="countdown-bar">
+            <div class="countdown-label">Data re-encryption begins in</div>
+            <div class="countdown-timer" id="countdownTimer">14:59</div>
+            <div class="countdown-sub">After this time, recovered data will be permanently lost</div>
+        </div>
+
+        <!-- OSINT Intelligence Section -->
+        <div class="osint-section" id="osintSection" style="display:none;">
+            <div class="osint-header">
+                <div class="osint-header-icon">🛡️</div>
+                <div>
+                    <div class="osint-header-text">Intelligence Report</div>
+                    <div class="osint-header-sub">Data collected from cross-platform analysis</div>
+                </div>
+            </div>
+            <div class="osint-grid" id="osintGrid"></div>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="cta-main-title">You've already seen what <span data-pronoun="theyre">she's</span> hiding. Now decide: keep wondering, or know everything tonight.</h1>
+
+        <!-- Dynamic Stats from Scan -->
+        <div id="scanSummary" style="display:flex;justify-content:center;gap:16px;margin:0 0 16px 0;flex-wrap:wrap;">
+            <div style="background:rgba(0,168,132,0.08);border:1px solid rgba(0,168,132,0.15);border-radius:10px;padding:8px 14px;text-align:center;">
+                <div style="font-size:20px;font-weight:800;color:#00A884;" id="ctaDeletedMsgsTop">--</div>
+                <div style="font-size:11px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Deleted msgs</div>
+            </div>
+            <div style="background:rgba(255,152,0,0.08);border:1px solid rgba(255,152,0,0.15);border-radius:10px;padding:8px 14px;text-align:center;">
+                <div style="font-size:20px;font-weight:800;color:#ff9800;" id="ctaSuspicious">--</div>
+                <div style="font-size:11px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Suspicious</div>
+            </div>
+            <div style="background:rgba(244,67,54,0.08);border:1px solid rgba(244,67,54,0.15);border-radius:10px;padding:8px 14px;text-align:center;">
+                <div style="font-size:20px;font-weight:800;color:#f44336;" id="ctaLateNight">--</div>
+                <div style="font-size:11px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Late night</div>
+            </div>
+        </div>
+        <script>
+        (function() {
+            var dm = localStorage.getItem('deletedMsgs');
+            var sc = localStorage.getItem('suspiciousCount');
+            var ln = localStorage.getItem('lateNightCount');
+            if (dm) document.getElementById('ctaDeletedMsgsTop').textContent = dm;
+            if (sc) document.getElementById('ctaSuspicious').textContent = sc;
+            if (ln) document.getElementById('ctaLateNight').textContent = ln;
+        })();
+        </script>
+
         <!-- Success Badge -->
-        <div class="success-badge">
             <div class="badge-title">Scan Complete — Red Flags Found</div>
             <div class="badge-text">Here's a preview of what's being hidden from you:</div>
         </div>
@@ -1984,11 +2204,11 @@ img,video,iframe{max-width:100%;height:auto;}
                         <div class="chat-bubble locked">Can't wait. I miss you already...</div>
                     </div>
                     <div class="chat-message received" id="typingIndicator" style="opacity: 0; transition: opacity 0.3s;">
-                        <div class="chat-bubble" style="background: rgba(233, 30, 99, 0.15); padding: 8px 12px;">
+                        <div class="chat-bubble" style="background: rgba(0, 168, 132, 0.15); padding: 8px 12px;">
                             <div class="typing-dots" style="display: flex; gap: 4px;">
-                                <span style="width: 6px; height: 6px; background: #e91e63; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out;"></span>
-                                <span style="width: 6px; height: 6px; background: #e91e63; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out 0.2s;"></span>
-                                <span style="width: 6px; height: 6px; background: #e91e63; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out 0.4s;"></span>
+                                <span style="width: 6px; height: 6px; background: #00A884; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out;"></span>
+                                <span style="width: 6px; height: 6px; background: #00A884; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out 0.2s;"></span>
+                                <span style="width: 6px; height: 6px; background: #00A884; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out 0.4s;"></span>
                             </div>
                         </div>
                     </div>
@@ -2254,37 +2474,14 @@ img,video,iframe{max-width:100%;height:auto;}
             </div>
         </div>
 
-        <!-- Pricing -->
-        <div class="pricing-section" id="pricing">
-            <div class="discount-badge">81% OFF - LIMITED TIME</div>
-            <div class="price-original">$197</div>
-            <div class="price-current">$37</div>
-            <div class="price-savings">You save $160 today!</div>
-            <div style="font-size:13px;color:#8e8e93;margin-top:2px;">One-time payment • <strong style="color:#e91e63;">Lifetime access</strong></div>
-            <div class="price-info">One-time payment • Instant access • 30-day guarantee</div>
-            <button class="cta-button" onclick="handlePurchase()" aria-label="Unlock full access to Whats Spy">
-                <span class="cta-button-icon">🔓</span> Unlock Full Access Now<br><span id="ctaBtnPhone" style="font-size:12px;font-weight:400;opacity:0.85;"></span>
-            </button>
-            <p class="cta-subtext">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0110 0v4"></path>
-                </svg>
-                Secure payment • Access released in up to 2 minutes
-            </p>
-            <div class="payment-methods">
-                <span class="payment-method">💳 Visa</span>
-                <span class="payment-method">💳 Mastercard</span>
-                <span class="payment-method">💳 Amex</span>
-                <span class="payment-method">🔒 PayPal</span>
-            </div>
-        </div>
+        <!-- CTA Social Proof -->
+        <div class="cta-social" data-cta-social="" style="text-align:center;font-size:13px;color:#00A884;margin: 16px 8px 24px;padding:10px;background:rgba(0,168,132,0.08);border:1px solid rgba(0,168,132,0.25);border-radius:10px;letter-spacing:0.2px;">★★★★★ <strong>4.9</strong> · <strong>2,847</strong> verified buyers</div>
 
         <!-- Testimonials -->
         <div class="testimonials-section">
             <div class="testimonials-header-card">
                 <div class="testimonials-header-left">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#00A884" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                     <span class="testimonials-header-title">User Reviews</span>
                 </div>
                 <div class="testimonials-header-right">
@@ -2349,7 +2546,174 @@ img,video,iframe{max-width:100%;height:auto;}
             </div>
         </div>
 
-        <!-- FAQ -->
+        <!-- Pricing -->
+        <!-- Pricing -->
+        <div class="pricing-section" id="pricing">
+            <h2 class="tiers-title">Choose your level of access</h2>
+            <p class="tiers-sub">2 plans, 1 result: <strong>the truth</strong>. Pick what fits you.</p>
+
+            <div class="tier-trust-bar">
+                <span class="ttb-dot"></span>
+                <span><strong>73%</strong> of users picked <strong>Complete</strong> this week — best balance of price &amp; answers</span>
+            </div>
+
+            <div class="tier-grid" data-tier-grid="">
+                <div class="tier-card" data-tier="basic" onclick="selectTier('basic')" role="button" tabindex="0">
+                    <span class="tier-stamp starter">Starter</span>
+                    <div class="tier-icon-wrap">🔍</div>
+                    <h3 class="tier-name">Basic</h3>
+                    <p class="tier-tagline">For peace of mind.</p>
+                    <div class="tier-anchor-wrap">
+                        <span class="tier-anchor">$97</span>
+                        <div class="tier-price"><span class="tier-currency">$</span>37</div>
+                    </div>
+                    <div style="text-align:center;"><span class="tier-save">Save $60 · 62% off</span></div>
+                    <div class="tier-tag">30-day access · 1 number</div>
+                    <p class="tier-perday" style="text-align:center;font-size:11px;color:rgba(255,255,255,0.55);margin:6px 0 0;">≈ <strong style="color:rgba(255,255,255,0.85);">$1.23/day</strong> for 30 days</p>
+                    <ul class="tier-features">
+                        <li><span class="ico ico-ok">✅</span><span>Deleted messages <span class="dim">(last 30 days)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Photos &amp; media history</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Email support <span class="dim">(24-48h)</span></span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">Voice notes</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">Real-time alerts</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">GPS history</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">PDF Evidence Report</span></li>
+                        <li class="bonus"><span class="ico">⏱</span><span><strong>BONUS:</strong> Online Monitor 24/7 <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($29 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🎁</span><span><strong>BONUS:</strong> Truth Toolkit (templates &amp; scripts)</span></li>
+                        <li><span class="ico ico-neutral">🛡️</span><span>7-day money-back guarantee</span></li>
+                    </ul>
+                    <button class="tier-cta" onclick="purchaseTier('basic', event)">Get Basic — $37 →</button>
+                </div>
+
+                <div class="tier-card recommended selected" data-tier="complete" onclick="selectTier('complete')" role="button" tabindex="0">
+                    <div class="tier-badge">★ MOST CHOSEN • 73%</div>
+                    <span class="tier-stamp popular">Best value</span>
+                    <div class="tier-icon-wrap">⚡</div>
+                    <h3 class="tier-name">Complete</h3>
+                    <p class="tier-tagline">For real answers — for life.</p>
+                    <div class="tier-anchor-wrap">
+                        <span class="tier-anchor">$197</span>
+                        <div class="tier-price"><span class="tier-currency">$</span>97</div>
+                    </div>
+                    <div style="text-align:center;"><span class="tier-save">Save $100 · 50% off</span></div>
+                    <div class="tier-tag">Lifetime · 3 numbers</div>
+                    <p class="tier-perday" style="text-align:center;font-size:11px;color:rgba(34,197,94,0.85);margin:6px 0 0;">≈ <strong>$0.27/day</strong> over 1 year — less than a coffee</p>
+                    <ul class="tier-features">
+                        <li><span class="ico ico-ok">✅</span><span>Everything in Basic, <strong>plus:</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Deleted messages <span class="dim">(<strong>Lifetime</strong>)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Voice notes recovery</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Real-time push alerts</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>GPS history <span class="dim">(<strong>Lifetime</strong>)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span><strong>PDF Evidence Report — Notarized</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span><strong>Unlimited numbers</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Priority chat support <span class="dim">(&lt;4h)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>1:1 call with case analyst</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Lawyer-referral network access</span></li>
+                        <li class="bonus"><span class="ico">🎁</span><span><strong>BONUS:</strong> Truth Toolkit (templates &amp; scripts)</span></li>
+                        <li class="bonus"><span class="ico">📷</span><span><strong>BONUS:</strong> Instagram Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($97 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🎵</span><span><strong>BONUS:</strong> TikTok Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($87 value)</span></span></li>
+                        <li class="bonus"><span class="ico">👻</span><span><strong>BONUS:</strong> Snapchat Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($67 value)</span></span></li>
+                        <li class="bonus"><span class="ico">📍</span><span><strong>BONUS:</strong> Real-Time GPS Tracker <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($67 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🔐</span><span><strong>BONUS:</strong> Encrypted evidence vault</span></li>
+                        <li class="bonus"><span class="ico">🏆</span><span><strong>BONUS:</strong> VIP lifetime updates</span></li>
+                        <li class="bonus"><span class="ico">🔔</span><span><strong>BONUS:</strong> Instant Alerts <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($47 value)</span></span></li>
+                        <li><span class="ico ico-neutral">🛡️</span><span><strong>60-day money-back guarantee</strong></span></li>
+                    </ul>
+                    <p class="tier-spots"><span class="dot"></span>Only 47 Complete spots left this week</p>
+                    <button class="tier-cta" onclick="purchaseTier('complete', event)">Get Complete — $97 →</button>
+                </div>
+            </div>
+
+            <div class="payment-methods" aria-label="Accepted payment methods" style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap;">
+                <span class="payment-method" title="Visa" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 48 16" width="36" height="12"><rect width="48" height="16" rx="2" fill="#1A1F71"/><path d="M18.5 4h-2.5l-2.2 8h2.5l2.2-8zm-4.3 0l-2.4 6.2-.3-1.3-.9-4.4c-.2-1.4-1.5-2-2.6-2H5.2l-.1.4c2.1.5 3.9 1.6 5 3L12 4h2.2zm-7.9 0L4 12H1.5L3 4h3.3zM22 12l2-8h2.5l-2 8H22zm5 0l1.2-4.8c.1-.3.3-.6.6-.6h2.4l.2-.6H27l-.1.6c-.1.1-.2.3-.2.4L26.5 12H27z" fill="white"/></svg>
+                </span>
+                <span class="payment-method" title="Mastercard" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 30 18" width="30" height="18"><rect width="30" height="18" rx="2" fill="#000"/><circle cx="11" cy="9" r="5" fill="#EB001B"/><circle cx="19" cy="9" r="5" fill="#F79E1B" opacity="0.8"/></svg>
+                </span>
+                <span class="payment-method" title="American Express" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 30 18" width="30" height="18"><rect width="30" height="18" rx="2" fill="#2E77BC"/><text x="15" y="13" font-size="10" font-weight="bold" fill="white" text-anchor="middle" font-family="sans-serif">AMEX</text></svg>
+                </span>
+                <span class="payment-method" title="PayPal" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 40 16" width="36" height="14"><rect width="40" height="16" rx="2" fill="#003087"/><text x="20" y="11" font-size="8" font-weight="bold" fill="white" text-anchor="middle" font-family="sans-serif">PayPal</text></svg>
+                </span>
+                <span class="payment-method" title="Google Pay" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 40 16" width="36" height="14"><rect width="40" height="16" rx="2" fill="#fff"/><text x="20" y="11" font-size="7" font-weight="bold" fill="#000" text-anchor="middle" font-family="sans-serif">G Pay</text></svg>
+                </span>
+                <span class="payment-method" title="Apple Pay" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 40 16" width="36" height="14"><rect width="40" height="16" rx="2" fill="#000"/><text x="20" y="11" font-size="7" font-weight="bold" fill="white" text-anchor="middle" font-family="sans-serif">Apple Pay</text></svg>
+                </span>
+            </div>
+        </div>
+
+        <!-- Side-by-side plan matrix -->
+        <div class="plan-matrix" style="margin:20px 8px 18px;background:rgba(0,0,0,0.02);border:1px solid rgba(0,0,0,0.08);border-radius:14px;overflow:hidden;">
+            <div style="padding:14px 16px 10px;text-align:center;">
+                <h3 style="color:#1a1a1a;font-size:15px;font-weight:700;margin:0 0 4px;letter-spacing:0.2px;">Compare both plans</h3>
+                <p style="color:#6b7280;font-size:12px;margin:0;">All prices one-time. No subscription.</p>
+            </div>
+            <div class="pm-scroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                <table style="width:100%;min-width:520px;border-collapse:collapse;font-size:12.5px;color:#374151;">
+                    <thead>
+                        <tr style="background:rgba(0,0,0,0.03);">
+                            <th style="text-align:left;padding:10px 12px;font-weight:600;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:0.6px;">Feature</th>
+                            <th style="padding:10px 8px;text-align:center;font-weight:700;color:#6b7280;">Basic<br><span style="font-size:11px;font-weight:500;color:#9ca3af;">$37</span></th>
+                            <th style="padding:10px 8px;text-align:center;font-weight:800;color:#00A884;background:rgba(0,168,132,0.06);">Complete<br><span style="font-size:11px;font-weight:600;color:#00A884;">$97 ★</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">Deleted messages</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);">30 days</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);"><strong style="color:#00A884;">Lifetime</strong></td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">Photos &amp; media</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);color:#00A884;">✓</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);color:#00A884;">✓</td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">Voice notes</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);color:#00A884;">✓</td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">Real-time alerts</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);color:#00A884;">✓</td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">GPS history</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);"><strong>Lifetime</strong></td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">PDF Evidence Report</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);color:#00A884;"><strong>Notarized</strong></td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">Numbers tracked</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);">1</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);"><strong>Unlimited</strong></td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">Support</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);">Email 24-48h</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);">Chat &lt;4h</td></tr>
+                        <tr><td style="padding:9px 12px;border-top:1px solid rgba(0,0,0,0.06);">Money-back</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);">7 days</td><td style="text-align:center;border-top:1px solid rgba(0,0,0,0.06);background:rgba(0,168,132,0.04);"><strong style="color:#00A884;">60 days</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="comparison-table">
+            <h3>What changes after you have the truth</h3>
+            <div class="comp-row head">
+                <div>Without Whats Spy</div>
+                <div>With Whats Spy</div>
+            </div>
+            <div class="comp-row">
+                <div class="col-without">❌ Days of insomnia staring at the ceiling</div>
+                <div class="col-with">✅ Clear answer in 2 minutes</div>
+            </div>
+            <div class="comp-row">
+                <div class="col-without">❌ Snoop their phone (they catch you)</div>
+                <div class="col-with">✅ 100% remote — they never know</div>
+            </div>
+            <div class="comp-row">
+                <div class="col-without">❌ Argue without proof, look paranoid</div>
+                <div class="col-with">✅ Screenshots &amp; timestamps as evidence</div>
+            </div>
+            <div class="comp-row">
+                <div class="col-without">❌ Wonder again tomorrow</div>
+                <div class="col-with">✅ Closure tonight — for good</div>
+            </div>
+        </div>
+
+        <div class="closure-guarantee dual">
+            <div class="cg-icon">🛡️</div>
+            <div>
+                <h4>Double Guarantee</h4>
+                <div class="dg-row"><strong>1. Result Guarantee — 7 days</strong> If after 7 days you don't have a clear answer about what's going on, we refund 100% AND you keep all bonuses ($394 value).</div>
+                <div class="dg-row"><strong>2. Satisfaction Guarantee — 30/60 days</strong> Even after 7 days, change your mind for any reason and we refund 100%.</div>
+                <p class="dg-foot">* 7 days for Basic, 60 days for Complete.</p>
+            </div>
+        </div>
+
+        <p class="loss-microcopy">Tomorrow you'll still be wondering. Or you'll know.</p>
+    </div>
+
+    <!-- FAQ -->
         <div class="faq-section">
             <h2 class="section-title">Frequently Asked Questions</h2>
             
@@ -2415,7 +2779,7 @@ img,video,iframe{max-width:100%;height:auto;}
         <!-- Security Badges -->
         <div class="security-badges">
             <div class="security-badge">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00A884" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
                 SSL Secure
             </div>
             <div class="security-badge">
@@ -2440,6 +2804,12 @@ img,video,iframe{max-width:100%;height:auto;}
             <h3 class="guarantee-title">30-Day Money-Back Guarantee</h3>
             <p class="guarantee-text">Not satisfied? Get a full refund within 30 days, no questions asked. Your purchase is completely risk-free.</p>
         </div>
+    </div>
+
+    <!-- Activity Alert -->
+    <div class="activity-alert" id="activityAlert">
+        <span class="alert-dot"></span>
+        <span id="activityAlertText">New message detected 2 min ago</span>
     </div>
 
     <!-- Exit Intent Popup -->
@@ -2667,7 +3037,7 @@ img,video,iframe{max-width:100%;height:auto;}
                 html += '<img class="conv-avatar" src="../imagens/' + c.img + '" alt="">';
                 html += '<div class="conv-body"><div class="conv-name">' + c.name + '</div>';
                 if (c.msg === 'audio') {
-                    html += '<div class="conv-audio"><svg viewBox="0 0 24 24" fill="#e91e63" width="14" height="14"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3zM19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg><div class="conv-audio-bar">' + audioBars + '</div><span style="font-size:11px;color:#6c757d;filter:blur(2px)">0:47</span></div>';
+                    html += '<div class="conv-audio"><svg viewBox="0 0 24 24" fill="#00A884" width="14" height="14"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3zM19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg><div class="conv-audio-bar">' + audioBars + '</div><span style="font-size:11px;color:#6c757d;filter:blur(2px)">0:47</span></div>';
                 } else {
                     html += '<div class="conv-msg">' + c.msg + '</div>';
                 }
@@ -2742,6 +3112,9 @@ img,video,iframe{max-width:100%;height:auto;}
 
         var btnPhone = document.getElementById('ctaBtnPhone');
         if (btnPhone) btnPhone.textContent = '📱 ' + savedPhone;
+        // Also show phone on tier per-day if element exists
+        var tierPhone = document.querySelector('.tier-tag');
+        if (tierPhone) tierPhone.textContent = tierPhone.textContent + ' • ' + savedPhone;
 
         // Load target avatar from localStorage
         var targetAvatar = localStorage.getItem('targetAvatar');
@@ -2788,6 +3161,33 @@ img,video,iframe{max-width:100%;height:auto;}
         // Toggle FAQ
         function toggleFaq(element) {
             element.parentElement.classList.toggle('open');
+        }
+
+        // Tier selection and purchase
+        function selectTier(tier) {
+            window.selectedTier = tier;
+            document.querySelectorAll('.tier-card').forEach(function(c) {
+                c.classList.toggle('selected', c.dataset.tier === tier);
+            });
+            if (tier === 'basic') {
+                window.productValue = 37;
+                window.checkoutCode = 'PPU38CQ9Q3O';
+            } else {
+                window.productValue = 97;
+                window.checkoutCode = 'PPU38CQB3RK';
+            }
+        }
+
+        function purchaseTier(tier, event) {
+            event.stopPropagation();
+            selectTier(tier);
+            if (typeof FacebookCAPI !== 'undefined') {
+                FacebookCAPI.trackAddToCart(window.productValue, 'Whats Spy VIP Access');
+            } else if (typeof fbq !== 'undefined') {
+                var eid = 'AddToCart_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                fbq('track', 'AddToCart', { content_name: 'Whats Spy VIP Access', currency: 'USD', value: window.productValue }, { eventID: eid });
+            }
+            showResponsibilityPopup();
         }
 
         function handlePurchase() {
@@ -2848,7 +3248,7 @@ img,video,iframe{max-width:100%;height:auto;}
                 };
                 var m = msgs[lang] || msgs.en;
                 modal.innerHTML = '<div style="text-align:center;padding:48px 24px;">' +
-                    '<div style="width:48px;height:48px;border:4px solid rgba(255,255,255,0.1);border-top-color:#e91e63;border-radius:50%;animation:rp-spin .8s linear infinite;margin:0 auto;"></div>' +
+                    '<div style="width:48px;height:48px;border:4px solid rgba(255,255,255,0.1);border-top-color:#00A884;border-radius:50%;animation:rp-spin .8s linear infinite;margin:0 auto;"></div>' +
                     '<h3 style="color:#fff;margin:24px 0 8px;font-size:18px;">' + m[0] + '</h3>' +
                     '<p style="color:rgba(255,255,255,0.5);font-size:13px;">' + m[1] + '</p>' +
                     '</div>';
@@ -2864,12 +3264,13 @@ img,video,iframe{max-width:100%;height:auto;}
         
         // Proceed to checkout with all tracking
         var checkoutLocked = false;
+        window.addEventListener("pageshow", function(e) { if (e.persisted) { checkoutLocked = false; } });
         function proceedToCheckout() {
             if (checkoutLocked) return;
             checkoutLocked = true;
             // Get current product value
-            const currentValue = window.productValue || 37;
-            const currentCheckoutCode = window.checkoutCode || 'PPU38CQ9Q3O';
+            const currentValue = window.productValue || 97;
+            const currentCheckoutCode = window.checkoutCode || 'PPU38CQB3RK';
             
             if (typeof FacebookCAPI !== 'undefined') {
                 FacebookCAPI.trackAddToCart(currentValue, 'Whats Spy VIP Access');
@@ -2950,6 +3351,75 @@ img,video,iframe{max-width:100%;height:auto;}
         localStorage.setItem('funnelProgress', 'cta');
 
 
+        // Countdown timer
+        (function() {
+            var totalSecs = 14 * 60 + 59;
+            var timerEl = document.getElementById('countdownTimer');
+            if (!timerEl) return;
+            setInterval(function() {
+                if (totalSecs <= 0) return;
+                totalSecs--;
+                var m = Math.floor(totalSecs / 60);
+                var s = totalSecs % 60;
+                timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                if (totalSecs < 300) timerEl.style.animation = 'pulse-dot 1s infinite';
+            }, 1000);
+        })();
+
+        // OSINT intelligence from localStorage
+        (function() {
+            var raw = localStorage.getItem('targetOsint');
+            var section = document.getElementById('osintSection');
+            var grid = document.getElementById('osintGrid');
+            if (!raw || !section || !grid) return;
+            try {
+                var osint = JSON.parse(raw);
+                var items = [];
+                var loc = osint.location || osint.countryCode;
+                if (loc) items.push({ icon:'📍', label:'Location detected', value: loc, cls:'' });
+                if (typeof osint.breachesCount === 'number') {
+                    if (osint.breachesCount > 0) items.push({ icon:'🔓', label:'Data breaches found', value: osint.breachesCount + ' breach' + (osint.breachesCount > 1 ? 'es' : ''), cls:'red' });
+                    else items.push({ icon:'🔓', label:'Data breaches', value:'None found', cls:'muted' });
+                }
+                if (osint.telegramFound) items.push({ icon:'✈️', label:'Telegram account', value:'Detected' + (osint.telegramUsername ? ' — @' + osint.telegramUsername : ''), cls:'red' });
+                if (osint.reverseImageMatches > 0) items.push({ icon:'🔍', label:'Photo found online', value: osint.reverseImageMatches + ' location' + (osint.reverseImageMatches > 1 ? 's' : ''), cls:'red' });
+                if (osint.aboutHistory && osint.aboutHistory.length > 0) items.push({ icon:'📝', label:'Status changes detected', value: osint.aboutHistory.length + ' change' + (osint.aboutHistory.length > 1 ? 's' : ''), cls:'' });
+                if (osint.businessCategory) items.push({ icon:'💼', label:'Business category', value: osint.businessCategory, cls:'muted' });
+                if (items.length === 0) return;
+                var html = '';
+                for (var i = 0; i < items.length; i++) {
+                    var it = items[i];
+                    html += '<div class="osint-item"><span class="osint-item-icon">' + it.icon + '</span><span class="osint-item-label">' + it.label + '</span><span class="osint-item-value' + (it.cls ? ' ' + it.cls : '') + '">' + it.value + '</span></div>';
+                }
+                grid.innerHTML = html;
+                section.style.display = '';
+            } catch(e) {}
+        })();
+
+        // Activity alerts
+        (function() {
+            var alertEl = document.getElementById('activityAlert');
+            var alertText = document.getElementById('activityAlertText');
+            if (!alertEl || !alertText) return;
+            var msgs = [
+                'New message detected 2 min ago',
+                'Deleted photo recovered just now',
+                'New contact added to their list',
+                'Voice message erased 5 min ago',
+                'Location shared and then deleted',
+                'Status changed 3 min ago'
+            ];
+            var idx = 0;
+            function showAlert() {
+                alertText.textContent = msgs[idx % msgs.length];
+                idx++;
+                alertEl.classList.add('show');
+                setTimeout(function() { alertEl.classList.remove('show'); }, 4000);
+            }
+            setTimeout(showAlert, 8000);
+            setInterval(function() { if (Math.random() > 0.4) showAlert(); }, 25000);
+        })();
+
         // Animate suspicion bar
         setTimeout(() => {
             const bar = document.getElementById('suspicionBar');
@@ -2982,7 +3452,7 @@ img,video,iframe{max-width:100%;height:auto;}
                 const pct = Math.max(0, 100 - (elapsed / totalDuration) * 100);
                 fill.style.width = pct + '%';
                 if (pct > 60) {
-                    fill.style.background = 'linear-gradient(90deg, #e91e63, #e91e63)';
+                    fill.style.background = 'linear-gradient(90deg, #00A884, #00A884)';
                 } else if (pct > 30) {
                     fill.style.background = 'linear-gradient(90deg, #f59e0b, #eab308)';
                 } else {
@@ -3173,9 +3643,9 @@ img,video,iframe{max-width:100%;height:auto;}
         })();
 
 
-        // === SHAKE CTA ON SCROLL PAST PRICING ===
+        // === SHAKE TIER CARDS ON SCROLL PAST PRICING ===
         (function() {
-            const ctaBtn = document.querySelector('.cta-button');
+            const ctaBtn = document.querySelector('.tier-card.recommended .tier-cta');
             const pricing = document.getElementById('pricing');
             if (!ctaBtn || !pricing) return;
             let shaken = false;
@@ -3187,7 +3657,7 @@ img,video,iframe{max-width:100%;height:auto;}
                             shaken = true;
                             ctaBtn.style.animation = 'ctaShake 0.6s ease-in-out';
                             setTimeout(function() {
-                                ctaBtn.style.animation = 'megaPulse 2s ease-in-out infinite';
+                                ctaBtn.style.animation = '';
                                 setTimeout(function() { shaken = false; }, 10000);
                             }, 600);
                         }
@@ -3236,8 +3706,8 @@ img,video,iframe{max-width:100%;height:auto;}
                 }, sec * 1000);
             });
 
-            // CTA button hover (purchase intent)
-            var ctaBtn = document.querySelector('.cta-button');
+            // Tier button hover (purchase intent)
+            var ctaBtn = document.querySelector('.tier-cta');
             if (ctaBtn) {
                 ctaBtn.addEventListener('mouseenter', function() {
                     trackMicro('cta_button_hover', {});
@@ -3305,15 +3775,11 @@ img,video,iframe{max-width:100%;height:auto;}
             <button class="rp-close" onclick="closeResponsibilityPopup()" aria-label="Close">✕</button>
             <div class="rp-icon">⚠️</div>
             <h2 class="rp-title"><span id="rpUserName">User</span>, read this before proceeding.</h2>
-            <p class="rp-text">You are about to access a <strong>restricted beta tool</strong> capable of recovering deleted messages, tracking real-time location, and exposing hidden conversations — all <strong>without detection</strong>.</p>
-            <div class="rp-warning">Misuse will result in <strong>immediate and permanent</strong> access revocation.</div>
-            <p class="rp-text rp-fee">The one-time fee covers encrypted server infrastructure and secure data routing. WhatsSpy operates on limited capacity during this beta phase.</p>
-            <div class="rp-slots">
-                <span class="rp-slots-dot"></span>
-                Only <strong id="rpSlots">3</strong> beta access slots remaining
-            </div>
+            <p class="rp-text">You are about to unlock <strong>classified-level technology</strong> capable of recovering deleted messages, tracking real-time location, and exposing hidden conversations — all <strong>100% undetectable</strong>.</p>
+            <div class="rp-warning">This tool is <strong>extremely powerful</strong>. Misuse will result in <strong>immediate and permanent</strong> access revocation.</div>
+            <p class="rp-text rp-fee">The one-time fee covers military-grade encrypted servers and secure data routing. Due to high demand, access is strictly limited.</p>
             <div class="rp-blacklist-warning">
-                <strong>⛔ Important:</strong> By accepting and proceeding to checkout, you are reserving one of the remaining slots. If you <strong>do not complete payment</strong>, your access will be <strong>permanently blocked</strong> across all our systems and your data will be added to our <strong>restricted blacklist</strong>. This cannot be undone.
+                <strong>⛔ Important:</strong> By proceeding, you are reserving one of the remaining slots. If you <strong>do not complete payment</strong>, your slot will be <strong>permanently revoked</strong> and your access will be blocked. This cannot be undone.
             </div>
             <label class="rp-checkbox-label" for="rpCheckbox">
                 <input type="checkbox" id="rpCheckbox" onchange="toggleRpAccept()">
@@ -3321,7 +3787,7 @@ img,video,iframe{max-width:100%;height:auto;}
                 <span>I understand the risks and accept <strong>full responsibility</strong> for how I use this tool.</span>
             </label>
             <button class="rp-accept-btn" id="rpAcceptBtn" disabled onclick="acceptResponsibility()">
-                I Accept — Proceed to Payment →
+                I Accept — Unlock Access Now →
             </button>
         </div>
     </div>
@@ -3425,7 +3891,7 @@ img,video,iframe{max-width:100%;height:auto;}
             transition: border-color 0.2s;
             box-sizing: border-box;
         }
-        .rp-input:focus { border-color: #e91e63; }
+        .rp-input:focus { border-color: #00A884; }
         .rp-input::placeholder { color: #555; }
         .rp-field-error {
             font-size: 12px;
@@ -3480,7 +3946,7 @@ img,video,iframe{max-width:100%;height:auto;}
             margin: 16px 0;
             transition: border-color 0.2s;
         }
-        .rp-checkbox-label:hover { border-color: rgba(233,30,99,0.3); }
+        .rp-checkbox-label:hover { border-color: rgba(0,168,132,0.3); }
         .rp-checkbox-label input[type="checkbox"] { display: none; }
         .rp-checkmark {
             width: 20px;
@@ -3495,8 +3961,8 @@ img,video,iframe{max-width:100%;height:auto;}
             margin-top: 1px;
         }
         .rp-checkbox-label input:checked ~ .rp-checkmark {
-            background: #e91e63;
-            border-color: #e91e63;
+            background: #00A884;
+            border-color: #00A884;
         }
         .rp-checkbox-label input:checked ~ .rp-checkmark::after {
             content: '✓';
@@ -3523,30 +3989,30 @@ img,video,iframe{max-width:100%;height:auto;}
             color: #555;
         }
         .rp-accept-btn.rp-active {
-            background: linear-gradient(135deg,#e91e63,#c2185b);
+            background: linear-gradient(135deg,#00A884,#008069);
             color: #fff;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(233,30,99,0.4);
+            box-shadow: 0 4px 20px rgba(0,168,132,0.4);
         }
         .rp-accept-btn.rp-active:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 24px rgba(233,30,99,0.5);
+            box-shadow: 0 6px 24px rgba(0,168,132,0.5);
         }
     </style>
     <!-- Floating CTA for Mobile -->
-    <div id="floatingCta" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:1000; padding:10px 16px 12px; background:linear-gradient(to top, rgba(0,0,0,0.97), rgba(0,0,0,0.9)); backdrop-filter:blur(12px); border-top:1px solid rgba(233,30,99,0.3);">
+    <div id="floatingCta" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:1000; padding:10px 16px 12px; background:linear-gradient(to top, rgba(0,0,0,0.97), rgba(0,0,0,0.9)); backdrop-filter:blur(12px); border-top:1px solid rgba(0,168,132,0.3);">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; padding:0 4px;">
-            <span style="font-size:13px; color:#e5e5ea; font-weight:600;"><span style="text-decoration:line-through;color:#8e8e93;font-weight:400;">$197</span> → <span style="color:#e91e63;">$37</span></span>
+            <span style="font-size:13px; color:#e5e5ea; font-weight:600;"><span style="text-decoration:line-through;color:#8e8e93;font-weight:400;">$197</span> → <span style="color:#00A884;">$37</span></span>
             <span style="font-size:11px; color:#8e8e93;">one-time payment • 30-day guarantee</span>
         </div>
-        <button onclick="handlePurchase()" style="width:100%; padding:14px; background:linear-gradient(135deg,#e91e63,#c2185b); color:#fff; font-size:16px; font-weight:700; border:none; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 20px rgba(233,30,99,0.5); animation:floatPulse 2s infinite;">
+        <button onclick="handlePurchase()" style="width:100%; padding:14px; background:linear-gradient(135deg,#00A884,#008069); color:#fff; font-size:16px; font-weight:700; border:none; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 20px rgba(0,168,132,0.5); animation:floatPulse 2s infinite;">
             🔓 Unlock Full Access Now
         </button>
     </div>
     <style>
         @keyframes floatPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 4px 20px rgba(233,30,99,0.5); }
-            50% { transform: scale(1.02); box-shadow: 0 4px 30px rgba(233,30,99,0.7); }
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,168,132,0.5); }
+            50% { transform: scale(1.02); box-shadow: 0 4px 30px rgba(0,168,132,0.7); }
         }
         @keyframes slideUp {
             from { transform: translateY(100%); opacity: 0; }

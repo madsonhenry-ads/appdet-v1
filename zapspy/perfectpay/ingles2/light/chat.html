@@ -90,7 +90,8 @@
             --bg-tertiary: #f5f0eb;
             --text-primary: #111b21;
             --text-secondary: #667781;
-            --green-primary: #00a884;
+            --green-primary: #00A884;
+            --green-dark: #008069;
             --blue-check: #53bdeb;
             --red-alert: #ef4444;
             --msg-out: #d9fdd3;
@@ -366,9 +367,9 @@
         .unlock-banner-text span { font-size: 12px; color: var(--text-secondary); }
         .unlock-banner-btn {
             padding: 12px 20px;
-            background: linear-gradient(135deg, var(--green-primary), #e91e63);
+            background: linear-gradient(135deg, var(--green-primary), var(--green-dark, #008069));
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             color: white;
             font-size: 14px;
             font-weight: 700;
@@ -460,7 +461,7 @@
         .modal-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, var(--green-primary), #e91e63);
+            background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
             border: none;
             border-radius: 14px;
             color: white;
