@@ -416,6 +416,13 @@ const CHECKOUT_LINKS = {
     2: 'https://go.centerpag.com/PPU38CQ848T', // $27
     3: 'https://go.centerpag.com/PPU38CQ848U', // $18
     4: 'https://go.centerpag.com/PPU38CQ85II', // $9
+  },
+  // DigiStore24 direct checkout links (para campanhas de recovery do funil DigiStore)
+  digi_en: {
+    1: 'https://www.checkout-ds24.com/product/557131',  // $37
+    2: 'https://www.checkout-ds24.com/product/557131',  // $37
+    3: 'https://www.checkout-ds24.com/product/557125',  // $97
+    4: 'https://www.checkout-ds24.com/product/557125',  // $97
   }
 };
 

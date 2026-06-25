@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const pool = require('../database');
 const { authenticateToken, requireAdmin, invalidateCache } = require('../middleware');
@@ -1730,6 +1731,547 @@ router.all('/api/postback/perfectpay', async (req, res) => {
     }
 });
 
+// ==================== DIGISTORE24 WEBHOOK (IPN GENÉRICO) ====================
+// Docs: https://support.digistore24.com/hc/en-us/articles/360001420763-IPN-Instant-Payment-Notification
+// Formato: form-urlencoded POST com campos: event, order_id, transaction_id, product_id,
+//          amount_brutto, transaction_currency, buyer_email, buyer_first_name, buyer_last_name, sha_sign
+
+const recentDigiStoreWebhooks = [];
+
+// Validação SHA512 da assinatura DigiStore24
+function validateDigiStoreSignature(body, ipnPassword) {
+    // Pega todos os campos exceto sha_sign
+    const fields = {};
+    for (const key of Object.keys(body)) {
+        if (key !== 'sha_sign' && key !== 'sign' && body[key] !== undefined && body[key] !== null) {
+            fields[key] = body[key];
+        }
+    }
+
+    // Ordena alfabeticamente pelas chaves e concatena chave=valor
+    const sortedKeys = Object.keys(fields).sort();
+    let signString = '';
+    for (const key of sortedKeys) {
+        signString += key + '=' + fields[key];
+    }
+    signString += ipnPassword;
+
+    // Gera SHA512
+    const hash = crypto.createHash('sha512').update(signString).digest('hex');
+
+    const receivedSign = body.sha_sign || body.sign || '';
+    return hash.toLowerCase() === receivedSign.toLowerCase();
+}
+
+// Mapeamento de eventos DigiStore24 para status interno
+function mapDigiStoreEvent(event, transactionData) {
+    // Eventos padrão DigiStore24
+    switch (event) {
+        case 'on_payment':
+            return 'approved';
+        case 'on_refund':
+            return 'refunded';
+        case 'on_chargeback':
+            return 'chargeback';
+        case 'payment_denial':
+            return 'cancelled';
+        case 'on_payment_missed':
+            return 'cancelled';
+        default:
+            // Fallback: verifica se transaction_data tem status
+            if (transactionData && transactionData.status) {
+                const s = String(transactionData.status).toLowerCase();
+                if (s === 'completed' || s === 'finished') return 'approved';
+                if (s === 'refunded' || s === 'refund') return 'refunded';
+                if (s === 'chargeback') return 'chargeback';
+                if (s === 'cancelled' || s === 'canceled' || s === 'denied') return 'cancelled';
+            }
+            return 'pending_payment';
+    }
+}
+
+// Product IDs DigiStore24 → preço/tier
+const DIGISTORE_PRODUCT_MAP = {
+    '557125': { price: 97, tier: 'complete' },
+    '557131': { price: 37, tier: 'basic' }
+};
+
+router.all('/api/postback/digistore', async (req, res) => {
+    // Handle GET request for testing
+    if (req.method === 'GET') {
+        return res.json({
+            status: 'ok',
+            message: 'DigiStore24 IPN endpoint is working! Use POST to send transaction data.',
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    try {
+        const body = req.body || {};
+
+        console.log('📥 DigiStore24 Webhook received');
+        console.log('📥 Content-Type:', req.headers['content-type']);
+        console.log('📥 Body keys:', Object.keys(body));
+        console.log('📥 Raw body:', JSON.stringify(body).substring(0, 1000));
+
+        // Store webhook for debugging
+        try {
+            const webhookEntry = {
+                timestamp: new Date().toISOString(),
+                method: req.method,
+                contentType: req.headers['content-type'],
+                body: body,
+                bodyKeys: Object.keys(body)
+            };
+            recentDigiStoreWebhooks.unshift(webhookEntry);
+            if (recentDigiStoreWebhooks.length > 50) recentDigiStoreWebhooks.pop();
+
+            // Persist to database (non-blocking)
+            pool.query(`
+                INSERT INTO postback_logs (content_type, body, created_at)
+                VALUES ($1, $2, NOW())
+            `, ['digistore_webhook', JSON.stringify(body)]).catch(err => {
+                console.log('DigiStore webhook log DB error (non-blocking):', err.message);
+            });
+        } catch (debugErr) {
+            console.log('DigiStore debug storage error:', debugErr.message);
+        }
+
+        // ==================== VALIDAÇÃO DA ASSINATURA ====================
+        const ipnPassword = process.env.DIGISTORE_IPN_PASSWORD || '';
+        const signatureValid = validateDigiStoreSignature(body, ipnPassword);
+
+        if (!signatureValid && ipnPassword) {
+            console.warn('⚠️ DigiStore24 signature validation FAILED - webhook may be spoofed');
+            // Ainda processamos para não perder vendas se a senha estiver errada,
+            // mas logamos o aviso
+        }
+
+        // ==================== EXTRAIR CAMPOS ====================
+        const event = body.event || '';
+        const orderId = body.order_id || body.orderId || '';
+        const transactionId = body.transaction_id || body.transactionId || '';
+        const productId = String(body.product_id || body.productId || '');
+        const amountBrutto = parseFloat(body.amount_brutto || body.amount || body.sale_amount || 0);
+        const currency = body.transaction_currency || body.currency || 'USD';
+        const buyerEmail = body.buyer_email || body.email || body.customer_email || '';
+        const buyerFirstName = body.buyer_first_name || body.first_name || body.firstName || '';
+        const buyerLastName = body.buyer_last_name || body.last_name || body.lastName || '';
+        const buyerFullName = (buyerFirstName + ' ' + buyerLastName).trim() || body.customer_full_name || body.name || '';
+
+        // Dados adicionais que podem vir no transaction_data (JSON string)
+        let transactionData = null;
+        if (body.transaction_data) {
+            try {
+                transactionData = typeof body.transaction_data === 'string'
+                    ? JSON.parse(body.transaction_data)
+                    : body.transaction_data;
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        // Dados de afiliado
+        const affiliateId = body.affiliate_id || body.affId || '';
+        const affiliateName = body.affiliate_name || '';
+
+        // UTMs - DigiStore pode repassar nos parâmetros
+        const utmSource = body.utm_source || '';
+        const utmMedium = body.utm_medium || '';
+        const utmCampaign = body.utm_campaign || '';
+        const utmContent = body.utm_content || '';
+        const utmTerm = body.utm_term || '';
+
+        // Campos ZAPSPY personalizados
+        const zsFunnel = body.zs_funnel || '';
+        const zsSource = body.zs_source || 'DigiStore';
+
+        // Visitor ID para continuidade
+        const visitorId = body.vid || body.visitor_id || '';
+
+        // Phone (pode vir em campos diferentes)
+        const buyerPhone = body.buyer_phone || body.phone || body.buyer_telephone || '';
+
+        console.log('📥 DigiStore parsed:', { event, orderId, transactionId, productId, amountBrutto, currency, buyerEmail });
+
+        // ==================== DETECTAR PRODUTO E IDIOMA ====================
+        const productInfo = DIGISTORE_PRODUCT_MAP[productId];
+        const saleAmount = productInfo ? productInfo.price : amountBrutto;
+        const productTier = productInfo ? productInfo.tier : 'front';
+
+        // Idioma: padrão 'en' (DigiStore é primariamente inglês)
+        let funnelLanguage = 'en';
+        if (zsFunnel.includes('es_') || utmCampaign.includes('es_')) funnelLanguage = 'es';
+        if (zsFunnel.includes('pt_') || utmCampaign.includes('pt_')) funnelLanguage = 'pt';
+        if (zsFunnel.includes('fr_') || utmCampaign.includes('fr_')) funnelLanguage = 'fr';
+
+        // ==================== MAPEAR STATUS ====================
+        const internalStatus = mapDigiStoreEvent(event, transactionData);
+
+        console.log('📊 DigiStore mapped:', { productId, productTier, saleAmount, internalStatus, funnelLanguage });
+
+        // ==================== BUSCAR LEAD EXISTENTE ====================
+        let existingLead = null;
+        let buyerPhoneFormatted = buyerPhone;
+
+        if (buyerEmail) {
+            try {
+                const leadResult = await pool.query('SELECT * FROM leads WHERE email = $1', [buyerEmail.toLowerCase().trim()]);
+                if (leadResult.rows.length > 0) {
+                    existingLead = leadResult.rows[0];
+                    if (existingLead.whatsapp && !buyerPhoneFormatted) {
+                        buyerPhoneFormatted = existingLead.whatsapp;
+                    }
+                }
+            } catch (err) {
+                console.error('DigiStore lead lookup error:', err.message);
+            }
+        }
+
+        // ==================== SALVAR TRANSAÇÃO ====================
+        const dsTransactionId = transactionId
+            ? `DS_${transactionId}`
+            : `DS_${orderId}_${Date.now()}`;
+
+        const rawData = {
+            event, orderId, transactionId, productId, amountBrutto, currency,
+            buyerEmail, buyerFirstName, buyerLastName, buyerFullName,
+            affiliateId, affiliateName, utmSource, utmMedium, utmCampaign,
+            utmContent, utmTerm, zsFunnel, zsSource, visitorId,
+            transaction_data: body.transaction_data || null,
+            signature_valid: signatureValid,
+            raw_body: body
+        };
+
+        // Monta notas com info do produto
+        const purchaseNotes = productInfo
+            ? `DigiStore24 - ${productTier} ($${saleAmount}) - Produto #${productId}`
+            : `DigiStore24 - Produto #${productId}`;
+
+        try {
+            await pool.query(`
+                INSERT INTO transactions (transaction_id, lead_email, product_name, amount, currency, status,
+                    funnel_source, funnel_stage, funnel_language, utm_source, utm_medium, utm_campaign,
+                    utm_content, utm_term, zs_funnel, zs_source, visitor_id, raw_data, notes, created_at, updated_at)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, NOW(), NOW())
+                ON CONFLICT (transaction_id) DO UPDATE SET
+                    status = EXCLUDED.status,
+                    amount = EXCLUDED.amount,
+                    raw_data = EXCLUDED.raw_data,
+                    updated_at = NOW()
+            `, [
+                dsTransactionId,
+                buyerEmail.toLowerCase().trim(),
+                `Whats Spy VIP Access${productInfo ? ` (${productTier})` : ''}`,
+                saleAmount,
+                currency,
+                internalStatus,
+                'digistore',
+                productTier,
+                funnelLanguage,
+                utmSource || null,
+                utmMedium || null,
+                utmCampaign || null,
+                utmContent || null,
+                utmTerm || null,
+                zsFunnel || null,
+                zsSource || null,
+                visitorId || null,
+                JSON.stringify(rawData),
+                purchaseNotes
+            ]);
+
+            console.log(`✅ DigiStore transaction saved: ${dsTransactionId} (${internalStatus})`);
+        } catch (dbError) {
+            console.error('❌ DigiStore transaction save error:', dbError.message);
+            // Não interrompe o fluxo
+        }
+
+        // ==================== ATUALIZAR/CRIAR LEAD ====================
+        try {
+            if (internalStatus === 'approved' || internalStatus === 'refunded' || internalStatus === 'chargeback') {
+                // Atualiza ou cria lead
+                const existingProducts = existingLead?.products_purchased || [];
+                let newProducts = existingProducts;
+
+                if (internalStatus === 'approved') {
+                    const productName = `Whats Spy ${productTier || 'VIP'} (DigiStore)`;
+                    if (!existingProducts.includes(productName)) {
+                        newProducts = [...existingProducts, productName];
+                    }
+                }
+
+                const totalSpent = internalStatus === 'approved'
+                    ? parseFloat(existingLead?.total_spent || 0) + saleAmount
+                    : (existingLead?.total_spent || 0);
+
+                if (existingLead) {
+                    await pool.query(`
+                        UPDATE leads SET
+                            status = $1,
+                            name = COALESCE(NULLIF($2, ''), name),
+                            whatsapp = COALESCE(NULLIF($3, ''), whatsapp),
+                            products_purchased = $4,
+                            total_spent = $5,
+                            last_purchase_at = CASE WHEN $6 THEN NOW() ELSE last_purchase_at END,
+                            first_purchase_at = COALESCE(first_purchase_at, CASE WHEN $6 THEN NOW() END),
+                            funnel_source = 'digistore',
+                            updated_at = NOW()
+                        WHERE email = $7
+                    `, [
+                        internalStatus === 'approved' ? 'converted' : (internalStatus === 'refunded' ? 'refunded' : 'lost'),
+                        buyerFullName,
+                        buyerPhoneFormatted,
+                        JSON.stringify(newProducts),
+                        totalSpent,
+                        internalStatus === 'approved',
+                        buyerEmail.toLowerCase().trim()
+                    ]);
+                } else if (internalStatus === 'approved') {
+                    // Cria lead novo
+                    await pool.query(`
+                        INSERT INTO leads (email, name, whatsapp, status, products_purchased, total_spent,
+                            first_purchase_at, last_purchase_at, funnel_source, funnel_language, created_at, updated_at)
+                        VALUES ($1, $2, $3, 'converted', $4, $5, NOW(), NOW(), 'digistore', $6, NOW(), NOW())
+                        ON CONFLICT (email) DO UPDATE SET
+                            status = 'converted',
+                            name = COALESCE(NULLIF($2, ''), leads.name),
+                            products_purchased = $4,
+                            total_spent = leads.total_spent + $5,
+                            last_purchase_at = NOW(),
+                            funnel_source = 'digistore',
+                            updated_at = NOW()
+                    `, [
+                        buyerEmail.toLowerCase().trim(),
+                        buyerFullName,
+                        buyerPhoneFormatted,
+                        JSON.stringify([`Whats Spy ${productTier || 'VIP'} (DigiStore)`]),
+                        saleAmount,
+                        funnelLanguage
+                    ]);
+                }
+
+                console.log(`✅ DigiStore lead updated: ${buyerEmail} (${internalStatus})`);
+            }
+        } catch (leadError) {
+            console.error('❌ DigiStore lead update error:', leadError.message);
+        }
+
+        // ==================== FACEBOOK CAPI ====================
+        try {
+            if ((internalStatus === 'approved' || internalStatus === 'refunded' || internalStatus === 'chargeback') && buyerEmail) {
+                // Buscar dados de funnel_events para enriquecer CAPI
+                let enrichedData = {};
+                let eventSourceUrl = 'https://ingles.appdetect.site/';
+
+                if (visitorId) {
+                    try {
+                        const funnelResult = await pool.query(
+                            `SELECT ip, user_agent, fbc, fbp FROM funnel_events
+                             WHERE visitor_id = $1 AND (ip IS NOT NULL OR user_agent IS NOT NULL)
+                             ORDER BY created_at DESC LIMIT 1`,
+                            [visitorId]
+                        );
+                        if (funnelResult.rows.length > 0) {
+                            enrichedData = funnelResult.rows[0];
+                        }
+                    } catch (err) {
+                        console.log('DigiStore funnel lookup error:', err.message);
+                    }
+                }
+
+                // Language-specific event source URL
+                const eventSourceUrls = {
+                    en: 'https://ingles.appdetect.site/',
+                    es: 'https://espanhol.appdetect.site/',
+                    pt: 'https://portugues.appdetect.site/',
+                    fr: 'https://frances.appdetect.site/'
+                };
+                eventSourceUrl = eventSourceUrls[funnelLanguage] || eventSourceUrls.en;
+
+                const capiPayload = {
+                    eventName: internalStatus === 'approved' ? 'Purchase' : internalStatus === 'refunded' ? 'Refund' : 'Purchase',
+                    email: buyerEmail,
+                    phone: buyerPhoneFormatted || enrichedData.phone || '',
+                    firstName: buyerFirstName || buyerFullName.split(' ')[0] || '',
+                    lastName: buyerLastName || buyerFullName.split(' ').slice(1).join(' ') || '',
+                    value: saleAmount,
+                    currency: currency === 'BRL' ? 'BRL' : 'USD',
+                    eventSourceUrl: eventSourceUrl,
+                    fbc: enrichedData.fbc || '',
+                    fbp: enrichedData.fbp || '',
+                    userAgent: enrichedData.user_agent || (req.headers['user-agent'] || ''),
+                    ip: enrichedData.ip || req.ip || '',
+                    eventId: `DS_${transactionId || orderId}_${Date.now()}`,
+                    funnelSource: 'digistore',
+                    productTier: productTier
+                };
+
+                if (internalStatus === 'approved') {
+                    // Purchase com 30s delay para dedup
+                    setTimeout(async () => {
+                        try {
+                            await sendToFacebookCAPI(capiPayload);
+                            console.log(`✅ DigiStore CAPI Purchase sent: ${dsTransactionId}`);
+                        } catch (err) {
+                            console.error('❌ DigiStore CAPI Purchase error:', err.message);
+                        }
+                    }, 30000);
+
+                    // Também envia Google Ads Purchase (se disponível)
+                    try {
+                        const { sendGoogleAdsPurchase } = require('../services/google-ads-conversion');
+                        await sendGoogleAdsPurchase({
+                            email: buyerEmail,
+                            value: saleAmount,
+                            currency: currency,
+                            transactionId: dsTransactionId
+                        }).catch(() => {});
+                    } catch (err) {
+                        // Google Ads não configurado - ignorar
+                    }
+                } else {
+                    // Refund/Chargeback envia imediatamente
+                    try {
+                        await sendToFacebookCAPI(capiPayload);
+                        console.log(`✅ DigiStore CAPI ${internalStatus} sent: ${dsTransactionId}`);
+                    } catch (err) {
+                        console.error(`❌ DigiStore CAPI ${internalStatus} error:`, err.message);
+                    }
+                }
+            }
+        } catch (capiError) {
+            console.error('❌ DigiStore CAPI error:', capiError.message);
+        }
+
+        // ==================== REFUND/CHARGEBACK REGISTRATION ====================
+        try {
+            if (internalStatus === 'refunded' || internalStatus === 'chargeback') {
+                const protocolId = `DS-${transactionId || orderId}-${Date.now()}`;
+                await pool.query(`
+                    INSERT INTO refund_requests (transaction_id, lead_email, amount, reason, protocol, status, created_at)
+                    VALUES ($1, $2, $3, $4, $5, 'completed', NOW())
+                    ON CONFLICT (transaction_id) DO NOTHING
+                `, [
+                    dsTransactionId,
+                    buyerEmail.toLowerCase().trim(),
+                    saleAmount,
+                    `DigiStore24 ${internalStatus} - Event: ${event}`,
+                    protocolId
+                ]);
+                console.log(`✅ DigiStore ${internalStatus} registered: ${protocolId}`);
+            }
+        } catch (refundError) {
+            console.error(`❌ DigiStore ${internalStatus} registration error:`, refundError.message);
+        }
+
+        // ==================== ACTIVECAMPAIGN ====================
+        try {
+            let acEvent = '';
+            if (internalStatus === 'approved') acEvent = 'sale_approved';
+            else if (internalStatus === 'cancelled') acEvent = 'sale_cancelled';
+            else if (internalStatus === 'refunded' || internalStatus === 'chargeback') acEvent = 'sale_cancelled';
+
+            if (acEvent && buyerEmail) {
+                await activeCampaign.trackEvent(buyerEmail, acEvent, {
+                    event: 'DigiStore24',
+                    transaction_id: dsTransactionId,
+                    product: `Whats Spy ${productTier || 'VIP'}`,
+                    value: saleAmount,
+                    currency: currency,
+                    funnel_language: funnelLanguage
+                });
+                console.log(`✅ DigiStore AC event sent: ${acEvent} for ${buyerEmail}`);
+            }
+        } catch (acError) {
+            console.error('❌ DigiStore AC event error:', acError.message);
+        }
+
+        // ==================== CANCELAR FUNIL DE EMAIL (se aprovado) ====================
+        try {
+            if (internalStatus === 'approved' && buyerEmail) {
+                await dispatchService.cancelEmailFunnel(buyerEmail).catch(() => {});
+                console.log(`✅ DigiStore email funnel cancelled for ${buyerEmail}`);
+            }
+        } catch (cancelError) {
+            console.error('❌ DigiStore cancel funnel error:', cancelError.message);
+        }
+
+        // ==================== SUPABASE AUTO-PROVISION ====================
+        try {
+            if (internalStatus === 'approved' && buyerEmail) {
+                // Não bloqueante - cria usuário na área de membros e envia magic link
+                setImmediate(async () => {
+                    try {
+                        const result = await supabaseAuthService.ensureSupabaseUser({
+                            email: buyerEmail,
+                            name: buyerFullName,
+                            phone: buyerPhoneFormatted,
+                            language: funnelLanguage,
+                            source: 'digistore',
+                            transactionId: dsTransactionId
+                        });
+
+                        if (result?.isNew) {
+                            await supabaseAuthService.sendCredentialsEmail(buyerEmail, result.magicLink, buyerFullName || '', funnelLanguage);
+                        }
+                    } catch (sbError) {
+                        console.error('Supabase DigiStore user creation error (non-blocking):', sbError.message);
+                    }
+                });
+            }
+        } catch (sbError) {
+            console.error('Supabase DigiStore error (non-blocking):', sbError.message);
+        }
+
+        // Return success (DigiStore expects 200 OK)
+        res.status(200).json({ status: 'ok' });
+
+    } catch (error) {
+        console.error('❌ DigiStore Webhook CRITICAL error:', error.message);
+        console.error('❌ Stack:', error.stack);
+
+        try {
+            await pool.query(`INSERT INTO postback_logs (content_type, body, created_at) VALUES ('DS_CRITICAL_ERROR', $1, NOW())`,
+                [JSON.stringify({
+                    error: error.message,
+                    stack: error.stack?.substring(0, 500),
+                    body: req.body || {}
+                })]);
+        } catch (logErr) {
+            console.error('Failed to log DigiStore error to DB:', logErr.message);
+        }
+
+        // Still return 200 to prevent DigiStore from retrying
+        res.status(200).json({ status: 'ok' });
+    }
+});
+
+// Admin: Debug DigiStore webhooks
+router.get('/api/admin/debug/digistore-webhooks', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const dbLogs = await pool.query(`
+            SELECT id, content_type, body, created_at
+            FROM postback_logs
+            WHERE content_type LIKE 'digistore%' OR content_type LIKE 'DS_%'
+            ORDER BY created_at DESC
+            LIMIT 30
+        `);
+
+        res.json({
+            memoryCount: recentDigiStoreWebhooks.length,
+            dbLogCount: dbLogs.rows.length,
+            info: 'DigiStore24 webhook debug.',
+            webhookUrl: 'https://zappspy-backend-v1-production.up.railway.app/api/postback/digistore',
+            alternateUrl: 'https://painel.xaimonitor.com/api/postback/digistore',
+            recentWebhooks: recentDigiStoreWebhooks,
+            dbLogs: dbLogs.rows
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Admin: Fix PerfectPay transaction dates (BRT timezone correction)
 router.post('/api/admin/fix-perfectpay-dates', authenticateToken, requireAdmin, async (req, res) => {
     try {
@@ -1816,5 +2358,6 @@ router.get('/api/admin/debug/perfectpay-webhooks', authenticateToken, requireAdm
 
 router.recentPostbacks = recentPostbacks;
 router.recentPerfectPayWebhooks = recentPerfectPayWebhooks;
+router.recentDigiStoreWebhooks = recentDigiStoreWebhooks;
 
 module.exports = router;
