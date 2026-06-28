@@ -1766,16 +1766,26 @@ function validateDigiStoreSignature(body, ipnPassword) {
 // Mapeamento de eventos DigiStore24 para status interno
 function mapDigiStoreEvent(event, transactionData) {
     // Eventos padrão DigiStore24
+    // Generic IPN usa nomes sem prefixo "on_"
     switch (event) {
         case 'on_payment':
+        case 'payment':
+        case 'sale':
+        case 'completed':
             return 'approved';
         case 'on_refund':
+        case 'refund':
             return 'refunded';
         case 'on_chargeback':
+        case 'chargeback':
             return 'chargeback';
         case 'payment_denial':
+        case 'denial':
+        case 'cancelled':
+        case 'canceled':
             return 'cancelled';
         case 'on_payment_missed':
+        case 'missed_payment':
             return 'cancelled';
         default:
             // Fallback: verifica se transaction_data tem status
@@ -1799,11 +1809,7 @@ const DIGISTORE_PRODUCT_MAP = {
 router.all('/api/postback/digistore', async (req, res) => {
     // Handle GET request for testing
     if (req.method === 'GET') {
-        return res.json({
-            status: 'ok',
-            message: 'DigiStore24 IPN endpoint is working! Use POST to send transaction data.',
-            timestamp: new Date().toISOString()
-        });
+        return res.status(200).type('text/plain').send('OK');
     }
 
     try {
@@ -2224,8 +2230,8 @@ router.all('/api/postback/digistore', async (req, res) => {
             console.error('Supabase DigiStore error (non-blocking):', sbError.message);
         }
 
-        // Return success (DigiStore expects 200 OK)
-        res.status(200).json({ status: 'ok' });
+        // Return success (DigiStore24 Generic IPN expects plain text "OK")
+        res.status(200).type('text/plain').send('OK');
 
     } catch (error) {
         console.error('❌ DigiStore Webhook CRITICAL error:', error.message);
@@ -2243,7 +2249,7 @@ router.all('/api/postback/digistore', async (req, res) => {
         }
 
         // Still return 200 to prevent DigiStore from retrying
-        res.status(200).json({ status: 'ok' });
+        res.status(200).type('text/plain').send('OK');
     }
 });
 
