@@ -1,22 +1,18 @@
-import { createClient } from "@/utils/supabase/server"
 import DashboardLayout from "@/components/dashboard-layout"
 import LessonList from "@/components/lesson-list"
 
-export default async function IntroPage() {
-  const supabase = await createClient()
+const lessons = [
+  {
+    id: "1",
+    title: "Introduction to AppDetect and Scanner Differences",
+    description: "Learn the differences between the scanner and AppDetect, and how AppDetect offers 100% mobile access.",
+    video_url: "6a4285c4d846aeb492a38dd4",
+    video_type: "converteai",
+    duration_minutes: 10,
+  },
+]
 
-  const { data: courses } = await supabase
-    .from("courses")
-    .select("id")
-    .eq("category", "introduction")
-    .single()
-
-  const { data: lessons } = await supabase
-    .from("lessons")
-    .select("*")
-    .eq("course_id", courses?.id || "")
-    .order("order_index", { ascending: true })
-
+export default function IntroPage() {
   return (
     <DashboardLayout activeTab="intro">
       <div className="max-w-6xl mx-auto space-y-8">
@@ -25,7 +21,7 @@ export default async function IntroPage() {
           <p className="text-zinc-400">Welcome to your professional espionage training. Start with these essential steps.</p>
         </div>
 
-        <LessonList lessons={lessons || []} categoryTitle="Introduction" />
+        <LessonList lessons={lessons} categoryTitle="Introduction" />
       </div>
     </DashboardLayout>
   )

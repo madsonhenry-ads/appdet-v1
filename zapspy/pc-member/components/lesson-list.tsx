@@ -28,6 +28,9 @@ export default function LessonList({ lessons, categoryTitle }: LessonListProps) 
     }
   }, []);
 
+  // Converteai video IDs that are portrait (9:16)
+  const portraitVideoIds = ["6a4285c4d846aeb492a38dd4"]
+
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(
     uniqueLessons.length > 0 ? uniqueLessons[0] : null
   )
@@ -49,7 +52,10 @@ export default function LessonList({ lessons, categoryTitle }: LessonListProps) 
         {selectedLesson?.video_url ? (
           selectedLesson.video_type === "converteai" ? (
             <div className="bg-black rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
-              <ConverteaiPlayer videoId={selectedLesson.video_url.replace('vid-', '')} />
+              <ConverteaiPlayer
+                videoId={selectedLesson.video_url}
+                isPortrait={portraitVideoIds.includes(selectedLesson.video_url)}
+              />
             </div>
           ) : (
             <div className="aspect-video bg-black rounded-2xl overflow-hidden border border-white/5 shadow-2xl">

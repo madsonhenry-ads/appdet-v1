@@ -63,12 +63,13 @@ export default function Sidebar({ open, onToggle, activeTab }: SidebarProps) {
           </div>
         </div>
 
+        {/* Category: Advanced Spy */}
         <div>
-          <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Scanner</h3>
+          <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Advanced Spy</h3>
           <div className="space-y-1">
-            {scannerItems.map((item) => {
+            {advancedItems.map((item) => {
               const Icon = item.icon
-              const isActive = activeTab === item.id
+              const isActive = activeTab === item.id || (activeTab === "" && item.id === "intro")
 
               return (
                 <Link
@@ -89,13 +90,13 @@ export default function Sidebar({ open, onToggle, activeTab }: SidebarProps) {
           </div>
         </div>
 
-        {/* Category: Advanced Spy */}
+        {/* Category: Scanner */}
         <div>
-          <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Advanced Spy</h3>
+          <h3 className="px-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Scanner</h3>
           <div className="space-y-1">
-            {advancedItems.map((item) => {
+            {scannerItems.map((item) => {
               const Icon = item.icon
-              const isActive = activeTab === item.id || (activeTab === "" && item.id === "intro")
+              const isActive = activeTab === item.id
 
               return (
                 <Link
