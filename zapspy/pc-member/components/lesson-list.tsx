@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { PlayCircle, Clock, ChevronRight } from "lucide-react"
+import ConverteaiPlayer from "./converteai-player"
 
 interface Lesson {
   id: string
@@ -46,14 +47,20 @@ export default function LessonList({ lessons, categoryTitle }: LessonListProps) 
       {/* Video Player Section */}
       <div className="lg:col-span-2 space-y-6">
         {selectedLesson?.video_url ? (
-          <div className="aspect-video bg-black rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
-            <iframe
-              src={selectedLesson.video_url}
-              className="w-full h-full"
-              allowFullScreen
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            ></iframe>
-          </div>
+          selectedLesson.video_type === "converteai" ? (
+            <div className="bg-black rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
+              <ConverteaiPlayer videoId={selectedLesson.video_url.replace('vid-', '')} />
+            </div>
+          ) : (
+            <div className="aspect-video bg-black rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
+              <iframe
+                src={selectedLesson.video_url}
+                className="w-full h-full"
+                allowFullScreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              ></iframe>
+            </div>
+          )
         ) : (
           <div className="aspect-video bg-zinc-900 rounded-2xl flex flex-col items-center justify-center border border-white/5">
             <PlayCircle className="w-12 h-12 text-muted-foreground mb-2" />

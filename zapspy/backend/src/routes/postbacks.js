@@ -1956,35 +1956,28 @@ router.all('/api/postback/digistore', async (req, res) => {
 
         try {
             await pool.query(`
-                INSERT INTO transactions (transaction_id, lead_email, product_name, amount, currency, status,
-                    funnel_source, funnel_stage, funnel_language, utm_source, utm_medium, utm_campaign,
-                    utm_content, utm_term, zs_funnel, zs_source, visitor_id, raw_data, notes, created_at, updated_at)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, NOW(), NOW())
+                INSERT INTO transactions (
+                    transaction_id, email, phone, name, product, value,
+                    monetizze_status, status, raw_data, funnel_language, funnel_source, created_at,
+                    visitor_id
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, NOW(), $12)
                 ON CONFLICT (transaction_id) DO UPDATE SET
                     status = EXCLUDED.status,
-                    amount = EXCLUDED.amount,
                     raw_data = EXCLUDED.raw_data,
                     updated_at = NOW()
             `, [
                 dsTransactionId,
                 buyerEmail.toLowerCase().trim(),
+                buyerPhoneFormatted || null,
+                buyerFullName || '',
                 `Whats Spy VIP Access${productInfo ? ` (${productTier})` : ''}`,
-                saleAmount,
-                currency,
+                String(saleAmount),
+                `ds_${internalStatus}`,
                 internalStatus,
-                'digistore',
-                productTier,
-                funnelLanguage,
-                utmSource || null,
-                utmMedium || null,
-                utmCampaign || null,
-                utmContent || null,
-                utmTerm || null,
-                zsFunnel || null,
-                zsSource || null,
-                visitorId || null,
                 JSON.stringify(rawData),
-                purchaseNotes
+                funnelLanguage,
+                'digistore',
+                visitorId || null
             ]);
 
             console.log(`✅ DigiStore transaction saved: ${dsTransactionId} (${internalStatus})`);
@@ -2176,16 +2169,16 @@ router.all('/api/postback/digistore', async (req, res) => {
             let acEvent = '';
             if (internalStatus === 'approved') acEvent = 'sale_approved';
             else if (internalStatus === 'cancelled') acEvent = 'sale_cancelled';
-            else if (internalStatus === 'refunded' || internalStatus === 'chargeback') acEvent = 'sale_cancelled';
+            else if (internalStatus === 'refunded') acEvent = 'sale_refunded';
+            else if (internalStatus === 'chargeback') acEvent = 'sale_chargeback';
 
             if (acEvent && buyerEmail) {
-                await activeCampaign.trackEvent(buyerEmail, acEvent, {
-                    event: 'DigiStore24',
-                    transaction_id: dsTransactionId,
-                    product: `Whats Spy ${productTier || 'VIP'}`,
-                    value: saleAmount,
-                    currency: currency,
-                    funnel_language: funnelLanguage
+                await activeCampaign.processEvent(acEvent, funnelLanguage || 'en', {
+                    email: buyerEmail,
+                    name: buyerFullName || '',
+                    phone: buyerPhoneFormatted || '',
+                    targetPhone: buyerPhoneFormatted || '',
+                    whatsapp: buyerPhoneFormatted || ''
                 });
                 console.log(`✅ DigiStore AC event sent: ${acEvent} for ${buyerEmail}`);
             }
@@ -2209,14 +2202,11 @@ router.all('/api/postback/digistore', async (req, res) => {
                 // Não bloqueante - cria usuário na área de membros e envia magic link
                 setImmediate(async () => {
                     try {
-                        const result = await supabaseAuthService.ensureSupabaseUser({
-                            email: buyerEmail,
-                            name: buyerFullName,
-                            phone: buyerPhoneFormatted,
-                            language: funnelLanguage,
-                            source: 'digistore',
-                            transactionId: dsTransactionId
-                        });
+                        const result = await supabaseAuthService.ensureSupabaseUser(
+                            buyerEmail,
+                            buyerFullName || '',
+                            funnelLanguage || 'en'
+                        );
 
                         if (result?.isNew) {
                             await supabaseAuthService.sendCredentialsEmail(buyerEmail, result.magicLink, buyerFullName || '', funnelLanguage);
