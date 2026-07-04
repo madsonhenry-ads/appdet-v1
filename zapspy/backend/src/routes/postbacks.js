@@ -1898,6 +1898,9 @@ router.all('/api/postback/digistore', async (req, res) => {
         // Phone (pode vir em campos diferentes)
         const buyerPhone = body.buyer_phone || body.phone || body.buyer_telephone || '';
 
+        // Country (ISO code) for CAPI matching
+        const country = body.country || body.buyer_address_country || '';
+
         console.log('📥 DigiStore parsed:', { event, orderId, transactionId, productId, amountBrutto, currency, buyerEmail });
 
         // ==================== DETECTAR PRODUTO E IDIOMA ====================
@@ -2021,7 +2024,7 @@ router.all('/api/postback/digistore', async (req, res) => {
                         internalStatus === 'approved' ? 'converted' : (internalStatus === 'refunded' ? 'refunded' : 'lost'),
                         buyerFullName,
                         buyerPhoneFormatted,
-                        JSON.stringify(newProducts),
+                        newProducts,
                         totalSpent,
                         internalStatus === 'approved',
                         buyerEmail.toLowerCase().trim()
@@ -2044,7 +2047,7 @@ router.all('/api/postback/digistore', async (req, res) => {
                         buyerEmail.toLowerCase().trim(),
                         buyerFullName,
                         buyerPhoneFormatted,
-                        JSON.stringify([`Whats Spy ${productTier || 'VIP'} (DigiStore)`]),
+                        [`Whats Spy ${productTier || 'VIP'} (DigiStore)`],
                         saleAmount,
                         funnelLanguage
                     ]);
@@ -2088,29 +2091,43 @@ router.all('/api/postback/digistore', async (req, res) => {
                 };
                 eventSourceUrl = eventSourceUrls[funnelLanguage] || eventSourceUrls.en;
 
-                const capiPayload = {
-                    eventName: internalStatus === 'approved' ? 'Purchase' : internalStatus === 'refunded' ? 'Refund' : 'Purchase',
+                const fbUserData = {
                     email: buyerEmail,
                     phone: buyerPhoneFormatted || enrichedData.phone || '',
                     firstName: buyerFirstName || buyerFullName.split(' ')[0] || '',
                     lastName: buyerLastName || buyerFullName.split(' ').slice(1).join(' ') || '',
-                    value: saleAmount,
-                    currency: currency === 'BRL' ? 'BRL' : 'USD',
-                    eventSourceUrl: eventSourceUrl,
+                    ip: enrichedData.ip || req.ip || '',
+                    userAgent: enrichedData.user_agent || req.headers['user-agent'] || '',
                     fbc: enrichedData.fbc || '',
                     fbp: enrichedData.fbp || '',
-                    userAgent: enrichedData.user_agent || (req.headers['user-agent'] || ''),
-                    ip: enrichedData.ip || req.ip || '',
-                    eventId: `DS_${transactionId || orderId}_${Date.now()}`,
-                    funnelSource: 'digistore',
-                    productTier: productTier
+                    country: country || ''
                 };
+
+                const fbCustomData = {
+                    content_name: `Whats Spy ${productTier || 'VIP'} (DigiStore)`,
+                    content_ids: [productId || dsTransactionId],
+                    content_type: 'product',
+                    content_category: 'digital_product',
+                    value: saleAmount,
+                    currency: currency === 'BRL' ? 'BRL' : 'USD',
+                    order_id: dsTransactionId,
+                    num_items: 1
+                };
+
+                const capiOptions = {
+                    language: funnelLanguage
+                };
+
+                const fbEventName = (internalStatus === 'refunded' || internalStatus === 'chargeback')
+                    ? 'Refund'
+                    : 'Purchase';
+                const fbEventId = `DS_${transactionId || orderId}_${Date.now()}`;
 
                 if (internalStatus === 'approved') {
                     // Purchase com 30s delay para dedup
                     setTimeout(async () => {
                         try {
-                            await sendToFacebookCAPI(capiPayload);
+                            await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, fbEventId, capiOptions);
                             console.log(`✅ DigiStore CAPI Purchase sent: ${dsTransactionId}`);
                         } catch (err) {
                             console.error('❌ DigiStore CAPI Purchase error:', err.message);
@@ -2132,7 +2149,7 @@ router.all('/api/postback/digistore', async (req, res) => {
                 } else {
                     // Refund/Chargeback envia imediatamente
                     try {
-                        await sendToFacebookCAPI(capiPayload);
+                        await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, fbEventId, capiOptions);
                         console.log(`✅ DigiStore CAPI ${internalStatus} sent: ${dsTransactionId}`);
                     } catch (err) {
                         console.error(`❌ DigiStore CAPI ${internalStatus} error:`, err.message);

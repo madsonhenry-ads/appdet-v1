@@ -199,6 +199,9 @@ async function _initDatabaseCore() {
         await pool.query(`ALTER TABLE transactions ADD COLUMN IF NOT EXISTS fbp VARCHAR(255);`);
         await pool.query(`ALTER TABLE transactions ADD COLUMN IF NOT EXISTS visitor_id VARCHAR(255);`);
         await pool.query(`ALTER TABLE transactions ADD COLUMN IF NOT EXISTS gclid VARCHAR(255);`);
+
+        // Widen monetizze_status to accommodate 'ds_<status>' (e.g. 'ds_approved' = 11 chars)
+        await pool.query(`ALTER TABLE transactions ALTER COLUMN monetizze_status TYPE VARCHAR(20);`);
         
         // Add match_method column to capi_purchase_logs for attribution monitoring
         await pool.query(`ALTER TABLE capi_purchase_logs ADD COLUMN IF NOT EXISTS match_method VARCHAR(50);`);
