@@ -1854,16 +1854,20 @@ router.all('/api/postback/digistore', async (req, res) => {
         }
 
         // ==================== EXTRAIR CAMPOS ====================
-        const event = body.event || '';
-        const orderId = body.order_id || body.orderId || '';
-        const transactionId = body.transaction_id || body.transactionId || '';
-        const productId = String(body.product_id || body.productId || '');
-        const amountBrutto = parseFloat(body.amount_brutto || body.amount || body.sale_amount || 0);
-        const currency = body.transaction_currency || body.currency || 'USD';
-        const buyerEmail = body.buyer_email || body.email || body.customer_email || '';
-        const buyerFirstName = body.buyer_first_name || body.first_name || body.firstName || '';
-        const buyerLastName = body.buyer_last_name || body.last_name || body.lastName || '';
-        const buyerFullName = (buyerFirstName + ' ' + buyerLastName).trim() || body.customer_full_name || body.name || '';
+        // DigiStore24 sometimes sends duplicate values as arrays (e.g. country: ["GB","GB"]),
+        // so normalize every field to a single string with pickStr().
+        const pickStr = (v) => Array.isArray(v) ? (v[0] || '') : (v || '');
+
+        const event = pickStr(body.event);
+        const orderId = pickStr(body.order_id) || pickStr(body.orderId);
+        const transactionId = pickStr(body.transaction_id) || pickStr(body.transactionId);
+        const productId = String(pickStr(body.product_id) || pickStr(body.productId));
+        const amountBrutto = parseFloat(pickStr(body.amount_brutto) || pickStr(body.amount) || pickStr(body.sale_amount) || 0);
+        const currency = pickStr(body.transaction_currency) || pickStr(body.currency) || 'USD';
+        const buyerEmail = pickStr(body.buyer_email) || pickStr(body.email) || pickStr(body.customer_email);
+        const buyerFirstName = pickStr(body.buyer_first_name) || pickStr(body.first_name) || pickStr(body.firstName);
+        const buyerLastName = pickStr(body.buyer_last_name) || pickStr(body.last_name) || pickStr(body.lastName);
+        const buyerFullName = (buyerFirstName + ' ' + buyerLastName).trim() || pickStr(body.customer_full_name) || pickStr(body.name);
 
         // Dados adicionais que podem vir no transaction_data (JSON string)
         let transactionData = null;
@@ -1878,28 +1882,28 @@ router.all('/api/postback/digistore', async (req, res) => {
         }
 
         // Dados de afiliado
-        const affiliateId = body.affiliate_id || body.affId || '';
-        const affiliateName = body.affiliate_name || '';
+        const affiliateId = pickStr(body.affiliate_id) || pickStr(body.affId);
+        const affiliateName = pickStr(body.affiliate_name);
 
         // UTMs - DigiStore pode repassar nos parâmetros
-        const utmSource = body.utm_source || '';
-        const utmMedium = body.utm_medium || '';
-        const utmCampaign = body.utm_campaign || '';
-        const utmContent = body.utm_content || '';
-        const utmTerm = body.utm_term || '';
+        const utmSource = pickStr(body.utm_source);
+        const utmMedium = pickStr(body.utm_medium);
+        const utmCampaign = pickStr(body.utm_campaign);
+        const utmContent = pickStr(body.utm_content);
+        const utmTerm = pickStr(body.utm_term);
 
         // Campos ZAPSPY personalizados
-        const zsFunnel = body.zs_funnel || '';
-        const zsSource = body.zs_source || 'DigiStore';
+        const zsFunnel = pickStr(body.zs_funnel);
+        const zsSource = pickStr(body.zs_source) || 'DigiStore';
 
         // Visitor ID para continuidade
-        const visitorId = body.vid || body.visitor_id || '';
+        const visitorId = pickStr(body.vid) || pickStr(body.visitor_id);
 
         // Phone (pode vir em campos diferentes)
-        const buyerPhone = body.buyer_phone || body.phone || body.buyer_telephone || '';
+        const buyerPhone = pickStr(body.buyer_phone) || pickStr(body.phone) || pickStr(body.buyer_telephone);
 
         // Country (ISO code) for CAPI matching
-        const country = body.country || body.buyer_address_country || '';
+        const country = pickStr(body.country) || pickStr(body.buyer_address_country) || pickStr(body.billing_country);
 
         console.log('📥 DigiStore parsed:', { event, orderId, transactionId, productId, amountBrutto, currency, buyerEmail });
 
