@@ -257,10 +257,10 @@ function handleCTA() {
         currency: 'USD'
     });
     if (target.phone) {
-        var url = '../../cta-unified.html?gender=' + target.gender + '&returning=1';
+        var url = 'https://go.centerpag.com/PPU38CQAEMT?src=expired';
         window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs(url) : url;
     } else {
-        var url = '../../landing.html';
+        var url = 'https://go.centerpag.com/PPU38CQAEMT?src=expired';
         window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs(url) : url;
     }
 }
