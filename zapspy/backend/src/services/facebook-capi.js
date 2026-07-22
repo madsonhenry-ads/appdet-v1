@@ -509,6 +509,9 @@ async function sendMissingCAPIPurchases() {
                         ? Math.round((rawValue * brlToUsdRate) * 100) / 100 
                         : rawValue;
                     console.log(`💱 CAPI CATCH-UP: PerfectPay value: ${rawValue} -> USD: ${valueUSD} (isBRL: ${isPerfectPayBRL})`);
+                } else if (funnelSource === 'vega' || funnelSource === 'digistore') {
+                    // Vega e DigiStore values are already in USD
+                    valueUSD = rawValue;
                 } else {
                     // Monetizze values are always in BRL
                     valueUSD = Math.round((rawValue * brlToUsdRate) * 100) / 100;

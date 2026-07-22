@@ -986,7 +986,7 @@ router.get('/api/admin/stats', authenticateToken, async (req, res) => {
         }
         
         // Source filter
-        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore') {
+        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore' || source === 'vega' || source === 'vega') {
             dateFilter += ` AND (funnel_source = $${params.length + 1} OR (funnel_source IS NULL AND $${params.length + 1} = 'main'))`;
             params.push(source);
         }
@@ -999,6 +999,8 @@ router.get('/api/admin/stats', authenticateToken, async (req, res) => {
             platformFilter = ` AND email IN (SELECT DISTINCT email FROM transactions WHERE funnel_source = 'perfectpay')`;
         } else if (platform === 'digistore') {
             platformFilter = ` AND email IN (SELECT DISTINCT email FROM transactions WHERE funnel_source = 'digistore')`;
+        } else if (platform === 'vega') {
+            platformFilter = ` AND email IN (SELECT DISTINCT email FROM transactions WHERE funnel_source = 'vega')`;
         }
         
         const [totalResult, todayResult, weekResult, statusResult] = await Promise.all([
@@ -1416,7 +1418,7 @@ router.get('/api/admin/funnel-stats', authenticateToken, async (req, res) => {
             params.push(language);
         }
         
-        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore') {
+        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore' || source === 'vega') {
             sourceFilter = ` AND (metadata->>'funnelSource' = '${source}' OR (metadata->>'funnelSource' IS NULL AND '${source}' = 'main'))`;
             sourceFilterTx = ` AND (funnel_source = $${params.length + 1} OR (funnel_source IS NULL AND $${params.length + 1} = 'main'))`;
             params.push(source);
@@ -1436,7 +1438,7 @@ router.get('/api/admin/funnel-stats', authenticateToken, async (req, res) => {
             leadsLangFilter = ` AND (funnel_language = $${leadsParams.length + 1} OR (funnel_language IS NULL AND $${leadsParams.length + 1} = 'en'))`;
             leadsParams.push(language);
         }
-        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore') {
+        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore' || source === 'vega') {
             leadsSourceFilter = ` AND (funnel_source = $${leadsParams.length + 1} OR (funnel_source IS NULL AND $${leadsParams.length + 1} = 'main'))`;
             leadsParams.push(source);
         }
@@ -1457,7 +1459,7 @@ router.get('/api/admin/funnel-stats', authenticateToken, async (req, res) => {
         if (language === 'en' || language === 'es') {
             evtLangFilter = ` AND (metadata->>'funnelLanguage' = '${language}' OR (metadata->>'funnelLanguage' IS NULL AND '${language}' = 'en'))`;
         }
-        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore') {
+        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore' || source === 'vega') {
             evtSourceFilter = ` AND (metadata->>'funnelSource' = '${source}' OR (metadata->>'funnelSource' IS NULL AND '${source}' = 'main'))`;
         }
         
@@ -1474,7 +1476,7 @@ router.get('/api/admin/funnel-stats', authenticateToken, async (req, res) => {
             txLangFilter = ` AND (funnel_language = $${txParams.length + 1} OR (funnel_language IS NULL AND $${txParams.length + 1} = 'en'))`;
             txParams.push(language);
         }
-        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore') {
+        if (source === 'main' || source === 'affiliate' || source === 'perfectpay' || source === 'digistore' || source === 'vega') {
             txSourceFilter = ` AND (funnel_source = $${txParams.length + 1} OR (funnel_source IS NULL AND $${txParams.length + 1} = 'main'))`;
             txParams.push(source);
         }
@@ -1539,6 +1541,8 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
             sourceCondition = `AND metadata->>'funnelSource' = 'perfectpay'`;
         } else if (source === 'digistore') {
             sourceCondition = `AND metadata->>'funnelSource' = 'digistore'`;
+        } else if (source === 'vega') {
+            sourceCondition = `AND metadata->>'funnelSource' = 'vega'`;
         }
         
         let dateCondition = '';
@@ -1672,6 +1676,8 @@ router.get('/api/admin/funnel', authenticateToken, async (req, res) => {
                 txSourceCondition = `AND funnel_source = 'perfectpay'`;
             } else if (source === 'digistore') {
                 txSourceCondition = `AND funnel_source = 'digistore'`;
+            } else if (source === 'vega') {
+                txSourceCondition = `AND funnel_source = 'vega'`;
             }
             
             // Count unique emails per status (not total transactions)
@@ -2365,6 +2371,18 @@ router.get('/api/admin/platform-comparison', authenticateToken, async (req, res)
             WHERE t.funnel_source = 'digistore'${txDateCond}${txLangCond}`
         );
 
+        // ===== VEGA: Transaction metrics =====
+        const vegaTxResult = await pool.query(
+            `SELECT
+                COUNT(*) as total,
+                COUNT(*) FILTER (WHERE t.status = 'approved') as approved,
+                COUNT(*) FILTER (WHERE t.status IN ('refunded', 'chargeback')) as refunded,
+                COALESCE(SUM(CAST(t.value AS DECIMAL)) FILTER (WHERE t.status = 'approved'), 0) as revenue,
+                COALESCE(SUM(CAST(t.value AS DECIMAL)) FILTER (WHERE t.status NOT IN ('approved', 'refunded', 'chargeback')), 0) as lost_revenue
+            FROM transactions t
+            WHERE t.funnel_source = 'vega'${txDateCond}${txLangCond}`
+        );
+
         // ===== AFFILIATE: Leads from affiliate domains =====
         const affDomains = `('afiliado.whatstalker.com', 'ingles.afiliado.appdetect.site', 'espanhol.afiliado.appdetect.site')`;
         const affLeadsResult = await pool.query(
@@ -2412,7 +2430,13 @@ router.get('/api/admin/platform-comparison', authenticateToken, async (req, res)
         const dsRefunds = parseInt(dsTxResult.rows[0].refunded) || 0;
         const dsRevenue = parseFloat(dsTxResult.rows[0].revenue) || 0;
         const dsLostRevenue = parseFloat(dsTxResult.rows[0].lost_revenue) || 0;
-        
+
+        const vegaTotal = parseInt(vegaTxResult.rows[0].total) || 0;
+        const vegaSales = parseInt(vegaTxResult.rows[0].approved) || 0;
+        const vegaRefunds = parseInt(vegaTxResult.rows[0].refunded) || 0;
+        const vegaRevenue = parseFloat(vegaTxResult.rows[0].revenue) || 0;
+        const vegaLostRevenue = parseFloat(vegaTxResult.rows[0].lost_revenue) || 0;
+
         // Attribution summary: how many leads are accounted for
         const attributedLeads = mLeads + ppLeads + affLeads;
         const unattributedLeads = totalLeads - attributedLeads;
@@ -2469,6 +2493,16 @@ router.get('/api/admin/platform-comparison', authenticateToken, async (req, res)
                 refundRate: dsSales > 0 ? ((dsRefunds / dsSales) * 100) : 0,
                 ticket: dsSales > 0 ? (dsRevenue / dsSales) : 0,
                 lostRevenue: dsLostRevenue
+            },
+            vega: {
+                totalTx: vegaTotal,
+                sales: vegaSales,
+                revenue: vegaRevenue,
+                refunds: vegaRefunds,
+                approvalRate: vegaTotal > 0 ? ((vegaSales / vegaTotal) * 100) : 0,
+                refundRate: vegaSales > 0 ? ((vegaRefunds / vegaSales) * 100) : 0,
+                ticket: vegaSales > 0 ? (vegaRevenue / vegaSales) : 0,
+                lostRevenue: vegaLostRevenue
             }
         };
         setCache(cacheKey, response);
@@ -2521,6 +2555,8 @@ router.get('/api/admin/revenue-by-day', authenticateToken, async (req, res) => {
             sourceCondition = ` AND funnel_source = 'perfectpay'`;
         } else if (source === 'digistore') {
             sourceCondition = ` AND funnel_source = 'digistore'`;
+        } else if (source === 'vega') {
+            sourceCondition = ` AND funnel_source = 'vega'`;
         }
 
         // Platform filter: monetizze = main+affiliate, perfectpay = perfectpay, digistore = digistore
@@ -2530,6 +2566,8 @@ router.get('/api/admin/revenue-by-day', authenticateToken, async (req, res) => {
             sourceCondition = ` AND funnel_source = 'perfectpay'`;
         } else if (platform === 'digistore' && !source) {
             sourceCondition = ` AND funnel_source = 'digistore'`;
+        } else if (platform === 'vega' && !source) {
+            sourceCondition = ` AND funnel_source = 'vega'`;
         }
         
         const allParams = [...dateParams, ...langParams];
@@ -2759,7 +2797,8 @@ router.get('/api/admin/lead-journey', authenticateToken, async (req, res) => {
                     COUNT(DISTINCT CASE WHEN t.status = 'approved' THEN l.id END) as leads_with_approved,
                     COUNT(DISTINCT CASE WHEN t.funnel_source = 'perfectpay' AND t.status = 'approved' THEN l.id END) as leads_bought_perfectpay,
                     COUNT(DISTINCT CASE WHEN t.funnel_source IN ('main','affiliate') AND t.status = 'approved' THEN l.id END) as leads_bought_monetizze,
-                    COUNT(DISTINCT CASE WHEN t.funnel_source = 'digistore' AND t.status = 'approved' THEN l.id END) as leads_bought_digistore
+                    COUNT(DISTINCT CASE WHEN t.funnel_source = 'digistore' AND t.status = 'approved' THEN l.id END) as leads_bought_digistore,
+                    COUNT(DISTINCT CASE WHEN t.funnel_source = 'vega' AND t.status = 'approved' THEN l.id END) as leads_bought_vega
                 FROM leads l
                 LEFT JOIN transactions t ON LOWER(l.email) = LOWER(t.email)
                 WHERE l.created_at >= NOW() - INTERVAL '30 days'
@@ -2811,6 +2850,7 @@ router.get('/api/admin/lead-journey', authenticateToken, async (req, res) => {
                 boughtPerfectPay: parseInt(stats.leads_bought_perfectpay),
                 boughtMonetizze: parseInt(stats.leads_bought_monetizze),
                 boughtDigiStore: parseInt(stats.leads_bought_digistore),
+                boughtVega: parseInt(stats.leads_bought_vega),
                 overallConvRate: stats.total_leads > 0 ? (parseInt(stats.leads_with_approved) / parseInt(stats.total_leads) * 100).toFixed(1) : 0
             },
             bySource: conversionBySource.rows.map(r => ({
@@ -2826,7 +2866,7 @@ router.get('/api/admin/lead-journey', authenticateToken, async (req, res) => {
                 leadSource: r.lead_source,
                 language: r.funnel_language,
                 leadDate: r.lead_date,
-                paymentPlatform: r.payment_platform === 'perfectpay' ? 'PerfectPay' : r.payment_platform === 'digistore' ? 'DigiStore' : 'Monetizze',
+                paymentPlatform: r.payment_platform === 'perfectpay' ? 'PerfectPay' : r.payment_platform === 'digistore' ? 'DigiStore' : r.payment_platform === 'vega' ? 'Vega' : 'Monetizze',
                 status: r.tx_status,
                 value: r.payment_platform === 'perfectpay' ? 
                     'R$ ' + (parseFloat(r.value) * usdToBrl).toFixed(2) : 

@@ -2373,8 +2373,555 @@ router.get('/api/admin/debug/perfectpay-webhooks', authenticateToken, requireAdm
     }
 });
 
+// ==================== VEGA CHECKOUT WEBHOOK ====================
+// Docs: https://docs.vegacheckout.com.br/
+// Webhooks 2.0 - JSON POST com transaction_token, status, total_price (centavos), customer, products, checkout (UTMs)
+
+const recentVegaWebhooks = [];
+
+router.all('/api/postback/vega', async (req, res) => {
+    // Handle GET request for testing
+    if (req.method === 'GET') {
+        return res.json({
+            status: 'ok',
+            message: 'Vega Checkout webhook endpoint is working! Use POST to send transaction data.',
+            timestamp: new Date().toISOString()
+        });
+    }
+
+    try {
+        const body = req.body || {};
+
+        console.log('📥 Vega Checkout Webhook received');
+        console.log('📥 Content-Type:', req.headers['content-type']);
+        console.log('📥 Body keys:', Object.keys(body));
+        console.log('📥 Raw body:', JSON.stringify(body).substring(0, 1000));
+
+        // Store webhook for debugging (also persist to DB)
+        try {
+            const webhookEntry = {
+                timestamp: new Date().toISOString(),
+                method: req.method,
+                contentType: req.headers['content-type'],
+                body: body,
+                bodyKeys: Object.keys(body)
+            };
+            recentVegaWebhooks.unshift(webhookEntry);
+            if (recentVegaWebhooks.length > 50) recentVegaWebhooks.pop();
+
+            // Persist to database for debugging (non-blocking)
+            pool.query(`
+                INSERT INTO postback_logs (content_type, body, created_at)
+                VALUES ($1, $2, NOW())
+            `, ['vega_webhook', JSON.stringify(body)]).catch(err => {
+                console.log('Vega webhook log DB error (non-blocking):', err.message);
+            });
+        } catch (debugErr) {
+            console.log('Debug storage error:', debugErr.message);
+        }
+
+        // ==================== EXTRACT VEGA FIELDS ====================
+        // Vega Webhook 2.0 JSON structure:
+        // transaction_token, external_code, method, total_price (centavos), status
+        // customer: { name, email, phone, document }
+        // checkout: { src, fbclid, ttclid, click_id, utm_source, utm_medium, utm_campaign, utm_term, utm_content }
+        // products: [{ code, title, amount, quantity }]
+        // address: { street, number, district, zip_code, city, state, country }
+        // order_url, created_at, updated_at, approved_at, refunded_at
+
+        const transactionToken = body.transaction_token || `vega_auto_${Date.now()}`;
+        const externalCode = body.external_code || null;
+        const method = body.method || null; // pix, boleto, credit_card
+        const totalPriceCents = parseFloat(body.total_price || '0');
+        const totalPrice = totalPriceCents / 100; // Convert cents to dollars
+        const rawStatus = (body.status || '').toLowerCase();
+
+        // Customer info
+        const customer = body.customer || {};
+        const buyerName = customer.name || null;
+        const buyerEmail = customer.email || null;
+        const buyerPhone = customer.phone || null;
+        const buyerDocument = customer.document || null;
+
+        // Address
+        const address = body.address || {};
+
+        // Products
+        const products = Array.isArray(body.products) ? body.products : [];
+        const firstProduct = products.length > 0 ? products[0] : {};
+        const productCode = firstProduct.code || null;
+        const productTitle = firstProduct.title || 'Whats Spy VIP Access';
+        const productAmount = firstProduct.amount ? (parseFloat(firstProduct.amount) / 100) : totalPrice;
+        const productQuantity = firstProduct.quantity || 1;
+
+        // Build product name from all products
+        let productName = productTitle;
+        if (products.length > 1) {
+            const allNames = products.map(p => p.title || 'Product').join(' + ');
+            productName = allNames;
+        }
+
+        // Checkout tracking data
+        const checkout = body.checkout || {};
+        const utmSource = checkout.utm_source || null;
+        const utmMedium = checkout.utm_medium || null;
+        const utmCampaign = checkout.utm_campaign || null;
+        const utmContent = checkout.utm_content || null;
+        const utmTerm = checkout.utm_term || null;
+        const checkoutSrc = checkout.src || null;
+        const fbclid = checkout.fbclid || null;
+        const ttclid = checkout.ttclid || null;
+        const clickId = checkout.click_id || null;
+
+        // Funnel language from UTM campaign
+        let funnelLanguage = 'en';
+        const utmCampaignLower = (utmCampaign || '').toLowerCase();
+        if (utmCampaignLower === 'es' || utmCampaignLower.includes('espanhol') || utmCampaignLower.includes('funnel_es')) {
+            funnelLanguage = 'es';
+        } else if (utmCampaignLower === 'pt' || utmCampaignLower.includes('portugues') || utmCampaignLower.includes('funnel_pt')) {
+            funnelLanguage = 'pt';
+        } else if (utmCampaignLower === 'fr' || utmCampaignLower.includes('frances') || utmCampaignLower.includes('funnel_fr')) {
+            funnelLanguage = 'fr';
+        }
+
+        // Dates
+        const dateCreated = body.created_at || null;
+        const dateApproved = body.approved_at || null;
+        const dateUpdated = body.updated_at || null;
+        const dateRefunded = body.refunded_at || null;
+
+        console.log('📥 Vega Extracted:', {
+            transactionToken,
+            rawStatus,
+            totalPrice,
+            email: buyerEmail || 'none',
+            name: buyerName || 'none',
+            productName,
+            productCode,
+            method,
+            funnelLanguage
+        });
+
+        // ==================== MAP STATUS ====================
+        // Vega Checkout Webhook 2.0 statuses:
+        // approved, pending, refused, charge_back, refunded, expired, in_process, in_dispute
+        const vegaStatusMap = {
+            'approved': 'approved',
+            'pending': 'pending_payment',
+            'refused': 'cancelled',
+            'charge_back': 'chargeback',
+            'refunded': 'refunded',
+            'expired': 'cancelled',
+            'canceled': 'cancelled',
+            'in_process': 'pending_payment',
+            'in_dispute': 'chargeback'
+        };
+        const mappedStatus = vegaStatusMap[rawStatus] || 'unknown';
+
+        console.log(`📥 Vega Status: "${rawStatus}" -> mapped="${mappedStatus}"`);
+
+        // ==================== RESOLVE EMAIL ====================
+        if (!buyerEmail) {
+            console.log('❌ Vega: No buyer email found in webhook');
+            pool.query(`INSERT INTO postback_logs (content_type, body, created_at) VALUES ('VEGA_ERROR_NO_EMAIL', $1, NOW())`,
+                [JSON.stringify(body)]).catch(() => {});
+            return res.status(200).json({ status: 'ok', message: 'No email found, skipped' });
+        }
+
+        // ==================== RESOLVE PHONE FROM LEADS ====================
+        let finalPhone = buyerPhone;
+        let buyerFullName = buyerName;
+        try {
+            const leadResult = await pool.query(
+                `SELECT whatsapp, name, funnel_language FROM leads WHERE LOWER(email) = LOWER($1) ORDER BY created_at DESC LIMIT 1`,
+                [buyerEmail]
+            );
+            if (leadResult.rows.length > 0) {
+                const lead = leadResult.rows[0];
+                if (lead.whatsapp) {
+                    finalPhone = lead.whatsapp;
+                    console.log(`📱 Vega: Using WhatsApp from lead: ${finalPhone}`);
+                }
+                if (!buyerFullName && lead.name) {
+                    buyerFullName = lead.name;
+                }
+                if (funnelLanguage === 'en' && lead.funnel_language) {
+                    const leadLang = (lead.funnel_language || '').toLowerCase();
+                    if (leadLang === 'pt' || leadLang === 'pt-br' || leadLang === 'es') {
+                        funnelLanguage = leadLang.startsWith('pt') ? 'pt' : 'es';
+                        console.log(`🌐 Vega: Using funnel language from lead: ${funnelLanguage}`);
+                    }
+                }
+            }
+        } catch (leadErr) {
+            console.log(`⚠️ Vega: Error looking up lead: ${leadErr.message}`);
+        }
+
+        // ==================== IDENTIFY PRODUCT TYPE (front vs upsell) ====================
+        let productType = 'front';
+        const productNameLower = (productName || '').toLowerCase();
+        if (productNameLower.includes('message vault') || productNameLower.includes('message recovery') || productNameLower.includes('recover')) {
+            productType = 'upsell1';
+        } else if (productNameLower.includes('social network') || productNameLower.includes('gps') || productNameLower.includes('360') || productNameLower.includes('tracker')) {
+            productType = 'upsell2';
+        } else if (productNameLower.includes('vip priority') || productNameLower.includes('priority processing') || productNameLower.includes('vip')) {
+            productType = 'upsell3';
+        } else if (productNameLower.includes('invisibility') || productNameLower.includes('cloak')) {
+            productType = 'upsell4';
+        } else if (productNameLower.includes('live access') || productNameLower.includes('live room') || productNameLower.includes('live')) {
+            productType = 'upsell5';
+        } else if (productNameLower.includes('multi-device') || productNameLower.includes('multi device') || productNameLower.includes('license')) {
+            productType = 'upsell6';
+        } else if (productNameLower.includes('behavior analyst') || productNameLower.includes('behavior analysis') || productNameLower.includes('ai behavior')) {
+            productType = 'upsell7';
+        }
+
+        // ==================== SAVE TRANSACTION ====================
+        const vegaTransactionId = `VEGA_${transactionToken}`;
+
+        console.log(`💾 Vega: Saving transaction: ${vegaTransactionId} for ${buyerEmail} (type: ${productType})`);
+
+        // Parse dates
+        let saleDate = null;
+        try {
+            if (dateCreated) saleDate = new Date(dateCreated);
+            if (saleDate && isNaN(saleDate.getTime())) saleDate = null;
+        } catch (e) { saleDate = null; }
+
+        try {
+            await pool.query(`
+                INSERT INTO transactions (
+                    transaction_id, email, phone, name, product, value,
+                    monetizze_status, status, raw_data, funnel_language, funnel_source, created_at
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, COALESCE($12, NOW()))
+                ON CONFLICT (transaction_id) DO UPDATE SET
+                    status = EXCLUDED.status,
+                    raw_data = EXCLUDED.raw_data,
+                    updated_at = NOW()
+            `, [
+                vegaTransactionId,
+                buyerEmail.toLowerCase().trim(),
+                finalPhone || null,
+                buyerFullName || '',
+                `Whats Spy ${productTitle || 'VIP'} (Vega)`,
+                String(totalPrice),
+                `vega_${rawStatus}`,
+                mappedStatus,
+                JSON.stringify(body),
+                funnelLanguage,
+                'vega',
+                saleDate
+            ]);
+
+            console.log(`✅ Vega transaction saved: ${vegaTransactionId} (${mappedStatus})`);
+        } catch (dbError) {
+            console.error('❌ Vega transaction save error:', dbError.message);
+            // Não interrompe o fluxo
+        }
+
+        // ==================== UPDATE/CREATE LEAD ====================
+        try {
+            if (mappedStatus === 'approved' || mappedStatus === 'refunded' || mappedStatus === 'chargeback') {
+                const purchaseNotes = `Vega Checkout - ${productType} ($${totalPrice})`;
+
+                if (mappedStatus === 'approved') {
+                    await pool.query(`
+                        UPDATE leads SET
+                            status = 'converted',
+                            notes = COALESCE(notes, '') || '\n' || $2,
+                            products_purchased = CASE
+                                WHEN products_purchased IS NULL THEN ARRAY[$3]
+                                WHEN NOT ($3 = ANY(products_purchased)) THEN products_purchased || $3
+                                ELSE products_purchased
+                            END,
+                            total_spent = COALESCE(total_spent, 0) + $4,
+                            first_purchase_at = CASE WHEN first_purchase_at IS NULL THEN NOW() ELSE first_purchase_at END,
+                            last_purchase_at = NOW(),
+                            funnel_source = 'vega',
+                            updated_at = NOW()
+                        WHERE LOWER(email) = LOWER($1)
+                    `, [buyerEmail, purchaseNotes, `Whats Spy ${productTitle || 'VIP'} (Vega)`, totalPrice]);
+
+                    console.log(`✅ Vega lead updated: ${buyerEmail} (converted)`);
+                } else {
+                    // Refunded or chargeback
+                    await pool.query(`
+                        UPDATE leads SET
+                            status = CASE
+                                WHEN status != 'converted' THEN 'lost'
+                                ELSE status
+                            END,
+                            notes = COALESCE(notes, '') || '\n' || $2,
+                            updated_at = NOW()
+                        WHERE LOWER(email) = LOWER($1)
+                    `, [buyerEmail, purchaseNotes]);
+
+                    console.log(`✅ Vega lead updated: ${buyerEmail} (${mappedStatus})`);
+                }
+
+                // If lead doesn't exist, create one
+                const leadExists = await pool.query(
+                    `SELECT id FROM leads WHERE LOWER(email) = LOWER($1) LIMIT 1`,
+                    [buyerEmail]
+                );
+                if (leadExists.rows.length === 0 && mappedStatus === 'approved') {
+                    await pool.query(`
+                        INSERT INTO leads (
+                            email, name, whatsapp, status, products_purchased, total_spent,
+                            first_purchase_at, last_purchase_at, funnel_language, funnel_source, created_at, updated_at
+                        ) VALUES ($1, $2, $3, 'converted', $4, $5, NOW(), NOW(), $6, 'vega', NOW(), NOW())
+                    `, [
+                        buyerEmail.toLowerCase().trim(),
+                        buyerFullName || '',
+                        finalPhone || '',
+                        [`Whats Spy ${productTitle || 'VIP'} (Vega)`],
+                        totalPrice,
+                        funnelLanguage
+                    ]);
+                    console.log(`✅ Vega lead created: ${buyerEmail}`);
+                }
+            }
+        } catch (leadError) {
+            console.error('❌ Vega lead update error:', leadError.message);
+        }
+
+        // ==================== FACEBOOK CAPI ====================
+        try {
+            if ((mappedStatus === 'approved' || mappedStatus === 'refunded' || mappedStatus === 'chargeback') && buyerEmail) {
+                // Buscar dados de funnel_events para enriquecer CAPI
+                let enrichedData = {};
+                let eventSourceUrl = 'https://ingles.appdetect.site/';
+
+                // Try to find visitor_id from leads
+                let visitorId = null;
+                try {
+                    const leadVid = await pool.query(
+                        `SELECT visitor_id FROM leads WHERE LOWER(email) = LOWER($1) ORDER BY created_at DESC LIMIT 1`,
+                        [buyerEmail]
+                    );
+                    if (leadVid.rows.length > 0) {
+                        visitorId = leadVid.rows[0].visitor_id;
+                    }
+                } catch (e) {}
+
+                if (visitorId) {
+                    try {
+                        const funnelResult = await pool.query(
+                            `SELECT ip, user_agent, fbc, fbp FROM funnel_events
+                             WHERE visitor_id = $1 AND (ip IS NOT NULL OR user_agent IS NOT NULL)
+                             ORDER BY created_at DESC LIMIT 1`,
+                            [visitorId]
+                        );
+                        if (funnelResult.rows.length > 0) {
+                            enrichedData = funnelResult.rows[0];
+                        }
+                    } catch (err) {
+                        console.log('Vega funnel lookup error:', err.message);
+                    }
+                }
+
+                // Language-specific event source URL
+                const eventSourceUrls = {
+                    en: 'https://ingles.appdetect.site/',
+                    es: 'https://espanhol.appdetect.site/',
+                    pt: 'https://portugues.appdetect.site/',
+                    fr: 'https://frances.appdetect.site/'
+                };
+                eventSourceUrl = eventSourceUrls[funnelLanguage] || eventSourceUrls.en;
+
+                const fbUserData = {
+                    email: buyerEmail,
+                    phone: finalPhone || enrichedData.phone || '',
+                    firstName: (buyerFullName || '').split(' ')[0] || '',
+                    lastName: (buyerFullName || '').split(' ').slice(1).join(' ') || '',
+                    ip: enrichedData.ip || req.ip || '',
+                    userAgent: enrichedData.user_agent || req.headers['user-agent'] || '',
+                    fbc: enrichedData.fbc || '',
+                    fbp: enrichedData.fbp || '',
+                    country: (address.country || '')
+                };
+
+                const fbCustomData = {
+                    content_name: `Whats Spy ${productTitle || 'VIP'} (Vega)`,
+                    content_ids: [productCode || vegaTransactionId],
+                    content_type: 'product',
+                    content_category: 'digital_product',
+                    value: totalPrice,
+                    currency: 'USD',
+                    order_id: vegaTransactionId,
+                    num_items: productQuantity
+                };
+
+                const capiOptions = {
+                    language: funnelLanguage
+                };
+
+                const fbEventName = (mappedStatus === 'refunded' || mappedStatus === 'chargeback')
+                    ? 'Refund'
+                    : 'Purchase';
+                const fbEventId = `VEGA_${transactionToken}_${Date.now()}`;
+
+                if (mappedStatus === 'approved') {
+                    // Purchase com 30s delay para dedup
+                    setTimeout(async () => {
+                        try {
+                            await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, fbEventId, capiOptions);
+                            console.log(`✅ Vega CAPI Purchase sent: ${vegaTransactionId}`);
+                        } catch (err) {
+                            console.error('❌ Vega CAPI Purchase error:', err.message);
+                        }
+                    }, 30000);
+
+                    // Também envia Google Ads Purchase (se disponível)
+                    try {
+                        const { sendGoogleAdsPurchase } = require('../services/google-ads-conversion');
+                        await sendGoogleAdsPurchase({
+                            email: buyerEmail,
+                            value: totalPrice,
+                            currency: 'USD',
+                            transactionId: vegaTransactionId
+                        }).catch(() => {});
+                    } catch (err) {
+                        // Google Ads não configurado - ignorar
+                    }
+                } else {
+                    // Refund/Chargeback envia imediatamente
+                    try {
+                        await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, fbEventId, capiOptions);
+                        console.log(`✅ Vega CAPI ${mappedStatus} sent: ${vegaTransactionId}`);
+                    } catch (err) {
+                        console.error(`❌ Vega CAPI ${mappedStatus} error:`, err.message);
+                    }
+                }
+            }
+        } catch (capiError) {
+            console.error('❌ Vega CAPI error:', capiError.message);
+        }
+
+        // ==================== REFUND/CHARGEBACK REGISTRATION ====================
+        try {
+            if (mappedStatus === 'refunded' || mappedStatus === 'chargeback') {
+                const protocolId = `VEGA-${transactionToken}-${Date.now()}`;
+                await pool.query(`
+                    INSERT INTO refund_requests (transaction_id, lead_email, amount, reason, protocol, status, created_at)
+                    VALUES ($1, $2, $3, $4, $5, 'completed', NOW())
+                    ON CONFLICT (transaction_id) DO NOTHING
+                `, [
+                    vegaTransactionId,
+                    buyerEmail.toLowerCase().trim(),
+                    totalPrice,
+                    `Vega Checkout ${mappedStatus} - ${productTitle || 'Product'}`,
+                    protocolId
+                ]);
+                console.log(`✅ Vega ${mappedStatus} registered: ${protocolId}`);
+            }
+        } catch (refundError) {
+            console.error(`❌ Vega ${mappedStatus} registration error:`, refundError.message);
+        }
+
+        // ==================== ACTIVECAMPAIGN ====================
+        try {
+            const acEventMap = {
+                'approved': 'sale_approved',
+                'cancelled': 'sale_cancelled',
+                'refunded': 'sale_refunded',
+                'chargeback': 'sale_chargeback',
+                'pending_payment': 'initiate_checkout'
+            };
+            const acEvent = acEventMap[mappedStatus];
+            if (acEvent) {
+                await activeCampaign.processEvent(acEvent, {
+                    email: buyerEmail,
+                    name: buyerFullName || '',
+                    phone: finalPhone || '',
+                    product: `Whats Spy ${productTitle || 'VIP'} (Vega)`,
+                    value: totalPrice,
+                    language: funnelLanguage,
+                    source: 'vega'
+                });
+                console.log(`✅ Vega AC event sent: ${acEvent} for ${buyerEmail}`);
+            }
+        } catch (acError) {
+            console.error('❌ Vega AC event error:', acError.message);
+        }
+
+        // ==================== CANCEL EMAIL FUNNEL ====================
+        try {
+            if (mappedStatus === 'approved') {
+                await dispatchService.cancelEmailFunnel(buyerEmail, 'purchase_vega');
+                console.log(`✅ Vega email funnel cancelled for ${buyerEmail}`);
+            }
+        } catch (cancelError) {
+            console.error('❌ Vega cancel funnel error:', cancelError.message);
+        }
+
+        // ==================== SUPABASE AUTO-PROVISION ====================
+        try {
+            if (mappedStatus === 'approved') {
+                const sbResult = await supabaseAuthService.ensureSupabaseUser(buyerEmail, buyerFullName || '', funnelLanguage);
+                console.log('Vega Supabase result:', sbResult);
+                if (sbResult && sbResult.created && sbResult.magicLink) {
+                    await supabaseAuthService.sendCredentialsEmail(buyerEmail, sbResult.magicLink, buyerFullName || '', funnelLanguage);
+                    console.log('✅ Vega Supabase user created and notified');
+                } else if (sbResult && !sbResult.created) {
+                    console.log('ℹ️ Vega Supabase user already exists:', buyerEmail);
+                }
+            }
+        } catch (sbError) {
+            console.error('❌ Vega Supabase error (non-blocking):', sbError.message);
+        }
+
+        // ==================== RESPONSE ====================
+        console.log(`📋 VEGA SUMMARY: tx=${vegaTransactionId} | email=${buyerEmail || 'none'} | status=${rawStatus} (${mappedStatus}) | product=${productName} | value=$${totalPrice} | lang=${funnelLanguage} | type=${productType}`);
+        res.status(200).json({ status: 'ok' });
+
+    } catch (error) {
+        console.error('❌ Vega Webhook CRITICAL error:', error.message);
+        console.error(error.stack);
+
+        // Log error to DB (non-blocking)
+        try {
+            pool.query(`
+                INSERT INTO postback_logs (content_type, body, created_at)
+                VALUES ($1, $2, NOW())
+            `, ['vega_webhook_error', JSON.stringify({ error: error.message, body: req.body })]).catch(() => {});
+        } catch (logErr) {
+            console.error('Failed to log Vega error to DB:', logErr.message);
+        }
+
+        // Still return 200 to prevent Vega from retrying
+        res.status(200).json({ status: 'ok', note: 'processed with error' });
+    }
+});
+
+// Admin: Debug Vega webhooks
+router.get('/api/admin/debug/vega-webhooks', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        const dbLogs = await pool.query(`
+            SELECT id, content_type, body, created_at
+            FROM postback_logs
+            WHERE content_type LIKE 'vega%' OR content_type LIKE 'VEGA%'
+            ORDER BY created_at DESC
+            LIMIT 30
+        `);
+
+        res.json({
+            memoryCount: recentVegaWebhooks.length,
+            dbLogCount: dbLogs.rows.length,
+            info: 'Vega Checkout webhook debug.',
+            webhookUrl: 'https://zappspy-backend-v1-production.up.railway.app/api/postback/vega',
+            alternateUrl: 'https://painel.xaimonitor.com/api/postback/vega',
+            recentWebhooks: recentVegaWebhooks,
+            dbLogs: dbLogs.rows
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.recentPostbacks = recentPostbacks;
 router.recentPerfectPayWebhooks = recentPerfectPayWebhooks;
 router.recentDigiStoreWebhooks = recentDigiStoreWebhooks;
+router.recentVegaWebhooks = recentVegaWebhooks;
 
 module.exports = router;

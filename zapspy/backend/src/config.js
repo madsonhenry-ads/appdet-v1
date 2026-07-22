@@ -49,6 +49,8 @@ const ALLOWED_ORIGINS = [
     'https://aft.appdetect.site',
     'https://lz.appdetect.site',
     'https://zappspy-backend-v1-production.up.railway.app',
+    'https://checkout.appdetect.shop',
+    'https://www.checkout.appdetect.shop',
     'http://localhost:3000',
     'http://localhost:5500',
     'http://127.0.0.1:3000',
