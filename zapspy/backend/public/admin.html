@@ -180,12 +180,14 @@
                             <option value="affiliate">🤝 Afiliados</option>
                             <option value="perfectpay">💳 PerfectPay</option>
                             <option value="digistore">🛒 DigiStore</option>
+                            <option value="vega">🚀 Vega</option>
                         </select>
                         <select class="funnel-selector" id="globalPlatformFilter" onchange="onGlobalFilterChange()" title="Filtrar por plataforma de pagamento" style="min-width: 160px; border-color: rgba(245,158,11,0.4);">
                             <option value="">💰 Todas Plataformas</option>
                             <option value="monetizze">🏠 Monetizze</option>
                             <option value="perfectpay">💳 PerfectPay</option>
                             <option value="digistore">🛒 DigiStore</option>
+                            <option value="vega">🚀 Vega</option>
                         </select>
                         <select class="funnel-selector" id="globalDateFilter" onchange="onGlobalFilterChange()" title="Filtrar por período" style="min-width: 150px;">
                             <option value="today">Hoje</option>
@@ -593,7 +595,7 @@
                     <!-- Platform Comparison: Monetizze vs PerfectPay -->
                     <div class="chart-card" style="margin-bottom: 28px; border: 1px solid rgba(99, 102, 241, 0.3);">
                         <div class="chart-header" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.05));">
-                            <span class="chart-title">⚔️ Comparação de Plataformas: Monetizze vs PerfectPay</span>
+                            <span class="chart-title">⚔️ Comparação de Plataformas</span>
                             <button class="btn-secondary" onclick="loadPlatformComparison()" style="font-size: 12px; padding: 6px 12px;">🔄 Atualizar</button>
                         </div>
                         <div id="platformComparisonContent" style="padding: 20px;">
@@ -611,7 +613,7 @@
                                 <span style="font-size: 11px; color: var(--text-muted);">Taxa Atribuição: <strong style="color: #8b5cf6; font-size: 13px;" id="cmpAttributionRate">-</strong></span>
                             </div>
                             <!-- Platform Comparison - Side by Side -->
-                            <div style="display: grid; grid-template-columns: 1fr 60px 1fr; gap: 16px; align-items: start;">
+                            <div style="display: grid; grid-template-columns: 1fr 60px 1fr 1fr 1fr; gap: 12px; align-items: start;">
                                 <!-- Monetizze Column -->
                                 <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 12px; padding: 20px;">
                                     <div style="text-align: center; margin-bottom: 16px;">
@@ -727,11 +729,89 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- DigiStore Column -->
+                                <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 12px; padding: 20px;">
+                                    <div style="text-align: center; margin-bottom: 16px;">
+                                        <div style="font-size: 18px; font-weight: 700; color: #8b5cf6;">🛒 DigiStore</div>
+                                        <div style="font-size: 11px; color: #8b5cf6; margin-top: 2px; font-weight: 600;" id="cmpDigiStoreShare"></div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                            <span style="font-size: 12px; color: var(--text-muted);">Total Transações</span>
+                                            <span style="font-size: 18px; font-weight: 700; color: #94a3b8;" id="cmpDigiStoreTx">-</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 8px; border-left: 3px solid #10b981;">
+                                            <span style="font-size: 12px; color: var(--text-muted);">Vendas Aprovadas</span>
+                                            <span style="font-size: 18px; font-weight: 700; color: #10b981;" id="cmpDigiStoreSales">-</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(16,185,129,0.12); border-radius: 8px; border-left: 3px solid #10b981;">
+                                            <span style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Faturamento (USD)</span>
+                                            <span style="font-size: 20px; font-weight: 800; color: #10b981;" id="cmpDigiStoreRevenue">-</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                            <span style="font-size: 12px; color: var(--text-muted);">Reembolsos</span>
+                                            <span style="font-size: 18px; font-weight: 700; color: #f59e0b;" id="cmpDigiStoreRefunds">-</span>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                            <div style="padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Taxa Aprovação</div>
+                                                <div style="font-size: 16px; font-weight: 700; color: #8b5cf6;" id="cmpDigiStoreApprovalRate">-</div>
+                                            </div>
+                                            <div style="padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Taxa Reembolso</div>
+                                                <div style="font-size: 16px; font-weight: 700; color: #ef4444;" id="cmpDigiStoreRefundRate">-</div>
+                                            </div>
+                                        </div>
+                                        <div style="padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Ticket Médio</div>
+                                            <div style="font-size: 16px; font-weight: 700; color: #f59e0b;" id="cmpDigiStoreTicket">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Vega Column -->
+                                <div style="background: rgba(236, 72, 153, 0.05); border: 1px solid rgba(236, 72, 153, 0.2); border-radius: 12px; padding: 20px;">
+                                    <div style="text-align: center; margin-bottom: 16px;">
+                                        <div style="font-size: 18px; font-weight: 700; color: #ec4899;">🚀 Vega</div>
+                                        <div style="font-size: 11px; color: #ec4899; margin-top: 2px; font-weight: 600;" id="cmpVegaShare"></div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                            <span style="font-size: 12px; color: var(--text-muted);">Total Transações</span>
+                                            <span style="font-size: 18px; font-weight: 700; color: #94a3b8;" id="cmpVegaTx">-</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(16,185,129,0.08); border-radius: 8px; border-left: 3px solid #10b981;">
+                                            <span style="font-size: 12px; color: var(--text-muted);">Vendas Aprovadas</span>
+                                            <span style="font-size: 18px; font-weight: 700; color: #10b981;" id="cmpVegaSales">-</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(16,185,129,0.12); border-radius: 8px; border-left: 3px solid #10b981;">
+                                            <span style="font-size: 13px; font-weight: 600; color: var(--text-muted);">Faturamento (USD)</span>
+                                            <span style="font-size: 20px; font-weight: 800; color: #10b981;" id="cmpVegaRevenue">-</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                            <span style="font-size: 12px; color: var(--text-muted);">Reembolsos</span>
+                                            <span style="font-size: 18px; font-weight: 700; color: #f59e0b;" id="cmpVegaRefunds">-</span>
+                                        </div>
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                            <div style="padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Taxa Aprovação</div>
+                                                <div style="font-size: 16px; font-weight: 700; color: #8b5cf6;" id="cmpVegaApprovalRate">-</div>
+                                            </div>
+                                            <div style="padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                                                <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Taxa Reembolso</div>
+                                                <div style="font-size: 16px; font-weight: 700; color: #ef4444;" id="cmpVegaRefundRate">-</div>
+                                            </div>
+                                        </div>
+                                        <div style="padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                                            <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Ticket Médio</div>
+                                            <div style="font-size: 16px; font-weight: 700; color: #f59e0b;" id="cmpVegaTicket">-</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Tab: Leads -->
                 <div class="tab-content" id="tab-leads">
                     <div class="funnel-page-header">
@@ -834,6 +914,8 @@
                                     <option value="main">🏠 Principal</option>
                                     <option value="affiliate">🤝 Afiliados</option>
                                     <option value="perfectpay">💳 PerfectPay</option>
+                                    <option value="digistore">🛒 DigiStore</option>
+                                    <option value="vega">🚀 Vega</option>
                                 </select>
                             </div>
                         </div>
@@ -17103,27 +17185,30 @@ Posso ajudar em algo mais? 😊`
                 const f = data.funnel;
                 const m = data.monetizze;
                 const pp = data.perfectpay;
-                
+                const ds = data.digistore || {};
+                const vg = data.vega || {};
+
                 const fmt = (n) => (n || 0).toLocaleString('pt-BR');
                 const fmtR = (n) => 'R$ ' + (n || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                const fmtD = (n) => '$ ' + (n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 const fmtP = (n) => (n || 0).toFixed(1) + '%';
                 const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-                
+
                 // Update total funnel reference
                 setEl('cmpTotalLeads', fmt(f.totalLeads));
                 setEl('cmpTotalCheckouts', fmt(f.totalCheckouts));
-                
+
                 // Update attribution summary bar
                 setEl('cmpAttributedLeads', fmt(f.attributedLeads));
                 setEl('cmpUnknownLeads', fmt(f.unknownReferrer));
                 setEl('cmpAttributionRate', fmtP(f.attributionRate));
-                
+
                 // Show lead share in platform headers
                 const mShareEl = document.getElementById('cmpMonetizzeShare');
                 const ppShareEl = document.getElementById('cmpPerfectPayShare');
                 if (mShareEl) mShareEl.textContent = fmtP(m.leadShare) + ' dos leads';
                 if (ppShareEl) ppShareEl.textContent = fmtP(pp.leadShare) + ' dos leads';
-                
+
                 // Update Monetizze column - domain-based numbers
                 setEl('cmpMonetizzeLeads', fmt(m.leads));
                 setEl('cmpMonetizzeCheckouts', fmt(m.checkouts));
@@ -17135,7 +17220,7 @@ Posso ajudar em algo mais? 😊`
                 setEl('cmpMonetizzeRefundRate', fmtP(m.refundRate));
                 setEl('cmpMonetizzeConvRate', fmtP(m.conversionRate));
                 setEl('cmpMonetizzeTicket', fmtR(m.ticket));
-                
+
                 // Update PerfectPay column - isolated numbers
                 setEl('cmpPerfectPayLeads', fmt(pp.leads));
                 setEl('cmpPerfectPayCheckouts', fmt(pp.checkouts));
@@ -17147,7 +17232,25 @@ Posso ajudar em algo mais? 😊`
                 setEl('cmpPerfectPayRefundRate', fmtP(pp.refundRate));
                 setEl('cmpPerfectPayConvRate', fmtP(pp.conversionRate));
                 setEl('cmpPerfectPayTicket', fmtR(pp.ticket));
-                
+
+                // Update DigiStore column
+                setEl('cmpDigiStoreTx', fmt(ds.totalTx));
+                setEl('cmpDigiStoreSales', fmt(ds.sales));
+                setEl('cmpDigiStoreRevenue', fmtD(ds.revenue));
+                setEl('cmpDigiStoreRefunds', fmt(ds.refunds));
+                setEl('cmpDigiStoreApprovalRate', fmtP(ds.approvalRate));
+                setEl('cmpDigiStoreRefundRate', fmtP(ds.refundRate));
+                setEl('cmpDigiStoreTicket', fmtD(ds.ticket));
+
+                // Update Vega column
+                setEl('cmpVegaTx', fmt(vg.totalTx));
+                setEl('cmpVegaSales', fmt(vg.sales));
+                setEl('cmpVegaRevenue', fmtD(vg.revenue));
+                setEl('cmpVegaRefunds', fmt(vg.refunds));
+                setEl('cmpVegaApprovalRate', fmtP(vg.approvalRate));
+                setEl('cmpVegaRefundRate', fmtP(vg.refundRate));
+                setEl('cmpVegaTicket', fmtD(vg.ticket));
+
                 // Determine winner with multiple criteria
                 const winnerEl = document.getElementById('cmpWinner');
                 if (winnerEl) {
@@ -17158,7 +17261,6 @@ Posso ajudar em algo mais? 😊`
                     } else if (ppWins > mWins) {
                         winnerEl.innerHTML = '<div style="color: #f59e0b; font-weight: 700;">\ud83c\udfc6 PerfectPay</div><div style="margin-top: 4px;">melhor performance</div>';
                     } else {
-                        // Tie-break by revenue
                         if (pp.revenue > m.revenue) {
                             winnerEl.innerHTML = '<div style="color: #f59e0b; font-weight: 700;">\ud83c\udfc6 PerfectPay</div><div style="margin-top: 4px;">lidera em faturamento</div>';
                         } else if (m.revenue > pp.revenue) {
