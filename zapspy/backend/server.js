@@ -229,8 +229,8 @@ app.use('/es', express.static(path.join(funnelPath, 'espanhol')));
 app.use('/pt', express.static(path.join(funnelPath, 'portugues')));
 app.use('/fr', express.static(path.join(funnelPath, 'frances')));
 app.use('/ingles2', express.static(path.join(funnelPath, 'ingles2')));
-app.use('/digi', express.static(path.join(funnelPath, 'digi', 'ingles2')));
 app.use('/digi/lz2', express.static(path.join(funnelPath, 'digi', 'lz2')));
+app.use('/digi', express.static(path.join(funnelPath, 'digi', 'ingles2')));
 app.use('/vega', express.static(path.join(__dirname, '..', 'vega', 'ingles2')));
 
 // Domain-based routing
