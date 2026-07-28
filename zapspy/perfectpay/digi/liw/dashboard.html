@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Capture fbclid and poll for _fbp cookie ASAP -->
+    <script>
+    (function() {
+        var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+        if (m) {
+            var fbc = 'fb.1.' + Date.now() + '.' + decodeURIComponent(m[1]);
+            try { localStorage.setItem('_fbc', fbc); } catch(e) {}
+        }
+        var polls = 0;
+        var pi = setInterval(function() {
+            var c = document.cookie.match(/_fbp=([^;]+)/);
+            if (c) { try { localStorage.setItem('_fbp', c[1]); } catch(e) {} clearInterval(pi); }
+            if (++polls > 25) clearInterval(pi);
+        }, 200);
+    })();
+    </script>
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+    <meta charset="utf-8">
+    <meta name="facebook-domain-verification" content="88bg7nb3af9s66oo1b7oekmo287t2i" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Whats Spy - Dashboard</title>
+    <meta name="robots" content="noindex">
+    <link rel="shortcut icon" href="imagens/icon-site.png">
+
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    var userData = {};
+    try {
+        var em = localStorage.getItem('userEmail');
+        var ph = localStorage.getItem('userWhatsApp');
+        var fn = localStorage.getItem('userName');
+        var ct = localStorage.getItem('userCity');
+        var co = localStorage.getItem('userCountryCode');
+        var ge = localStorage.getItem('targetGender');
+        var st = localStorage.getItem('userState');
+        if (em) userData.em = em.toLowerCase().trim();
+        if (ph) userData.ph = ph.replace(/\D/g, '');
+        if (fn) {
+            var names = fn.trim().split(' ');
+            userData.fn = names[0].toLowerCase();
+            if (names.length > 1) userData.ln = names.slice(1).join(' ').toLowerCase();
+        }
+        if (ct) userData.ct = ct.toLowerCase().replace(/[^a-z]/g, '');
+        if (co) userData.country = co.toLowerCase();
+        if (ge) userData.ge = ge === 'female' ? 'f' : 'm';
+        if (st) userData.st = st.toLowerCase().replace(/[^a-z]/g, '');
+    } catch(e) {}
+    fbq('init', '569352939594980', userData);
+    fbq('init', '569352939594980', userData);
+    var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    fbq('track', 'PageView', {}, { eventID: pvId });
+    window._fbPageViewFired = true;
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=569352939594980&ev=PageView&noscript=1"
+    /></noscript>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=569352939594980&ev=PageView&noscript=1"
+    /></noscript>
+
+    <link rel="stylesheet" href="css/global.css">
+    <script src="js/funnel-config.js"></script>
+    <script src="js/tracking.js" defer></script>
+    <script src="js/fc.js" defer></script>
+    <script src="js/tracking-utils.js"></script>
+    <script>if(typeof TrackingUtils!=='undefined')TrackingUtils.captureUTMs();</script>
+    <script src="js/funnel-tracking.js" defer></script>
+    <script src="js/google-ads-loader.js" defer></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #000000;
+            position: relative;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 24px 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .status-time { font-weight: 700; }
+        .status-icons { display: flex; align-items: center; gap: 5px; }
+        .status-icons svg { width: 18px; height: 18px; }
+        .battery-text { font-size: 13px; font-weight: 600; margin-right: 2px; }
+
+        .dash-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 20px 12px;
+        }
+        .dash-header-left { display: flex; align-items: center; gap: 12px; }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            position: relative;
+        }
+        .user-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            border: 2px solid #000;
+        }
+
+        .header-info { display: flex; flex-direction: column; }
+        .header-greeting { font-size: 12px; color: #8e8e93; font-weight: 400; }
+        .header-name { font-size: 17px; font-weight: 700; }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .notif-btn {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            border: none;
+            cursor: pointer;
+        }
+        .notif-btn svg { width: 20px; height: 20px; color: #fff; }
+        .notif-dot {
+            position: absolute; top: 8px; right: 8px;
+            width: 8px; height: 8px;
+            background: #ff3b30;
+            border-radius: 50%;
+            border: 2px solid #000;
+        }
+
+        .free-access-banner {
+            margin: 4px 16px 16px;
+            background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(18,140,126,0.06));
+            border: 1.5px solid rgba(34,197,94,0.35);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            animation: fadeSlideIn 0.6s ease-out 0.3s both;
+            position: relative;
+            overflow: hidden;
+        }
+        .free-access-banner::before {
+            content: '';
+            position: absolute;
+            top: -40%; right: -40%;
+            width: 80%; height: 80%;
+            background: radial-gradient(circle, rgba(34,197,94,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .fab-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: #22c55e;
+            color: #000;
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+        .fab-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        .fab-desc {
+            font-size: 12px;
+            color: #8e8e93;
+            line-height: 1.4;
+            margin-bottom: 14px;
+        }
+        .fab-timer-wrap {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .fab-timer-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 4px;
+        }
+        .fab-pulse {
+            width: 6px; height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: fabPulse 1.5s ease infinite;
+        }
+        @keyframes fabPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+        .fab-timer {
+            font-size: 32px;
+            font-weight: 900;
+            color: #22c55e;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .fab-timer.fab-urgent {
+            color: #ef4444;
+            animation: fabFlash 1s ease infinite;
+        }
+        @keyframes fabFlash { 0%,100%{opacity:1} 50%{opacity:.6} }
+        .fab-slots {
+            font-size: 11px;
+            color: rgba(255,255,255,0.45);
+        }
+        .fab-slots strong {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .section-label {
+            padding: 0 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #22c55e;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(142,142,147,0.3), transparent);
+        }
+
+        .main-feature {
+            margin: 0 16px 20px;
+            background: linear-gradient(135deg, #12060d, #1a0a12);
+            border: 1.5px solid rgba(34,197,94,0.4);
+            border-radius: 20px;
+            padding: 22px 20px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeSlideIn 0.5s ease-out 0.4s both;
+            box-shadow: 0 0 25px rgba(34,197,94,0.12), 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .main-feature:active { transform: scale(0.98); }
+        .main-feature::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -50%;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(34,197,94,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .main-feature-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .main-feature-left { display: flex; align-items: center; gap: 14px; }
+        .main-feature-icon {
+            width: 52px; height: 52px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 4px 20px rgba(34,197,94,0.3);
+        }
+        .main-feature-info {}
+        .main-feature-name {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge-active {
+            font-size: 9px;
+            font-weight: 700;
+            background: #22c55e;
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(34,197,94,0); }
+        }
+
+        .main-feature-cta {
+            text-align: center;
+            padding-top: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #22c55e;
+            letter-spacing: 0.3px;
+        }
+        .main-feature-cta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .main-feature-cta svg {
+            width: 14px;
+            height: 14px;
+            animation: arrowBounce 1.5s ease-in-out infinite;
+        }
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(4px); }
+        }
+        .main-feature-desc {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-top: 3px;
+        }
+        .main-feature-arrow {
+            width: 36px; height: 36px;
+            background: rgba(34,197,94,0.15);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .main-feature-arrow svg { width: 18px; height: 18px; color: #22c55e; }
+
+        
+
+        .features-grid {
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 16px 10px 14px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .feature-card:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+
+        .feature-card.locked {
+            opacity: 0.7;
+        }
+
+        .feature-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin: 0 auto 10px;
+        }
+        .feature-card-icon img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .feature-card-name {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .badge-locked-icon {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+        .badge-locked-icon svg {
+            width: 14px; height: 14px; color: rgba(34,197,94,0.45);
+        }
+
+        .feature-card-desc { display: none; }
+
+        .content-spacer { height: 90px; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15,15,15,0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom, 0px));
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            color: #555;
+            text-decoration: none;
+            padding: 4px 12px;
+            transition: color 0.2s;
+        }
+        .nav-item.active { color: #22c55e; }
+        .nav-item svg { width: 24px; height: 24px; }
+
+        .locked-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .locked-overlay.show { display: flex; }
+
+        .locked-modal {
+            background: #1c1c1e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 32px 24px 24px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            animation: modalIn 0.3s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .locked-modal-emoji {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .locked-modal h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .locked-modal p {
+            font-size: 14px;
+            color: #8e8e93;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .locked-modal-steps {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+        .locked-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .locked-step:last-child { border-bottom: none; }
+        .locked-step-num {
+            width: 28px; height: 28px;
+            background: rgba(34,197,94,0.15);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: #22c55e;
+            flex-shrink: 0;
+        }
+        .locked-step-num.done {
+            background: #22c55e;
+            color: #000;
+        }
+        .locked-step-text { font-size: 13px; color: #ccc; }
+        .locked-step-text.done { color: #666; text-decoration: line-through; }
+
+        .locked-modal-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 20px rgba(34,197,94,0.3);
+        }
+        .locked-modal-btn:active { transform: scale(0.97); }
+
+        .locked-modal-close {
+            width: 100%;
+            padding: 14px;
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 14px;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-card {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeSlideIn 0.4s ease-out forwards;
+        }
+
+        @media (max-height: 680px) {
+            .main-feature { padding: 16px; }
+            .main-feature-icon { width: 44px; height: 44px; font-size: 22px; }
+            .feature-card { padding: 12px 8px 10px; }
+            .feature-card-icon { width: 36px; height: 36px; font-size: 18px; margin-bottom: 6px; }
+        }
+    </style>
+    <script src="js/sentry-init.js" defer></script>
+
+
+<style id="mobile-safety">
+html,body{max-width:100vw;overflow-x:hidden;}
+*{box-sizing:border-box;}
+@media (max-width: 480px) {
+  button:not([class*="close"]):not([class*="icon"]),
+  .btn, [role="button"], a.tier-cta, a.spy-btn, a[class*="cta"]:not([class*="floating"]) {
+    min-height: 44px;
+  }
+  input, select, textarea { min-height: 44px; font-size: 16px; }
+}
+img,video,iframe{max-width:100%;height:auto;}
+@supports (padding: env(safe-area-inset-bottom)) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  [class*="floatingCta"], #floatingCta, .floating-cta, .sticky-cta-bar,
+  .bottom-bar, .bottom-cta, .fixed-bottom {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+}
+</style>
+<link rel="stylesheet" href="css/zapspy.css">
+<link rel="stylesheet" href="css/funnel-bridge.css">
+<link rel="stylesheet" href="css/funnel-polish.css">
+</head>
+<body class="theme-dark">
+<div data-zs-hp="v1" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none" tabindex="-1">
+<label>Leave this empty<input type="text" name="email_confirm" tabindex="-1" autocomplete="off" value=""></label>
+<label>Website<input type="text" name="website_url" tabindex="-1" autocomplete="off" value=""></label>
+<label>Company<input type="text" name="company_name" tabindex="-1" autocomplete="off" value=""></label>
+</div>
+    <div class="app-container">
+        <div class="status-bar">
+            <span class="status-time" id="statusTime">9:41</span>
+            <div class="status-icons">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+                <span class="battery-text" id="batteryPct">92</span>
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="18" height="12" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="4" y="8" width="13" height="8" rx="1" fill="currentColor"/><rect x="22" y="9" width="2" height="6" rx="1" fill="currentColor"/></svg>
+            </div>
+        </div>
+
+        <div class="dash-header">
+            <div class="dash-header-left">
+                <div class="user-avatar" id="userAvatar">P</div>
+                <div class="header-info">
+                    <span class="header-greeting">Welcome back</span>
+                    <span class="header-name" id="headerName">User</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="notif-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <span class="notif-dot"></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="free-access-banner">
+            <div class="fab-badge">1 Free Access</div>
+            <div class="fab-title">Your access has been granted</div>
+            <div class="fab-desc">Verification approved. Use your free access before it expires.</div>
+            <div class="fab-timer-wrap" id="fabTimerWrap" style="display:none">
+                <div class="fab-timer-label"><span class="fab-pulse"></span> Expires in</div>
+                <div class="fab-timer" id="dashTimer">--:--</div>
+                <div class="fab-slots"><strong id="dashSlots">3</strong> slots remaining</div>
+            </div>
+        </div>
+
+        <div class="main-feature" onclick="openWhatsApp()">
+            <div class="main-feature-top">
+                <div class="main-feature-left">
+                    <div class="main-feature-icon"><svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+                    <div class="main-feature-info">
+                        <div class="main-feature-name">WhatsApp Spy <span class="badge-active">Active</span></div>
+                        <div class="main-feature-desc">Messages, photos, deleted content & calls</div>
+                    </div>
+                </div>
+                <div class="main-feature-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                </div>
+            </div>
+            <div class="main-feature-cta">
+                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Start Free Access Now</span>
+            </div>
+        </div>
+
+        <div class="section-label" style="margin-top: 4px;">Premium Features</div>
+
+        <div class="features-grid">
+            <div class="feature-card locked fade-card" style="animation-delay:0.5s" onclick="showLocked('Telegram Spy', '📨')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(0,136,204,0.12);"><img src="imagens/icon-telegram.png" alt="Telegram"></div>
+                <div class="feature-card-name">Telegram</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.55s" onclick="showLocked('TikTok Spy', '🎵')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(254,44,85,0.12);"><img src="imagens/icon-tiktok.png" alt="TikTok"></div>
+                <div class="feature-card-name">TikTok</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.6s" onclick="showLocked('Twitter / X', '🐦')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(29,155,240,0.12);"><img src="imagens/icon-twitter.png" alt="Twitter"></div>
+                <div class="feature-card-name">Twitter / X</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.65s" onclick="showLocked('Snapchat Spy', '👻')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(255,252,0,0.1);"><img src="imagens/icon-snapchat.png" alt="Snapchat"></div>
+                <div class="feature-card-name">Snapchat</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.7s" onclick="showLocked('Messenger Spy', '💬')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(0,132,255,0.12);"><img src="imagens/icon-messenger.png" alt="Messenger"></div>
+                <div class="feature-card-name">Messenger</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.75s" onclick="showLocked('iMessage Spy', '🍎')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(52,199,89,0.12);"><img src="imagens/icon-imessage.png" alt="iMessage"></div>
+                <div class="feature-card-name">iMessage</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.8s" onclick="showLocked('Remote Camera', '📷')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(255,59,48,0.12);"><img src="imagens/icon-camera.png" alt="Camera"></div>
+                <div class="feature-card-name">Camera</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.85s" onclick="showLocked('Remote Microphone', '🎙️')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(255,149,0,0.12);"><img src="imagens/icon-microphone.png" alt="Microphone"></div>
+                <div class="feature-card-name">Microphone</div>
+            </div>
+
+            <div class="feature-card locked fade-card" style="animation-delay:0.9s" onclick="showLocked('GPS Tracker', '📍')">
+                <div class="badge-locked-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div class="feature-card-icon" style="background: rgba(88,86,214,0.12);"><img src="imagens/icon-gps.png" alt="GPS Tracker"></div>
+                <div class="feature-card-name">GPS Tracker</div>
+            </div>
+        </div>
+
+        <div class="content-spacer"></div>
+
+        <div class="bottom-nav">
+            <a class="nav-item active" href="#">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <span>Alerts</span>
+            </a>
+            <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Contacts</span>
+            </a>
+            <a class="nav-item" href="#">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Settings</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Gender Picker Modal -->
+    <style>
+    #wsGpOverlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:20px;}
+    #wsGpOverlay.show{display:flex;}
+    #wsGpCard{background:#1c1c1e;border-radius:24px;padding:32px 28px 24px;max-width:380px;width:100%;text-align:center;animation:wsgpIn 0.3s ease-out;}
+    @keyframes wsgpIn{from{transform:scale(0.9) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+    #wsGpTitle{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-0.5px;}
+    #wsGpSub{font-size:14px;color:#8696a0;margin-bottom:24px;line-height:1.5;}
+    .ws-gp-btn{display:flex;align-items:center;gap:14px;width:100%;padding:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;cursor:pointer;text-align:left;transition:all 0.2s ease;margin-bottom:10px;}
+    .ws-gp-btn:hover{background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);}
+    .ws-gp-ico{font-size:28px;flex-shrink:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border-radius:50%;}
+    .ws-gp-text{flex:1;min-width:0;}
+    .ws-gp-name{display:block;font-size:16px;font-weight:700;color:#fff;margin-bottom:2px;}
+    .ws-gp-sub{display:block;font-size:12px;color:#8696a0;}
+    .ws-gp-arr{font-size:18px;color:#22c55e;flex-shrink:0;}
+    </style>
+    <div id="wsGpOverlay">
+        <div id="wsGpCard">
+            <div id="wsGpTitle">Who do you want to check?</div>
+            <div id="wsGpSub">We'll show suspicious contacts of the opposite sex.</div>
+            <button class="ws-gp-btn" data-gender="male">
+                <div class="ws-gp-ico">👨</div>
+                <div class="ws-gp-text">
+                    <span class="ws-gp-name">A Man</span>
+                    <span class="ws-gp-sub">Husband, boyfriend, ex...</span>
+                </div>
+                <div class="ws-gp-arr">→</div>
+            </button>
+            <button class="ws-gp-btn" data-gender="female">
+                <div class="ws-gp-ico">👩</div>
+                <div class="ws-gp-text">
+                    <span class="ws-gp-name">A Woman</span>
+                    <span class="ws-gp-sub">Wife, girlfriend, ex...</span>
+                </div>
+                <div class="ws-gp-arr">→</div>
+            </button>
+        </div>
+    </div>
+
+    <div class="locked-overlay" id="lockedOverlay" onclick="closeLocked(event)">
+        <div class="locked-modal">
+            <div class="locked-modal-emoji" id="lockedEmoji">🔒</div>
+            <h3 id="lockedTitle">Feature Locked</h3>
+            <p id="lockedDesc">Complete the WhatsApp Spy setup to unlock all premium features.</p>
+            <div class="locked-modal-steps">
+                <div class="locked-step">
+                    <div class="locked-step-num done">✓</div>
+                    <span class="locked-step-text done">Create your account</span>
+                </div>
+                <div class="locked-step">
+                    <div class="locked-step-num">2</div>
+                    <span class="locked-step-text">Complete WhatsApp Spy setup</span>
+                </div>
+                <div class="locked-step">
+                    <div class="locked-step-num">3</div>
+                    <span class="locked-step-text">Unlock all 10 features</span>
+                </div>
+            </div>
+            <button class="locked-modal-btn" onclick="openWhatsApp()">Continue with WhatsApp Spy</button>
+            <button class="locked-modal-close" onclick="document.getElementById('lockedOverlay').classList.remove('show')">Maybe later</button>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            var now = new Date();
+            var h = now.getHours();
+            var m = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('statusTime').textContent = h + ':' + m;
+        }
+        updateTime();
+        setInterval(updateTime, 30000);
+
+        document.getElementById('batteryPct').textContent = Math.floor(Math.random() * 30) + 70;
+
+        var userName = localStorage.getItem('userName') || 'User';
+        var firstName = userName.split(' ')[0];
+        document.getElementById('headerName').textContent = firstName;
+
+        var initials = userName.split(' ').map(function(n) { return n.charAt(0); }).join('').toUpperCase().substring(0, 2);
+        document.getElementById('userAvatar').textContent = initials;
+
+        (function() {
+            var expiresAt = localStorage.getItem('accessExpiresAt');
+            if (!expiresAt) return;
+            expiresAt = parseInt(expiresAt);
+            if (isNaN(expiresAt) || expiresAt - Date.now() <= 0) return;
+
+            var slots = parseInt(localStorage.getItem('accessSlots')) || 3;
+            var wrap = document.getElementById('fabTimerWrap');
+            var timerEl = document.getElementById('dashTimer');
+            var slotsEl = document.getElementById('dashSlots');
+            if (!wrap || !timerEl) return;
+
+            if (slotsEl) slotsEl.textContent = slots;
+            wrap.style.display = '';
+
+            function tick() {
+                var rem = Math.max(0, expiresAt - Date.now());
+                var mins = Math.floor(rem / 60000);
+                var secs = Math.floor((rem % 60000) / 1000);
+                timerEl.textContent = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+                if (mins < 5) timerEl.classList.add('fab-urgent');
+                else timerEl.classList.remove('fab-urgent');
+                if (rem > 0) setTimeout(tick, 1000);
+            }
+            tick();
+        })();
+
+        // Gender Picker
+        (function() {
+            var wsGpOverlay = document.getElementById('wsGpOverlay');
+
+            window.__wsGpOpen = function() {
+                wsGpOverlay.classList.add('show');
+            };
+
+            wsGpOverlay.addEventListener('click', function(e) {
+                if (e.target === wsGpOverlay) {
+                    wsGpOverlay.classList.remove('show');
+                }
+            });
+
+            document.querySelectorAll('.ws-gp-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var gender = this.getAttribute('data-gender');
+                    localStorage.setItem('targetGender', gender);
+                    wsGpOverlay.classList.remove('show');
+                    if (typeof FunnelTracker !== 'undefined' && FunnelTracker && FunnelTracker.events) {
+                        FunnelTracker.track(FunnelTracker.events.GENDER_SELECTED, { gender: gender, source: 'dashboard_modal' });
+                    }
+                    window.location.href = (typeof TrackingUtils!=='undefined')
+                        ? TrackingUtils.appendUTMs('phone.html?gender=' + gender)
+                        : 'phone.html?gender=' + gender;
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && wsGpOverlay.classList.contains('show')) {
+                    wsGpOverlay.classList.remove('show');
+                }
+            });
+        })();
+
+        function openWhatsApp() {
+            var gender = localStorage.getItem('targetGender');
+            if (!gender) {
+                if (typeof window.__wsGpOpen === 'function') { window.__wsGpOpen(); }
+                return;
+            }
+            window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs('phone.html') : 'phone.html';
+        }
+
+        function showLocked(featureName, emoji) {
+            document.getElementById('lockedEmoji').textContent = emoji;
+            document.getElementById('lockedTitle').textContent = featureName + ' — Locked';
+            document.getElementById('lockedDesc').textContent = 'Complete the WhatsApp Spy setup first to unlock ' + featureName + '. All premium features become available after activation.';
+            document.getElementById('lockedOverlay').classList.add('show');
+        }
+
+        function closeLocked(e) {
+            if (e.target === document.getElementById('lockedOverlay')) {
+                document.getElementById('lockedOverlay').classList.remove('show');
+            }
+        }
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof FacebookCAPI !== 'undefined') {
+            FacebookCAPI.init('Dashboard');
+            FacebookCAPI.trackViewContent('Dashboard', 'Funnel - Dashboard', 47);
+        }
+    });
+    </script>
+    <script src="js/urgency-bar.js"></script>
+</body>
+</html>
