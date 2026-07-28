@@ -1,0 +1,3766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Capture fbclid and poll for _fbp cookie ASAP -->
+    <script>
+    (function() {
+        var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+        if (m) {
+            var fbc = 'fb.1.' + Date.now() + '.' + decodeURIComponent(m[1]);
+            try { localStorage.setItem('_fbc', fbc); } catch(e) {}
+        }
+        var polls = 0;
+        var pi = setInterval(function() {
+            var c = document.cookie.match(/_fbp=([^;]+)/);
+            if (c) { try { localStorage.setItem('_fbp', c[1]); } catch(e) {} clearInterval(pi); }
+            if (++polls > 25) clearInterval(pi);
+        }, 200);
+    })();
+    </script>
+    <!-- UTMify tracking -->
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>Whats Spy - Unlock Full Access</title>
+    <meta name="description" content="Whats Spy - The most advanced WhatsApp data recovery tool. Unlock full access now.">
+    <link rel="shortcut icon" href="imagens/icon-site.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="css/global.css">
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    
+    // Advanced Matching - get user data from localStorage
+    var userData = {};
+    try {
+        var em = localStorage.getItem('userEmail');
+        var ph = localStorage.getItem('userWhatsApp');
+        var fn = localStorage.getItem('userName');
+        var ct = localStorage.getItem('userCity');
+        var co = localStorage.getItem('userCountryCode');
+        var ge = localStorage.getItem('targetGender');
+        var st = localStorage.getItem('userState');
+        if (em) userData.em = em.toLowerCase().trim();
+        if (ph) userData.ph = ph.replace(/\D/g, '');
+        if (fn) {
+            var names = fn.trim().split(' ');
+            userData.fn = names[0].toLowerCase();
+            if (names.length > 1) userData.ln = names.slice(1).join(' ').toLowerCase();
+        }
+        if (ct) userData.ct = ct.toLowerCase().replace(/[^a-z]/g, '');
+        if (co) userData.country = co.toLowerCase();
+        if (ge) userData.ge = ge === 'female' ? 'f' : 'm';
+        if (st) userData.st = st.toLowerCase().replace(/[^a-z]/g, '');
+    } catch(e) {}
+    
+    // Initialize pixels with Advanced Matching
+    fbq('init', '916446660777733', userData);
+    fbq('init', '916446660777733', userData);
+    var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    fbq('track', 'PageView', {}, { eventID: pvId });
+    window._fbPageViewFired = true;
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=916446660777733&ev=PageView&noscript=1"
+    /></noscript>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=916446660777733&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <!-- Enhanced Tracking -->
+    <script src="js/tracking-utils.js"></script>
+    <script>if(typeof TrackingUtils!=='undefined')TrackingUtils.captureUTMs();</script>
+    <script src="js/tracking.js"></script>
+    <script src="js/funnel-tracking.js" defer></script>
+    <script src="js/fc.js" defer></script>
+    <script src="js/funnel-config.js"></script>
+    <script src="js/google-ads-loader.js" async></script>
+    <script>
+        // Default product value
+        window.productValue = 97;
+        window.checkoutCode = 'PPU38CQB6RM';
+        
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize Facebook CAPI with current product value
+            if (typeof FacebookCAPI !== 'undefined') {
+                FacebookCAPI.init('CTA Page');
+                FacebookCAPI.trackViewContent('CTA Page', 'Funnel - Final Step', window.productValue);
+            }
+        });
+    </script>
+    
+    
+    <script src="js/sentry-init.js" defer></script>
+
+
+<style id="mobile-safety">
+html,body{max-width:100vw;overflow-x:hidden;}
+*{box-sizing:border-box;}
+@media (max-width: 480px) {
+  button:not([class*="close"]):not([class*="icon"]),
+  .btn, [role="button"], a.tier-cta, a.spy-btn, a[class*="cta"]:not([class*="floating"]) {
+    min-height: 44px;
+  }
+  input, select, textarea { min-height: 44px; font-size: 16px; }
+}
+img,video,iframe{max-width:100%;height:auto;}
+@supports (padding: env(safe-area-inset-bottom)) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  [class*="floatingCta"], #floatingCta, .floating-cta, .sticky-cta-bar,
+  .bottom-bar, .bottom-cta, .fixed-bottom {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+}
+</style>
+<link rel="stylesheet" href="css/zapspy.css">
+<link rel="stylesheet" href="css/funnel-bridge.css">
+<link rel="stylesheet" href="css/funnel-polish.css">
+
+    <!-- Shared Audio & Vibration Systems -->
+    <script src="js/audio-vibration.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #E9EDEF;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Live Counter Bar */
+        .live-counter-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.15), rgba(255, 149, 0, 0.1));
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 59, 48, 0.3);
+            z-index: 101;
+            font-size: 13px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #FF3B30;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-4px); opacity: 1; }
+        }
+        @keyframes ctaPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .live-counter-bar span {
+            color: #FF9500;
+            font-weight: 600;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 60px 20px 140px;
+            box-sizing: border-box;
+        }
+
+        /* Scarcity Banner */
+        .scarcity-banner {
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.15), rgba(255, 149, 0, 0.1));
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .scarcity-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 59, 48, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .scarcity-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #FF3B30;
+        }
+
+        .scarcity-text {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .scarcity-text strong {
+            display: block;
+            color: #FF3B30;
+            font-size: 14px;
+            margin-bottom: 2px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .scarcity-text span {
+            font-size: 12px;
+            color: #8696A0;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .main-title {
+            font-size: clamp(22px, 5vw, 28px);
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .main-title .gradient {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(18, 140, 126, 0.05));
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .profile-card-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            padding: 3px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .profile-avatar::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid #22c55e;
+            border-radius: 50%;
+            animation: profile-ring 2s infinite;
+            opacity: 0;
+        }
+
+        @keyframes profile-ring {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        .profile-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #111B21;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            overflow: hidden;
+        }
+
+        .profile-avatar-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #E9EDEF;
+            margin-bottom: 4px;
+        }
+
+        .profile-phone {
+            font-size: 14px;
+            color: #22c55e;
+            margin-bottom: 4px;
+        }
+
+        .profile-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #8696A0;
+        }
+
+        .profile-avatar-inner img {
+        }
+
+        /* Success Badge */
+        .success-badge {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.03));
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(34, 197, 94, 0.05), transparent);
+            animation: badge-sweep 4s linear infinite;
+        }
+
+        @keyframes badge-sweep {
+            to { transform: rotate(360deg); }
+        }
+
+        .badge-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #22c55e;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+            position: relative;
+        }
+
+        .badge-text {
+            font-size: 13px;
+            color: #8696A0;
+            position: relative;
+        }
+
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(31, 44, 51, 0.5);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #8696A0;
+        }
+
+        .trust-badge svg {
+            width: 14px;
+            height: 14px;
+            color: #22c55e;
+        }
+
+        /* Features */
+        .features-section {
+            margin-bottom: 24px;
+        }
+
+        .feature-item {
+            background: rgba(31, 44, 51, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .feature-header {
+            margin-bottom: 12px;
+        }
+
+        .feature-title-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .feature-icon {
+            width: 22px;
+            height: 22px;
+            color: #22c55e;
+        }
+
+        .feature-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #E9EDEF;
+        }
+
+        .feature-desc {
+            font-size: 12px;
+            color: #8696A0;
+            line-height: 1.5;
+        }
+
+        /* Media Grid */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .media-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            background: #1F2C33;
+        }
+
+        .media-item.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(6px);
+        }
+
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-overlay svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+
+        /* Dating Profiles */
+        .dating-profiles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dating-profile-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+        }
+
+        .dp-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .dp-tinder { background: linear-gradient(135deg, #FE3C72, #FF6B6B); }
+        .dp-bumble { background: linear-gradient(135deg, #FFC629, #FFD700); }
+        .dp-hinge { background: linear-gradient(135deg, #333, #555); color: #fff; font-weight: 800; font-size: 16px; }
+        .dp-onlyfans { background: linear-gradient(135deg, #00AFF0, #008CBA); }
+
+        .dp-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dp-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #E9EDEF;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dp-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dp-found {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .dp-not-found {
+            background: rgba(142, 142, 147, 0.15);
+            color: #8e8e93;
+        }
+
+        .dp-detail {
+            font-size: 11px;
+            color: #8696A0;
+            line-height: 1.5;
+        }
+
+        .dp-detail.blurred {
+            filter: blur(4px);
+            user-select: none;
+        }
+
+        .dp-photo {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            flex-shrink: 0;
+        }
+
+        /* Chat Preview */
+        .chat-preview {
+            background: #111B21;
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: message-appear 0.5s forwards;
+        }
+
+        .chat-message:nth-child(1) { animation-delay: 0.5s; }
+        .chat-message:nth-child(2) { animation-delay: 1.5s; }
+        .chat-message:nth-child(3) { animation-delay: 2.5s; }
+
+        @keyframes message-appear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-message.sent {
+            flex-direction: row-reverse;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .chat-message.received .chat-bubble {
+            background: #1F2C33;
+            color: #E9EDEF;
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-message.sent .chat-bubble {
+            background: #005C4B;
+            color: #E9EDEF;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble.locked {
+            filter: blur(4px);
+            user-select: none;
+        }
+
+        /* Suspicion Detector */
+        .suspicion-detector {
+            background: linear-gradient(145deg, rgba(255, 59, 48, 0.08), rgba(0, 0, 0, 0.4));
+            border: 1px solid rgba(255, 59, 48, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .suspicion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .suspicion-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suspicion-title svg {
+            width: 20px;
+            height: 20px;
+            color: #FF3B30;
+        }
+
+        .suspicion-title span {
+            font-size: 13px;
+            font-weight: 700;
+            color: #FF3B30;
+            text-transform: uppercase;
+        }
+
+        .suspicion-score {
+            font-size: 32px;
+            font-weight: 900;
+            color: #FF3B30;
+            text-shadow: 0 0 20px rgba(255, 59, 48, 0.4);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .suspicion-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .suspicion-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF9500, #FF3B30);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .suspicion-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .suspicion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .suspicion-item-label {
+            color: #8696A0;
+        }
+
+        .suspicion-item-value.high {
+            color: #FF3B30;
+            font-weight: 600;
+        }
+
+        /* Frequent Contact */
+        .frequent-contact {
+            background: linear-gradient(145deg, rgba(255, 149, 0, 0.08), rgba(255, 59, 48, 0.05));
+            border: 1px solid rgba(255, 149, 0, 0.15);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .frequent-contact-avatar {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+        }
+
+        .frequent-contact-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: blur(8px);
+        }
+
+        .frequent-contact-avatar::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+        }
+
+        .frequent-contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .frequent-contact-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #FF9500;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .frequent-contact-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #E9EDEF;
+            margin-bottom: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .frequent-contact-name .hidden {
+            background: #E9EDEF;
+            color: #E9EDEF;
+            border-radius: 2px;
+            padding: 0 2px;
+            margin-right: 4px;
+        }
+
+        .frequent-contact-stats {
+            font-size: 12px;
+            color: #8696A0;
+        }
+
+        .frequent-contact-stats strong {
+            color: #FF3B30;
+        }
+
+        .frequent-contact-badge {
+            background: #FF3B30;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .frequent-contact-badge span {
+            display: block;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        /* Deleted Message Reveal */
+        .deleted-message-reveal {
+            background: linear-gradient(145deg, rgba(255, 59, 48, 0.06), rgba(0, 0, 0, 0.4));
+            border: 1px solid rgba(255, 59, 48, 0.12);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deleted-message-reveal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .deleted-message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .deleted-message-header svg {
+            width: 20px;
+            height: 20px;
+            color: #FF3B30;
+        }
+
+        .deleted-message-header span {
+            font-size: 12px;
+            font-weight: 700;
+            color: #FF3B30;
+            text-transform: uppercase;
+        }
+
+        .deleted-message-content {
+            font-size: 15px;
+            color: #E9EDEF;
+            line-height: 1.5;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .deleted-message-content .blocked {
+            background: #E9EDEF;
+            color: #E9EDEF;
+            border-radius: 2px;
+            padding: 0 2px;
+            user-select: none;
+        }
+
+        .deleted-message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .deleted-message-time {
+            font-size: 11px;
+            color: #667781;
+        }
+
+        .deleted-message-unlock {
+            font-size: 11px;
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(18, 140, 126, 0.1));
+            border: 2px solid rgba(34, 197, 94, 0.4);
+            border-radius: 20px;
+            padding: 24px 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-section::before {
+            content: 'BEST VALUE';
+            position: absolute;
+            top: 12px;
+            right: -30px;
+            background: #FF3B30;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 40px;
+            transform: rotate(45deg);
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: #FF3B30;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .price-original {
+            font-size: 20px;
+            color: #667781;
+            text-decoration: line-through;
+            margin-bottom: 4px;
+        }
+
+        .price-current {
+            font-size: 52px;
+            font-weight: 800;
+            color: #22c55e;
+            margin-bottom: 4px;
+        }
+
+        .price-savings {
+            font-size: 14px;
+            color: #22c55e;
+            margin-bottom: 12px;
+        }
+
+        .price-info {
+            font-size: 12px;
+            color: #8696A0;
+            margin-bottom: 16px;
+        }
+
+        .cta-button {
+            width: 100%;
+            padding: 22px 24px;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #16a34a 100%);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: megaPulse 2s ease-in-out infinite;
+            box-shadow: 
+                0 0 20px rgba(34, 197, 94, 0.5),
+                0 0 40px rgba(34, 197, 94, 0.3),
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes megaPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 20px rgba(34, 197, 94, 0.5),
+                    0 0 40px rgba(34, 197, 94, 0.3),
+                    0 8px 32px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+            50% { 
+                transform: scale(1.03);
+                box-shadow: 
+                    0 0 30px rgba(34, 197, 94, 0.7),
+                    0 0 60px rgba(34, 197, 94, 0.4),
+                    0 12px 40px rgba(0, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 40px rgba(34, 197, 94, 0.8),
+                0 0 80px rgba(34, 197, 94, 0.5),
+                0 15px 50px rgba(0, 0, 0, 0.4);
+            animation: none;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: btn-shimmer 1.5s infinite;
+        }
+
+        .cta-button-icon {
+            display: inline-block;
+            margin-right: 10px;
+            animation: iconShake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes iconShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        @keyframes btn-shimmer {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .cta-subtext {
+            font-size: 11px;
+            color: #667781;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .cta-subtext svg {
+            width: 14px;
+            height: 14px;
+            color: #22c55e;
+        }
+
+        /* === TIER CARDS === */
+        .tier-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin: 22px auto 8px;
+            max-width: 480px;
+        }
+        @media (min-width: 1024px) {
+            .tier-grid {
+                grid-template-columns: repeat(2, 1fr);
+                align-items: stretch;
+                max-width: 820px;
+                gap: 28px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+        .tier-card {
+            position: relative;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 28px 18px 18px;
+            background: rgba(20,20,20,0.65);
+            transition: all 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+        .tier-card:hover { transform: translateY(-3px); border-color: rgba(233,30,99,0.35); }
+        .tier-card.selected {
+            border-color: #22c55e;
+            background: rgba(34,197,94,0.08);
+            box-shadow: 0 0 25px rgba(34,197,94,0.25);
+        }
+        .tier-card.recommended {
+            border-color: #22c55e;
+            background: linear-gradient(180deg, rgba(34,197,94,0.06), rgba(20,20,20,0.65));
+            box-shadow: 0 0 30px rgba(34,197,94,0.18);
+            animation: tierGlow 2.6s ease-in-out infinite;
+            transform: scale(1.02);
+            z-index: 2;
+        }
+        @media (min-width: 720px) {
+            .tier-card.recommended { transform: scale(1.04); }
+        }
+        @keyframes tierGlow {
+            0%, 100% { box-shadow: 0 0 25px rgba(34,197,94,0.18); }
+            50%      { box-shadow: 0 0 38px rgba(34,197,94,0.35); }
+        }
+        .tier-badge {
+            position: absolute;
+            top: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            padding: 5px 12px;
+            border-radius: 100px;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+        }
+        .tier-stamp {
+            position: absolute; top: 14px; right: 14px;
+            font-size: 9px; font-weight: 800; letter-spacing: 0.6px; text-transform: uppercase;
+            padding: 3px 8px; border-radius: 6px; opacity: 0.85;
+        }
+        .tier-stamp.starter { background: #f3f4f6; color: #6b7280; }
+        .tier-stamp.popular { background: linear-gradient(135deg, #10b981, #059669); color: #fff; }
+        .tier-name { font-size: 18px; font-weight: 700; color: #fff; margin: 4px 0 6px; text-align: center; }
+        .tier-tagline { text-align: center; font-size: 12px; color: #6b7280; font-style: italic; margin: 0 0 10px; min-height: 16px; }
+        .tier-icon-wrap {
+            position: relative; display: flex; align-items: center; justify-content: center;
+            width: 56px; height: 56px; margin: 0 auto 8px; border-radius: 14px;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04), 0 6px 14px rgba(15,23,42,0.06);
+            font-size: 28px;
+        }
+        .tier-card.recommended .tier-icon-wrap {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 8px 22px rgba(16,185,129,0.35), inset 0 0 0 1px rgba(255,255,255,0.2);
+        }
+        .tier-anchor-wrap { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-top: 4px; }
+        .tier-anchor { font-size: 16px; color: #9ca3af; text-decoration: line-through; font-weight: 600; }
+        .tier-price { font-size: 38px; font-weight: 800; color: #fff; line-height: 1; margin: 4px 0 4px; text-align: center; }
+        .tier-currency { font-size: 18px; vertical-align: top; opacity: 0.7; margin-right: 2px; }
+        .tier-save {
+            display: inline-block; background: #fef3c7; color: #92400e; padding: 2px 8px;
+            border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
+            text-transform: uppercase; margin: 6px auto 0; vertical-align: middle;
+        }
+        .tier-card.recommended .tier-save { background: #dcfce7; color: #166534; }
+        .tier-tag { font-size: 12px; color: #9ca3af; text-align: center; margin-bottom: 14px; font-weight: 500; }
+        .tier-features { list-style: none; padding: 0; margin: 0 0 16px; font-size: 13px; line-height: 1.55; color: #d4d4d8; flex: 1; }
+        .tier-features li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: flex-start; gap: 8px; }
+        .tier-features li:last-child { border-bottom: none; }
+        .tier-features .ico { flex-shrink: 0; width: 16px; text-align: center; font-size: 12px; }
+        .tier-features li .dim { color: #9ca3af; font-size: 12px; }
+        .tier-features li.bonus { background: linear-gradient(90deg, rgba(251,191,36,0.10), transparent); border-left: 2px solid #f59e0b; padding-left: 8px; margin: 4px -8px; border-radius: 0 6px 6px 0; }
+        .tier-features li.bonus .ico { color: #d97706; }
+        .tier-cta {
+            display: block;
+            width: 100%;
+            margin-top: 18px;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+            background: rgba(255,255,255,0.06);
+            color: #e5e5ea;
+            border: 1px solid rgba(255,255,255,0.10);
+        }
+        .tier-cta:hover { transform: translateY(-1px); background: rgba(255,255,255,0.10); }
+        .tier-card.recommended .tier-cta {
+            background: linear-gradient(135deg,#22c55e,#16a34a);
+            color: #fff;
+            border: none;
+            box-shadow: 0 8px 24px rgba(34,197,94,0.35);
+        }
+        .tier-card.recommended .tier-cta:hover {
+            box-shadow: 0 12px 30px rgba(34,197,94,0.45);
+        }
+        .tier-trust-bar {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02));
+            border: 1px solid rgba(34,197,94,0.25);
+            border-radius: 100px; padding: 8px 18px; margin: 6px auto 14px;
+            font-size: 12px; color: #047857; font-weight: 600; max-width: max-content;
+        }
+        .tier-trust-bar .ttb-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: ttbPulse 1.6s ease-in-out infinite; }
+        @keyframes ttbPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .tier-trust-bar strong { color: #064e3b; font-weight: 800; }
+        .tier-spots { text-align: center; font-size: 11px; color: #b45309; margin: 8px 0 0; font-weight: 600; }
+        .tier-spots .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; margin-right: 4px; vertical-align: middle; animation: ttbPulse 1.6s ease-in-out infinite; }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .payment-method {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 10px;
+            color: #8696A0;
+        }
+
+        /* Bonus Section */
+        .bonus-section {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.15), rgba(255, 204, 0, 0.05));
+            border: 2px solid rgba(255, 149, 0, 0.4);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .bonus-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #FF9500;
+            margin-bottom: 8px;
+        }
+
+        .bonus-total {
+            text-align: center;
+            font-size: 14px;
+            color: #22c55e;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bonus-total span {
+            text-decoration: line-through;
+            color: #ff4444;
+        }
+
+        .bonus-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .bonus-item:last-child {
+            border-bottom: none;
+        }
+
+        .bonus-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .bonus-icon.instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white;
+        }
+
+        .bonus-icon.tiktok {
+            background: #000000;
+            color: #25F4EE;
+        }
+
+        .bonus-icon.snapchat {
+            background: #FFFC00;
+            color: #000000;
+        }
+
+        .bonus-icon.location {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+        }
+
+        .bonus-icon.alerts {
+            background: linear-gradient(135deg, #ff4444, #ff6b6b);
+            color: white;
+        }
+
+        .bonus-icon.monitor {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .bonus-icon svg {
+            width: 16px;
+            height: 16px;
+            color: #FF9500;
+        }
+
+        .bonus-info h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #E9EDEF;
+            margin-bottom: 2px;
+        }
+
+        .bonus-info p {
+            font-size: 11px;
+            color: #8696A0;
+        }
+
+        .bonus-value {
+            font-size: 12px;
+            color: #FF9500;
+            font-weight: 600;
+        }
+
+        /* Benefits List */
+        .benefits-list {
+            margin-bottom: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .benefit-item svg {
+            width: 18px;
+            height: 18px;
+            color: #22c55e;
+            flex-shrink: 0;
+        }
+
+        .benefit-item span {
+            font-size: 13px;
+            color: #E9EDEF;
+        }
+
+        /* Conv List */
+        .conv-list {
+            margin-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 10px;
+        }
+        .conv-list-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #ef4444;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .conv-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 10px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            margin-bottom: 5px;
+            border: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        .conv-item.suspicious {
+            background: rgba(239,68,68,0.06);
+            border-color: rgba(239,68,68,0.15);
+        }
+        .conv-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            object-fit: cover;
+            filter: blur(3px) brightness(0.95);
+            user-select: none;
+            pointer-events: none;
+        }
+        .conv-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .conv-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e9edef;
+            filter: blur(3px);
+            user-select: none;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .conv-msg {
+            font-size: 12px;
+            color: #6c757d;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            filter: blur(3px);
+            user-select: none;
+        }
+        .conv-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+            flex-shrink: 0;
+        }
+        .conv-badge {
+            font-size: 9px;
+            font-weight: 700;
+            color: #fff;
+            background: #ef4444;
+            padding: 1px 6px;
+            border-radius: 8px;
+        }
+        .conv-tags {
+            display: flex;
+            gap: 4px;
+            margin-top: 3px;
+        }
+        .conv-tag {
+            font-size: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 1px 5px;
+            border-radius: 3px;
+            letter-spacing: 0.3px;
+        }
+        .conv-tag.deleted { background: rgba(239,68,68,0.1); color: #ef4444; }
+        .conv-tag.suspicious { background: rgba(245,158,11,0.1); color: #d97706; }
+        .conv-tag.evidence { background: rgba(139,92,246,0.1); color: #7c3aed; }
+        .conv-audio {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34,197,94,0.08);
+            border-radius: 16px;
+            padding: 4px 10px;
+            filter: blur(1px);
+            user-select: none;
+        }
+        .conv-audio-bar {
+            display: flex;
+            align-items: end;
+            gap: 1.5px;
+            height: 14px;
+        }
+        .conv-audio-bar span {
+            width: 2.5px;
+            background: #22c55e;
+            border-radius: 1px;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #e9edef;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .testimonials-header-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 14px 14px 0 0;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .testimonials-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .testimonials-header-left svg { width: 16px; height: 16px; }
+        .testimonials-header-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+        .testimonials-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .testimonials-rating-pill {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.12);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #fbbf24;
+        }
+        .testimonials-count-pill {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        .testimonials-body {
+            background: rgba(20,20,20,0.95);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-top: none;
+            border-radius: 0 0 14px 14px;
+            overflow: hidden;
+        }
+
+        .testimonial-item {
+            padding: 14px 16px;
+            position: relative;
+            transition: background 0.2s;
+        }
+        .testimonial-item:not(:last-child) {
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .testimonial-avatar-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 700;
+            font-style: normal;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+        .testimonial-avatar-icon.tav-1 { background: linear-gradient(135deg, #6366f1, #818cf8); color: #fff; }
+        .testimonial-avatar-icon.tav-2 { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #fff; }
+        .testimonial-avatar-icon.tav-3 { background: linear-gradient(135deg, #22c55e, #4ade80); color: #fff; }
+        .testimonial-avatar-icon.tav-4 { background: linear-gradient(135deg, #ef4444, #f87171); color: #fff; }
+        .testimonial-avatar-icon.tav-5 { background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: #fff; }
+
+        .testimonial-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .testimonial-name {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #e9edef;
+        }
+
+        .testimonial-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .testimonial-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            color: #16a34a;
+            font-weight: 500;
+        }
+
+        .testimonial-verified svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .testimonial-stars {
+            color: #fbbf24;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .testimonial-text {
+            font-size: 12.5px;
+            color: #a0aec0;
+            line-height: 1.55;
+            margin-bottom: 6px;
+        }
+        .testimonial-text em {
+            font-style: normal;
+            color: #ef4444;
+            font-weight: 500;
+        }
+
+        .testimonial-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .testimonial-time {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+        .testimonial-helpful {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            color: #94a3b8;
+        }
+        .testimonial-helpful svg { width: 11px; height: 11px; }
+
+        /* FAQ */
+        .faq-section {
+            margin-bottom: 24px;
+        }
+
+        .faq-item {
+            background: rgba(31, 44, 51, 0.5);
+            border-radius: 10px;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #E9EDEF;
+        }
+
+        .faq-question svg {
+            width: 18px;
+            height: 18px;
+            color: #667781;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.open .faq-question svg {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 14px 14px;
+            font-size: 12px;
+            color: #8696A0;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        /* Guarantee */
+        .guarantee-section {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.06), rgba(255, 152, 0, 0.03));
+            border: 2px solid rgba(255, 193, 7, 0.25);
+            border-radius: 20px;
+            padding: 28px 20px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .guarantee-seal {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 16px;
+        }
+
+        .guarantee-seal-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #FFC107, #FF9800);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 24px rgba(255, 193, 7, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 215, 0, 0.6);
+        }
+
+        .guarantee-seal-icon {
+            width: 22px;
+            height: 22px;
+            fill: #1a1a2e;
+            margin-bottom: 2px;
+        }
+
+        .guarantee-seal-number {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1a1a2e;
+            line-height: 1;
+        }
+
+        .guarantee-seal-days {
+            font-size: 8px;
+            font-weight: 700;
+            color: #1a1a2e;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .guarantee-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #FFC107;
+            margin-bottom: 10px;
+        }
+
+        .guarantee-text {
+            font-size: 13px;
+            color: #8696A0;
+            line-height: 1.6;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        /* Security Badges */
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(31, 44, 51, 0.3);
+            border-radius: 12px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #8696A0;
+        }
+
+        /* OSINT Intelligence Section */
+        .osint-section{background:linear-gradient(145deg,rgba(34,197,94,0.06),rgba(0,0,0,0.4));border:1px solid rgba(34,197,94,0.15);border-radius:16px;padding:18px;margin-bottom:20px;}
+        .osint-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+        .osint-header-icon{width:32px;height:32px;background:rgba(34,197,94,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+        .osint-header-text{font-size:13px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:0.5px;}
+        .osint-header-sub{font-size:11px;color:#8696A0;font-weight:400;text-transform:none;letter-spacing:0;}
+        .osint-grid{display:flex;flex-direction:column;gap:8px;}
+        .osint-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;}
+        .osint-item-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0;}
+        .osint-item-label{font-size:12px;color:#8696A0;flex:1;min-width:0;}
+        .osint-item-value{font-size:13px;font-weight:600;color:#22c55e;text-align:right;flex-shrink:0;}
+        .osint-item-value.green{color:#22c55e;}
+        .osint-item-value.red{color:#FF3B30;}
+        .osint-item-value.muted{color:#8696A0;font-weight:400;}
+
+        /* Countdown Timer */
+        .countdown-bar{background:linear-gradient(135deg,rgba(255,59,48,0.12),rgba(255,149,0,0.08));border:1px solid rgba(255,59,48,0.25);border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:center;}
+        .countdown-label{font-size:11px;color:#FF9500;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+        .countdown-timer{font-size:28px;font-weight:800;color:#FF3B30;font-variant-numeric:tabular-nums;letter-spacing:2px;}
+        .countdown-sub{font-size:11px;color:#667781;margin-top:4px;}
+
+        /* Activity Alert */
+        .activity-alert{position:fixed;top:50px;left:50%;transform:translateX(-50%) translateY(-100px);background:rgba(34,197,94,0.95);backdrop-filter:blur(8px);color:#fff;padding:10px 18px;border-radius:12px;font-size:12px;font-weight:600;z-index:200;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);white-space:nowrap;box-shadow:0 4px 20px rgba(34,197,94,0.4);}
+        .activity-alert.show{transform:translateX(-50%) translateY(0);}
+        .activity-alert .alert-dot{display:inline-block;width:6px;height:6px;background:#fff;border-radius:50%;margin-right:6px;animation:pulse-dot 1s infinite;}
+
+        /* Comparison Table - What changes after truth */
+        .comparison-table {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 14px 14px 6px;
+            margin: 24px 0 18px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .comparison-table h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #E9EDEF;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .comp-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 13px;
+            align-items: center;
+            line-height: 1.4;
+        }
+
+        .comp-row:last-child {
+            border-bottom: none;
+        }
+
+        .comp-row.head {
+            font-weight: 700;
+            color: #fff;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding-bottom: 6px;
+        }
+
+        .comp-row.head div {
+            text-align: center;
+        }
+
+        .col-without, .col-with {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .col-without {
+            color: #f87171;
+        }
+
+        .col-with {
+            color: #4ade80;
+        }
+
+        /* Guarantee Section */
+        .closure-guarantee {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(22,163,74,0.04));
+            border: 1px solid rgba(34,197,94,0.35);
+            border-radius: 14px;
+            padding: 16px 16px 14px;
+            margin: 18px 0 12px;
+        }
+        .closure-guarantee.dual { align-items: flex-start; }
+        .cg-icon { font-size: 28px; flex-shrink: 0; }
+        .closure-guarantee h4 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #4ade80;
+            margin-bottom: 12px;
+        }
+        .dg-row {
+            margin: 8px 0;
+            padding: 10px 12px;
+            background: rgba(0,0,0,0.32);
+            border-left: 3px solid #4ade80;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #ecfdf5;
+        }
+        .dg-row strong {
+            display: block;
+            color: #86efac;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        .dg-foot {
+            margin: 10px 0 0;
+            font-size: 11px;
+            color: #9ca3af;
+            font-style: italic;
+        }
+        .loss-microcopy {
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            font-style: italic;
+            margin: 14px 0 22px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 60px 16px 140px;
+            }
+            .scarcity-banner {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+            .scarcity-icon {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+            }
+            .scarcity-text strong {
+                font-size: 13px;
+            }
+            .scarcity-text span {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .container {
+                padding: 55px 12px 130px;
+            }
+            .price-current {
+                font-size: 42px;
+            }
+            .live-counter-bar {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body class="theme-dark">
+    <!-- Honeypot Anti-Bot -->
+    <div data-zs-hp="v1" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none" tabindex="-1">
+        <label>Leave this empty<input type="text" name="email_confirm" tabindex="-1" autocomplete="off" value=""></label>
+        <label>Website<input type="text" name="website_url" tabindex="-1" autocomplete="off" value=""></label>
+        <label>Company<input type="text" name="company_name" tabindex="-1" autocomplete="off" value=""></label>
+    </div>
+
+    <!-- Suspicion Score Banner -->
+    <style>
+    .qs-banner {
+        position: sticky; top: 0; z-index: 9998;
+        display: none; align-items: center; justify-content: center; gap: 12px;
+        padding: 10px 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 13px; line-height: 1.3; color: #fff;
+        background: linear-gradient(90deg, rgba(239,68,68,0.95), rgba(220,38,38,0.95));
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3); text-align: center;
+    }
+    .qs-banner.qs-moderate { background: linear-gradient(90deg, rgba(245,158,11,0.95), rgba(217,119,6,0.95)); }
+    .qs-banner.qs-low { background: linear-gradient(90deg, rgba(34,197,94,0.95), rgba(22,163,74,0.95)); }
+    .qs-banner .qs-num { font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+    .qs-banner .qs-label { font-weight: 700; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; opacity: 0.95; }
+    .qs-banner .qs-prefix { opacity: 0.9; }
+    @media (max-width: 480px) {
+        .qs-banner { font-size: 12px; padding: 8px 10px; gap: 8px; flex-wrap: wrap; }
+        .qs-banner .qs-num { font-size: 16px; }
+    }
+    </style>
+    <div class="qs-banner" id="qsBanner" role="status" aria-live="polite">
+        <span class="qs-prefix">Your Suspicion Score:</span>
+        <span class="qs-num"><span id="qsNum">0</span>/100</span>
+        <span class="qs-label" id="qsLabel">—</span>
+    </div>
+    <script>
+    (function () {
+        try {
+            var raw = parseInt(localStorage.getItem('quizSuspicionScore') || '0', 10);
+            if (!raw || raw < 1) {
+                var qs = new URLSearchParams(window.location.search);
+                var qsScore = parseInt(qs.get('score') || '0', 10);
+                if (qsScore && qsScore > 0) { raw = qsScore; try { localStorage.setItem('quizSuspicionScore', String(raw)); } catch(e) {} }
+            }
+            if (!raw || raw < 1) return;
+            var key = raw >= 75 ? 'high' : (raw >= 50 ? 'moderate' : 'low');
+            var labels = { high: 'HIGH RISK', moderate: 'MODERATE', low: 'LOW' };
+            var banner = document.getElementById('qsBanner');
+            var numEl = document.getElementById('qsNum');
+            var labEl = document.getElementById('qsLabel');
+            if (!banner) return;
+            banner.classList.remove('qs-moderate','qs-low');
+            if (key === 'moderate') banner.classList.add('qs-moderate');
+            if (key === 'low') banner.classList.add('qs-low');
+            if (labEl) labEl.textContent = labels[key];
+            banner.style.display = 'flex';
+            if (numEl) {
+                var start = 0; var end = raw; var dur = 1200; var t0 = Date.now();
+                (function tick() {
+                    var t = Math.min(1, (Date.now() - t0) / dur);
+                    var v = Math.round(start + (end - start) * t);
+                    numEl.textContent = v;
+                    if (t < 1) requestAnimationFrame(tick);
+                })();
+            }
+        } catch (e) {}
+    })();
+    </script>
+
+    <!-- Price Localization Banner -->
+    <style>
+    .pl-banner {
+        display: none; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+        padding: 10px 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-size: 12px; line-height: 1.3; color: #e5e7eb;
+        background: linear-gradient(180deg, rgba(15,23,42,0.92), rgba(15,23,42,0.88));
+        border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+    .pl-banner .pl-prefix { color: #94a3b8; font-weight: 600; }
+    .pl-banner .pl-tier { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: rgba(34,197,94,0.10); color: #4ade80; font-weight: 700; }
+    .pl-banner .pl-tier .pl-tier-name { color: #cbd5e1; font-weight: 600; }
+    .pl-banner .pl-billed { color: #94a3b8; font-size: 11px; opacity: 0.85; }
+    @media (max-width: 480px) { .pl-banner { font-size: 11px; gap: 8px; padding: 8px 10px; } }
+    </style>
+    <div class="pl-banner" id="plBanner" role="note" aria-live="polite">
+        <span class="pl-prefix">💰 Approx. in your currency:</span>
+        <span class="pl-tier"><span class="pl-tier-name">Basic</span> <span id="plBasic">—</span></span>
+        <span class="pl-tier"><span class="pl-tier-name">Complete</span> <span id="plComplete">—</span></span>
+        <span class="pl-billed">· Billed in USD</span>
+    </div>
+    <script>
+    (function () {
+        var EUR_COUNTRIES = ['AT','BE','CY','DE','EE','ES','FI','FR','GR','IE','IT','LT','LU','LV','MT','NL','PT','SI','SK'];
+        var CCY_BY_COUNTRY = {
+            BR:'BRL', MX:'MXN', AR:'ARS', CO:'COP', CL:'CLP', PE:'PEN', UY:'UYU', VE:'VES',
+            GB:'GBP', CH:'CHF', CA:'CAD', AU:'AUD', NZ:'NZD', JP:'JPY', IN:'INR', ZA:'ZAR',
+            SE:'SEK', NO:'NOK', DK:'DKK', PL:'PLN', CZ:'CZK', HU:'HUF', RO:'RON', BG:'BGN', TR:'TRY',
+            AE:'AED', SA:'SAR', IL:'ILS', EG:'EGP', NG:'NGN', KE:'KES', PK:'PKR', BD:'BDT', VN:'VND', TH:'THB', ID:'IDR', MY:'MYR', PH:'PHP', SG:'SGD', HK:'HKD', TW:'TWD', KR:'KRW', CN:'CNY'
+        };
+        var FX = {
+            USD:1, EUR:0.92, GBP:0.79, BRL:5.05, MXN:17.5, ARS:1010, COP:4100, CLP:945, PEN:3.75, UYU:39, VES:36,
+            CHF:0.88, CAD:1.36, AUD:1.52, NZD:1.66, JPY:155, INR:83, ZAR:18.5,
+            SEK:10.5, NOK:10.7, DKK:6.85, PLN:3.95, CZK:23, HUF:355, RON:4.55, BGN:1.80, TRY:33,
+            AED:3.67, SAR:3.75, ILS:3.65, EGP:48, NGN:1500, KES:130, PKR:278, BDT:110, VND:24500, THB:35, IDR:15700, MYR:4.7, PHP:56, SGD:1.34, HKD:7.81, TWD:32, KRW:1340, CNY:7.20
+        };
+        var SYMBOL = {
+            EUR:'€', GBP:'£', BRL:'R$', MXN:'Mex$', ARS:'AR$', COP:'COL$', CLP:'CLP$', PEN:'S/', UYU:'$U', VES:'Bs.',
+            CHF:'CHF', CAD:'C$', AUD:'A$', NZD:'NZ$', JPY:'¥', INR:'₹', ZAR:'R',
+            SEK:'kr', NOK:'kr', DKK:'kr', PLN:'zł', CZK:'Kč', HUF:'Ft', RON:'lei', BGN:'лв', TRY:'₺',
+            AED:'AED', SAR:'SAR', ILS:'₪', EGP:'E£', NGN:'₦', KES:'KSh', PKR:'₨', BDT:'৳', VND:'₫', THB:'฿', IDR:'Rp', MYR:'RM', PHP:'₱', SGD:'S$', HKD:'HK$', TWD:'NT$', KRW:'₩', CNY:'¥'
+        };
+        function fmt(value, ccy) {
+            var sym = SYMBOL[ccy] || ccy + ' ';
+            var rounded;
+            if (value >= 1000) rounded = Math.round(value / 10) * 10;
+            else if (value >= 100) rounded = Math.round(value);
+            else rounded = Math.round(value * 100) / 100;
+            var s = (ccy === 'JPY' || ccy === 'IDR' || ccy === 'VND' || ccy === 'KRW' || ccy === 'COP' || ccy === 'CLP' || ccy === 'HUF') ? Math.round(rounded).toString() : rounded.toFixed(rounded >= 100 ? 0 : 2);
+            return '~' + sym + s;
+        }
+        function apply(country) {
+            var ccy = (country === 'BR' || country === 'MX' || country === 'AR' || country === 'CO' || country === 'CL') ? CCY_BY_COUNTRY[country]
+                      : (EUR_COUNTRIES.indexOf(country) !== -1 ? 'EUR' : (CCY_BY_COUNTRY[country] || null));
+            if (!ccy || !FX[ccy] || ccy === 'USD') return;
+            var rate = FX[ccy];
+            var b = document.getElementById('plBasic');
+            var c = document.getElementById('plComplete');
+            var banner = document.getElementById('plBanner');
+            if (!b || !c || !banner) return;
+            b.textContent = fmt(37 * rate, ccy);
+            c.textContent = fmt(97 * rate, ccy);
+            banner.style.display = 'flex';
+            try { localStorage.setItem('plCountry', country); localStorage.setItem('plCcy', ccy); } catch (e) {}
+        }
+        try { var cached = localStorage.getItem('plCountry'); if (cached) apply(cached); } catch (e) {}
+        fetch('/api/geo').then(function (r) { return r.json(); }).then(function (d) {
+            if (d && d.country_code) apply(d.country_code);
+        }).catch(function () {});
+    })();
+    </script>
+
+    <!-- Live Counter Bar -->
+    <div class="live-counter-bar" style="top: 42px;">
+        <div class="live-dot"></div>
+        <span id="liveViewers">73</span> people viewing this page right now
+    </div>
+
+    <!-- Timer Bar -->
+    <!-- Timer bar removido -->
+
+    <div class="container">
+        <!-- Scarcity Banner -->
+        <div class="scarcity-banner">
+            <div class="scarcity-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+            <div class="scarcity-text">
+                <strong>Only <span id="slotsLeft">3</span> full unlocks left<span id="scarcityCity"></span> today!</strong>
+                <span id="scarcitySub">High demand - Access may be blocked soon</span>
+            </div>
+        </div>
+
+
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-card-content">
+                <div class="profile-avatar">
+                    <div class="profile-avatar-inner">
+                        <img src="imagens/default-avatar.png" alt="Target profile picture" id="targetAvatar" loading="eager" fetchpriority="high" width="96" height="96" class="blurred">
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profileTargetName">Monitored Target</div>
+                    <div class="profile-phone" id="targetPhone">+1 (555) 123-4567</div>
+                    <div class="profile-location" id="profileLocation" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" style="width:12px;height:12px;flex-shrink:0;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+                        <span id="profileLocationText"></span>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:10px;font-size:11px;color:#22c55e;">
+                <span style="display:inline-block;width:6px;height:6px;background:#22c55e;border-radius:50%;animation:ctaPulse 1.5s infinite;"></span>
+                Connection active
+            </div>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-bar">
+            <div class="countdown-label">Data re-encryption begins in</div>
+            <div class="countdown-timer" id="countdownTimer">14:59</div>
+            <div class="countdown-sub">After this time, recovered data will be permanently lost</div>
+        </div>
+
+        <!-- OSINT Intelligence Section -->
+        <div class="osint-section" id="osintSection" style="display:none;">
+            <div class="osint-header">
+                <div class="osint-header-icon">🛡️</div>
+                <div>
+                    <div class="osint-header-text">Intelligence Report</div>
+                    <div class="osint-header-sub">Data collected from cross-platform analysis</div>
+                </div>
+            </div>
+            <div class="osint-grid" id="osintGrid"></div>
+        </div>
+        <!-- Main Title -->
+        <h1 style="text-align:center;font-size:22px;font-weight:800;color:#fff;margin:0 0 16px 0;line-height:1.3;letter-spacing:-0.3px;">You've already seen what <span data-pronoun="theyre">she's</span> hiding. Now decide: keep wondering, or know everything tonight.</h1>
+
+        <!-- Dynamic Stats from Scan -->
+        <div id="scanSummary" style="display:flex;justify-content:center;gap:16px;margin:0 0 16px 0;flex-wrap:wrap;">
+            <div style="background:rgba(233,30,99,0.1);border:1px solid rgba(233,30,99,0.2);border-radius:10px;padding:8px 14px;text-align:center;">
+                <div style="font-size:20px;font-weight:800;color:#e91e63;" id="ctaDeletedMsgsTop">--</div>
+                <div style="font-size:11px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Deleted msgs</div>
+            </div>
+            <div style="background:rgba(255,152,0,0.1);border:1px solid rgba(255,152,0,0.2);border-radius:10px;padding:8px 14px;text-align:center;">
+                <div style="font-size:20px;font-weight:800;color:#ff9800;" id="ctaSuspicious">--</div>
+                <div style="font-size:11px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Suspicious</div>
+            </div>
+            <div style="background:rgba(244,67,54,0.1);border:1px solid rgba(244,67,54,0.2);border-radius:10px;padding:8px 14px;text-align:center;">
+                <div style="font-size:20px;font-weight:800;color:#f44336;" id="ctaLateNight">--</div>
+                <div style="font-size:11px;color:#8e8e93;text-transform:uppercase;letter-spacing:0.5px;">Late night</div>
+            </div>
+        </div>
+        <script>
+        (function() {
+            var dm = localStorage.getItem('deletedMsgs');
+            var sc = localStorage.getItem('suspiciousCount');
+            var ln = localStorage.getItem('lateNightCount');
+            if (dm) document.getElementById('ctaDeletedMsgsTop').textContent = dm;
+            if (sc) document.getElementById('ctaSuspicious').textContent = sc;
+            if (ln) document.getElementById('ctaLateNight').textContent = ln;
+        })();
+        </script>
+
+        <!-- Success Badge -->
+        <div class="success-badge">
+            <div class="badge-title">Scan Complete — Red Flags Found</div>
+            <div class="badge-text">Here's a preview of what's being hidden from you:</div>
+        </div>
+
+        <!-- Risk Analysis -->
+        <div class="suspicion-detector">
+            <div class="suspicion-header">
+                <div class="suspicion-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Risk Analysis</span>
+                </div>
+                <div class="suspicion-score" id="suspicionScore">87%</div>
+            </div>
+            <div class="suspicion-bar">
+                <div class="suspicion-bar-fill" id="suspicionBar" style="width: 0%"></div>
+            </div>
+            <div class="suspicion-details">
+                <div class="suspicion-item">
+                    <span class="suspicion-item-label">🕐 Messages erased between 12–5 AM</span>
+                    <span class="suspicion-item-value high" id="riskLateNight">34%</span>
+                </div>
+                <div class="suspicion-item">
+                    <span class="suspicion-item-label">👻 Chats with unsaved numbers</span>
+                    <span class="suspicion-item-value high" id="riskHidden">28%</span>
+                </div>
+                <div class="suspicion-item">
+                    <span class="suspicion-item-label">🗑️ Media opened once, then erased</span>
+                    <span class="suspicion-item-value high" id="riskMedia">25%</span>
+                </div>
+            </div>
+            <script>
+            (function() {
+                var ln = parseInt(localStorage.getItem('lateNightCount')) || 0;
+                var hc = parseInt(localStorage.getItem('hiddenContacts')) || 0;
+                var dm = parseInt(localStorage.getItem('deletedMedia')) || 0;
+                var total = ln + hc + dm;
+                if (total > 0) {
+                    var p1 = Math.round((ln / total) * 87);
+                    var p2 = Math.round((hc / total) * 87);
+                    var p3 = 87 - p1 - p2;
+                    var e1 = document.getElementById('riskLateNight');
+                    var e2 = document.getElementById('riskHidden');
+                    var e3 = document.getElementById('riskMedia');
+                    if (e1) e1.textContent = Math.max(p1, 8) + '%';
+                    if (e2) e2.textContent = Math.max(p2, 8) + '%';
+                    if (e3) e3.textContent = Math.max(p3, 8) + '%';
+                }
+            })();
+            </script>
+        </div>
+
+        <!-- Frequent Contact (dynamically set based on gender) -->
+        <div class="frequent-contact">
+            <div class="frequent-contact-avatar">
+                <img id="frequentContactImg" src="imagens/mulher1.jpg" alt="Frequent contact photo" loading="lazy" onerror="this.src='imagens/default-avatar.png'">
+            </div>
+            <div class="frequent-contact-info">
+                <div class="frequent-contact-label">⚠️ FLAGGED — HIGHEST ACTIVITY</div>
+                <div class="frequent-contact-name" id="frequentContactName"><span class="hidden">J***</span><span class="hidden">S***</span></div>
+                <div class="frequent-contact-stats"><span id="ctaTotalMsgs">1,062</span> messages this month • <strong><span id="ctaDeletedMsgsInline">317</span> DELETED</strong></div>
+            </div>
+            <div class="frequent-contact-badge">
+                <span>🔒</span>
+                WHO?
+            </div>
+        </div>
+
+        <!-- Deleted Message Reveal -->
+        <div class="deleted-message-reveal">
+            <div class="deleted-message-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+                <span>RECOVERED FROM DELETED CACHE</span>
+            </div>
+            <div class="deleted-message-content" id="deletedMessageContent">
+                "Can't stop thinking about <span class="blocked">████████</span>. When are you coming over? Don't let <span class="blocked">██████</span> see this..."
+            </div>
+            <div class="deleted-message-footer">
+                <span class="deleted-message-time">Recovered from cache • Erased at 3:24 AM</span>
+                <span class="deleted-message-unlock">🔓 Unlock full message</span>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features-section">
+            <!-- View All Conversations -->
+            <div class="feature-item">
+                <div class="feature-header">
+                    <div class="feature-title-row">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path>
+                        </svg>
+                        <h3 class="feature-title">View All Conversations</h3>
+                    </div>
+                    <p class="feature-desc">Read all messages sent and received, including deleted ones.</p>
+                </div>
+                <div class="chat-preview">
+                    <div class="chat-message received">
+                        <div class="chat-bubble locked">When can I see you again?</div>
+                    </div>
+                    <div class="chat-message sent">
+                        <div class="chat-bubble locked">Tomorrow night, same place as last time?</div>
+                    </div>
+                    <div class="chat-message received">
+                        <div class="chat-bubble locked">Can't wait. I miss you already...</div>
+                    </div>
+                    <div class="chat-message received" id="typingIndicator" style="opacity: 0; transition: opacity 0.3s;">
+                        <div class="chat-bubble" style="background: rgba(233, 30, 99, 0.1); padding: 8px 12px;">
+                            <div class="typing-dots" style="display: flex; gap: 4px;">
+                                <span style="width: 6px; height: 6px; background: #e91e63; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out;"></span>
+                                <span style="width: 6px; height: 6px; background: #e91e63; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out 0.2s;"></span>
+                                <span style="width: 6px; height: 6px; background: #e91e63; border-radius: 50%; animation: typingDot 1.4s infinite ease-in-out 0.4s;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="conv-list" id="convList"></div>
+                </div>
+            </div>
+
+            <!-- Photos & Videos (dynamically set based on gender) -->
+            <div class="feature-item">
+                <div class="feature-header">
+                    <div class="feature-title-row">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                        <h3 class="feature-title">Photos & Videos</h3>
+                    </div>
+                    <p class="feature-desc">View all media shared, including deleted items.</p>
+                </div>
+                <div class="media-grid" id="mediaGrid">
+                    <!-- Media items will be dynamically inserted based on gender -->
+                </div>
+            </div>
+
+            <!-- Dating Profiles Detected -->
+            <div class="feature-item">
+                <div class="feature-header">
+                    <div class="feature-title-row">
+                        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
+                        </svg>
+                        <h3 class="feature-title">Dating Profiles</h3>
+                    </div>
+                    <p class="feature-desc">Profiles found linked to this phone number across dating platforms.</p>
+                </div>
+                <div class="dating-profiles-list" id="datingProfilesList"></div>
+                <script>
+                (function() {
+                    var dpList = document.getElementById('datingProfilesList');
+                    if (!dpList) return;
+                    var isFemale = typeof gender !== 'undefined' && gender === 'female';
+                    var img1 = isFemale ? 'mulher9.jpg' : 'homem5.jpg';
+                    var img2 = isFemale ? 'mulher6.jpg' : 'homem4.jpg';
+                    var img3 = isFemale ? 'mulher5.jpg' : 'homem3.jpg';
+                    var html = '<div class="dating-profile-card"><div class="dp-icon dp-tinder">🔥</div><div class="dp-info"><div class="dp-name">Tinder <span class="dp-badge dp-found">SCANNED</span></div><div class="dp-detail blurred">Profile registered with this number</div><div class="dp-detail blurred">4 photos uploaded · Recent swipe activity</div></div><div class="dp-photo" style="background-image:url(imagens/'+img3+')"></div></div>';
+                    html += '<div class="dating-profile-card"><div class="dp-icon dp-bumble">🐝</div><div class="dp-info"><div class="dp-name">Bumble <span class="dp-badge dp-found">SCANNED</span></div><div class="dp-detail blurred">Verified dating profile found</div><div class="dp-detail blurred">Photo gallery · Connection history available</div></div><div class="dp-photo" style="background-image:url(imagens/'+img2+')"></div></div>';
+                    html += '<div class="dating-profile-card"><div class="dp-icon dp-hinge">H</div><div class="dp-info"><div class="dp-name">Hinge <span class="dp-badge dp-not-found">NOT FOUND</span></div><div class="dp-detail blurred">No active profile detected</div><div class="dp-detail blurred">Number not linked to account</div></div></div>';
+                    html += '<div class="dating-profile-card"><div class="dp-icon dp-onlyfans">🔒</div><div class="dp-info"><div class="dp-name">OnlyFans <span class="dp-badge dp-found">SCANNED</span></div><div class="dp-detail blurred">Account registered</div><div class="dp-detail blurred">Content published · Subscriber data</div></div><div class="dp-photo" style="background-image:url(imagens/'+img1+')"></div></div>';
+                    dpList.innerHTML = html;
+                })();
+                </script>
+            </div>
+
+        <!-- Suspicious Locations -->
+        <div id="suspiciousLocationsSection" style="display:none; margin: 24px 0; padding: 20px; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 16px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                <div style="width:32px;height:32px;background:rgba(239,68,68,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">📍</div>
+                <div>
+                    <div style="font-size:14px;font-weight:700;color:#e5e5ea;">Suspicious Locations Detected</div>
+                    <div style="font-size:11px;color:#8e8e93;">Near <span id="geoCity" style="color:#ff3b30;font-weight:600;">--</span>, <span id="geoState" style="color:#ff3b30;">--</span></div>
+                </div>
+            </div>
+            <div id="locationsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+        <script>
+        (function(){
+            var p = window.location.pathname;
+            var lang = 'en';
+            if (p.indexOf('/espanhol') !== -1) lang = 'es';
+            else if (p.indexOf('/portugues') !== -1) lang = 'pt';
+            var isDark = !p.includes('/light/');
+            var txtColor = isDark ? '#e5e5ea' : '#1a1a1a';
+            var cardBg = isDark ? 'rgba(255,255,255,0.04)' : '#f8f8f8';
+            var cardBorder = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+            var icons = {hotel:'🏨', motel:'🏩', restaurant:'🍷'};
+            var lb = {en:{visits:'visits',last:['Last seen today','Last seen yesterday','Last seen 2 days ago','Last seen 3 days ago','Last seen 5 days ago','Last seen 1 week ago']},es:{visits:'visitas',last:['Visto hoy','Visto ayer','Visto hace 2 días','Visto hace 3 días','Visto hace 5 días','Visto hace 1 semana']},pt:{visits:'visitas',last:['Visto hoje','Visto ontem','Visto há 2 dias','Visto há 3 dias','Visto há 5 dias','Visto há 1 semana']}}[lang] || {visits:'visits',last:['Last seen today','Last seen yesterday','Last seen 2 days ago']};
+            function detectDevice(){
+                var ua = navigator.userAgent;
+                var d = 'Unknown Device', b = 'Unknown';
+                if (/iPhone/.test(ua)) d = (ua.match(/iPhone[^;)]*/)||['iPhone'])[0];
+                else if (/iPad/.test(ua)) d = 'iPad';
+                else if (/Android/.test(ua)){ var m = ua.match(/;\s*([^;)]+)\s*Build/); d = m ? m[1].trim() : 'Android'; }
+                else if (/Mac OS X/.test(ua)) d = 'Mac';
+                else if (/Windows/.test(ua)) d = 'Windows PC';
+                if (/CriOS|Chrome/.test(ua) && !/Edg/.test(ua)) b = 'Chrome';
+                else if (/Safari/.test(ua) && !/Chrome/.test(ua)) b = 'Safari';
+                else if (/Firefox/.test(ua)) b = 'Firefox';
+                else if (/Edg/.test(ua)) b = 'Edge';
+                return {device:d, browser:b};
+            }
+            function genLocations(city){
+                var seed = 0; for(var i=0;i<city.length;i++) seed += city.charCodeAt(i);
+                var hp = lang==='es'?['Gran','Real','Sol','Paraíso','Dorado','Plaza']:lang==='pt'?['Grand','Real','Sol','Paraíso','Dourado','Plaza']:['Grand','Royal','Sunset','Paradise','Golden','Silver'];
+                var hs = lang==='es'?['Hotel','Posada','Suites','Resort']:lang==='pt'?['Hotel','Pousada','Suítes','Resort']:['Hotel','Inn','Suites','Resort'];
+                var mn = lang==='es'?['Motel','Auto Hotel']:lang==='pt'?['Motel','Auto Hotel']:['Motel','Motor Inn'];
+                var rs = lang==='es'?['Bistró','Parrilla','Lounge','Bar']:lang==='pt'?['Bistrô','Grill','Lounge','Bar']:['Bistro','Grill','Lounge','Bar & Grill'];
+                var rp = lang==='es'?['El','La','Don','Casa']:lang==='pt'?['O','A','Dom','Casa']:['The','Old','Downtown','Harbor'];
+                var pk = function(a,o){return a[(seed+o)%a.length]};
+                return [
+                    {type:'hotel',name:pk(hp,0)+' '+city+' '+pk(hs,1),visits:Math.floor((seed%5)+2),lastSeen:lb.last[0]},
+                    {type:'motel',name:city+' '+pk(mn,2),visits:Math.floor((seed%3)+1),lastSeen:lb.last[4]},
+                    {type:'hotel',name:pk(hp,3)+' '+pk(hs,4),visits:Math.floor((seed%4)+1),lastSeen:lb.last[5]},
+                    {type:'restaurant',name:pk(rp,5)+' '+pk(rs,6),visits:Math.floor((seed%6)+3),lastSeen:lb.last[1]},
+                    {type:'motel',name:pk(hp,7)+' '+pk(mn,0),visits:Math.floor((seed%2)+1),lastSeen:lb.last[2]},
+                    {type:'restaurant',name:pk(rp,1)+' '+city+' '+pk(rs,2),visits:Math.floor((seed%7)+2),lastSeen:lb.last[0]}
+                ];
+            }
+            function render(city, state, device, browser, locations){
+                var section = document.getElementById('suspiciousLocationsSection');
+                if (!section) return;
+                document.getElementById('geoCity').textContent = city;
+                if (locBadge) { locBadge.textContent = '📍 ' + city + (state ? ', ' + state : ''); locBadge.style.display = ''; }
+                document.getElementById('geoState').textContent = state || '';
+                var gd = document.getElementById('geoDevice'); if (gd) gd.textContent = device || '--';
+                var gb = document.getElementById('geoBrowser'); if (gb) gb.textContent = browser || '--';
+                var list = document.getElementById('locationsList');
+                locations.forEach(function(loc, idx){
+                    var blurred = true;
+                    var wrapper = document.createElement('div');
+                    wrapper.style.cssText = 'position:relative;' + (blurred ? 'overflow:hidden;border-radius:10px;' : '');
+                    var div = document.createElement('div');
+                    div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+cardBg+';border:1px solid '+cardBorder+';border-radius:10px;' + (blurred ? 'filter:blur(5px);-webkit-filter:blur(5px);user-select:none;pointer-events:none;' : '');
+                    div.innerHTML = '<div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">'+(icons[loc.type]||'📍')+'</div>'+
+                        '<div style="flex:1;min-width:0;">'+
+                            '<div style="font-size:13px;color:'+txtColor+';font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+loc.name+'</div>'+
+                            '<div style="font-size:11px;color:#8e8e93;">'+loc.lastSeen+'</div>'+
+                        '</div>'+
+                        '<div style="text-align:right;flex-shrink:0;">'+
+                            '<div style="font-size:14px;font-weight:700;color:#ff3b30;">'+loc.visits+'</div>'+
+                            '<div style="font-size:10px;color:#8e8e93;">'+lb.visits+'</div>'+
+                        '</div>';
+                    wrapper.appendChild(div);
+                    if (blurred) {
+                        var overlay = document.createElement('div');
+                        overlay.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;';
+                        overlay.innerHTML = '<span style="font-size:11px;color:#ff3b30;font-weight:600;background:rgba(0,0,0,0.5);padding:3px 10px;border-radius:20px;">🔒</span>';
+                        overlay.onclick = function(){ var p = document.getElementById('pricing'); if(p) p.scrollIntoView({behavior:'smooth'}); };
+                        wrapper.appendChild(overlay);
+                    }
+                    list.appendChild(wrapper);
+                });
+                section.style.display = '';
+            }
+            function renderBlurred(dev){
+                var section = document.getElementById('suspiciousLocationsSection');
+                if (!section) return;
+                var title = lang==='es'?'Ubicaciones Sospechosas Detectadas':lang==='pt'?'Localizações Suspeitas Detectadas':'Suspicious Locations Detected';
+                var fakeCity = 'Unknown';
+                var fakeLocs = genLocations(fakeCity);
+                document.getElementById('geoCity').textContent = fakeCity;
+                document.getElementById('geoState').textContent = '';
+                var gd = document.getElementById('geoDevice'); if (gd) gd.textContent = dev.device || '--';
+                var gb = document.getElementById('geoBrowser'); if (gb) gb.textContent = dev.browser || '--';
+                var list = document.getElementById('locationsList');
+                fakeLocs.forEach(function(loc){
+                    var wrapper = document.createElement('div');
+                    wrapper.style.cssText = 'position:relative;overflow:hidden;border-radius:10px;';
+                    var div = document.createElement('div');
+                    div.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;background:'+cardBg+';border:1px solid '+cardBorder+';border-radius:10px;filter:blur(5px);-webkit-filter:blur(5px);user-select:none;pointer-events:none;';
+                    div.innerHTML = '<div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">'+(icons[loc.type]||'📍')+'</div><div style="flex:1;min-width:0;"><div style="font-size:13px;color:'+txtColor+';font-weight:600;">'+loc.name+'</div><div style="font-size:11px;color:#8e8e93;">'+loc.lastSeen+'</div></div><div style="text-align:right;flex-shrink:0;"><div style="font-size:14px;font-weight:700;color:#ff3b30;">'+loc.visits+'</div><div style="font-size:10px;color:#8e8e93;">'+lb.visits+'</div></div>';
+                    wrapper.appendChild(div);
+                    var overlay = document.createElement('div');
+                    overlay.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer;';
+                    overlay.innerHTML = '<span style="font-size:11px;color:#ff3b30;font-weight:600;background:rgba(0,0,0,0.5);padding:3px 10px;border-radius:20px;">🔒</span>';
+                    overlay.onclick = function(){ var p = document.getElementById('pricing'); if(p) p.scrollIntoView({behavior:'smooth'}); };
+                    wrapper.appendChild(overlay);
+                    list.appendChild(wrapper);
+                });
+                var cityEl = document.getElementById('geoCity');
+                if (cityEl) { cityEl.style.filter = 'blur(4px)'; cityEl.style.webkitFilter = 'blur(4px)'; }
+                var stateEl = document.getElementById('geoState');
+                if (stateEl) { stateEl.style.filter = 'blur(4px)'; stateEl.style.webkitFilter = 'blur(4px)'; }
+                section.style.display = '';
+            }
+            var dev = detectDevice();
+            var locBadge = document.getElementById('ctaUserLocationBadge');
+            var devBadge = document.getElementById('ctaUserDeviceBadge');
+            if (devBadge) { devBadge.textContent = '💻 ' + dev.device + ' · ' + dev.browser; devBadge.style.display = ''; }
+            var apiBase = (window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app');
+            fetch(apiBase + '/api/geo?lang=' + lang).then(function(r){return r.json()}).then(function(data){
+                if (data.success && data.city) {
+                    render(data.city, data.state||data.country, data.device||dev.device, data.browser||dev.browser, data.locations);
+                } else { throw new Error('no city'); }
+            }).catch(function(){
+                fetch('https://ipapi.co/json/').then(function(r){return r.json()}).then(function(g){
+                    if (g.city) render(g.city, g.region||g.country_name, dev.device, dev.browser, genLocations(g.city));
+                    else throw new Error('no city');
+                }).catch(function(){
+                    renderBlurred(dev);
+                });
+            });
+        })();
+        </script>
+
+        </div>
+
+        <!-- Bonus Section -->
+        <div class="bonus-section">
+            <div class="bonus-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Exclusive Bonuses (FREE)
+            </div>
+            <div class="bonus-total">Total value: <span>$394</span> - Yours FREE today!</div>
+            <div class="bonus-item">
+                <div class="bonus-icon instagram">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                </div>
+                <div class="bonus-info">
+                    <h4>Instagram Spy</h4>
+                    <p>Access DMs, stories viewed & secret followers</p>
+                </div>
+            </div>
+            <div class="bonus-item">
+                <div class="bonus-icon tiktok">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
+                    </svg>
+                </div>
+                <div class="bonus-info">
+                    <h4>TikTok Spy</h4>
+                    <p>See private videos, likes & message history</p>
+                </div>
+            </div>
+            <div class="bonus-item">
+                <div class="bonus-icon snapchat">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                        <path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03a1.76 1.76 0 01-.168-.015c-.375-.045-.779-.09-1.229-.09-.449 0-.929.045-1.438.18-.509.119-.959.329-1.529.569-.795.33-1.695.705-3.009.705h-.075c-1.314 0-2.214-.375-3.009-.705-.57-.24-1.02-.45-1.529-.569-.509-.135-.989-.18-1.438-.18-.45 0-.854.045-1.229.09-.061.015-.12.015-.168.015-.284 0-.479-.134-.555-.405-.061-.193-.105-.375-.134-.553-.045-.195-.105-.479-.165-.57-1.872-.283-2.905-.702-3.146-1.271a.49.49 0 01-.044-.225.47.47 0 01.419-.509c3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.209-.645.119-.869-.195-.449-.884-.674-1.333-.809a3.96 3.96 0 01-.344-.119c-.823-.329-1.229-.72-1.214-1.168 0-.36.285-.689.735-.838.149-.06.326-.09.509-.09.119 0 .299.016.464.104.374.181.733.301 1.032.301.197 0 .326-.045.401-.09-.008-.165-.018-.33-.03-.51l-.003-.06c-.104-1.628-.23-3.654.299-4.847C7.86 1.069 11.216.793 12.206.793z"/>
+                    </svg>
+                </div>
+                <div class="bonus-info">
+                    <h4>Snapchat Spy</h4>
+                    <p>Recover deleted snaps & secret conversations</p>
+                </div>
+            </div>
+            <div class="bonus-item">
+                <div class="bonus-icon location">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polygon points="12 2 12 12 17 7"/>
+                        <line x1="12" y1="12" x2="12" y2="22"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                    </svg>
+                </div>
+                <div class="bonus-info">
+                    <h4>Real-Time GPS Tracker</h4>
+                    <p>Live location updates every 5 minutes</p>
+                </div>
+            </div>
+            <div class="bonus-item">
+                <div class="bonus-icon alerts">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+                    </svg>
+                </div>
+                <div class="bonus-info">
+                    <h4>Instant Alerts</h4>
+                    <p>Get notified of new contacts & suspicious activity</p>
+                </div>
+            </div>
+            <div class="bonus-item">
+                <div class="bonus-icon monitor">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <div class="bonus-info">
+                    <h4>24/7 Online Monitor</h4>
+                    <p>Track when they're online, even in hidden mode</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Social Proof -->
+        <div class="cta-social" data-cta-social="" style="text-align:center;font-size:13px;color:#fbbf24;margin: 16px 8px 24px;padding:10px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px;letter-spacing:0.2px;">★★★★★ <strong>4.9</strong> · <strong>2,847</strong> verified buyers</div>
+
+        <!-- Testimonials -->
+        <div class="testimonials-section">
+            <div class="testimonials-header-card">
+                <div class="testimonials-header-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    <span class="testimonials-header-title">User Reviews</span>
+                </div>
+                <div class="testimonials-header-right">
+                    <span class="testimonials-rating-pill">★ 4.9</span>
+                    <span class="testimonials-count-pill">2,847 reviews</span>
+                </div>
+            </div>
+            <div class="testimonials-body">
+
+            <div class="testimonial-item">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar-icon tav-1">S</div>
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">Sarah M.</div>
+                        <div class="testimonial-meta-row">
+                            <span class="testimonial-verified"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Verified Purchase</span>
+                            <span class="testimonial-stars">★★★★★</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="testimonial-text">For months I knew something was wrong. He'd take his phone everywhere, even to the bathroom. When I used this, I found <em>weeks of deleted conversations with the same number</em>. Messages he swore he never sent. I finally stopped doubting myself.</p>
+                <div class="testimonial-footer">
+                    <span class="testimonial-time">2 days ago • 🇺🇸</span>
+                    <span class="testimonial-helpful"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-6 0v4"/><path d="M2 11h4l3 9h6l3-9h4"/></svg> 124 helpful</span>
+                </div>
+            </div>
+
+            <div class="testimonial-item">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar-icon tav-2">J</div>
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">James R.</div>
+                        <div class="testimonial-meta-row">
+                            <span class="testimonial-verified"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Verified Purchase</span>
+                            <span class="testimonial-stars">★★★★★</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="testimonial-text">"It's just a coworker" she kept saying. I found <em>photos they shared and deleted</em>, calls at 2 AM, and a contact saved under a fake name. Everything was right there in black and white. It hurt, but I needed to know.</p>
+                <div class="testimonial-footer">
+                    <span class="testimonial-time">5 hours ago • 🇬🇧</span>
+                    <span class="testimonial-helpful"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-6 0v4"/><path d="M2 11h4l3 9h6l3-9h4"/></svg> 89 helpful</span>
+                </div>
+            </div>
+            <div class="testimonial-item">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar-icon tav-4">A</div>
+                    <div class="testimonial-info">
+                        <div class="testimonial-name">Ashley T.</div>
+                        <div class="testimonial-meta-row">
+                            <span class="testimonial-verified"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Verified Purchase</span>
+                            <span class="testimonial-stars">★★★★★</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="testimonial-text">I hesitated for a week before trying it. Part of me didn't want to know. But he had <em>an entire hidden life on WhatsApp</em> — blocked contacts, deleted voice messages, photos I was never meant to see. The truth is painful, but living in the dark was worse.</p>
+                <div class="testimonial-footer">
+                    <span class="testimonial-time">3 days ago • 🇨🇦</span>
+                    <span class="testimonial-helpful"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-6 0v4"/><path d="M2 11h4l3 9h6l3-9h4"/></svg> 156 helpful</span>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Pricing -->
+        <div class="pricing-section" id="pricing">
+            <h2 class="tiers-title">Choose your level of access</h2>
+            <p class="tiers-sub">2 plans, 1 result: <strong>the truth</strong>. Pick what fits you.</p>
+
+            <div class="tier-trust-bar">
+                <span class="ttb-dot"></span>
+                <span><strong>73%</strong> of users picked <strong>Complete</strong> this week — best balance of price &amp; answers</span>
+            </div>
+
+            <div class="tier-grid" data-tier-grid="">
+                <div class="tier-card" data-tier="basic" onclick="selectTier('basic')" role="button" tabindex="0">
+                    <span class="tier-stamp starter">Starter</span>
+                    <div class="tier-icon-wrap">🔍</div>
+                    <h3 class="tier-name">Basic</h3>
+                    <p class="tier-tagline">For peace of mind.</p>
+                    <div class="tier-anchor-wrap">
+                        <span class="tier-anchor">$97</span>
+                        <div class="tier-price"><span class="tier-currency">$</span>37</div>
+                    </div>
+                    <div style="text-align:center;"><span class="tier-save">Save $60 · 62% off</span></div>
+                    <div class="tier-tag">30-day access · 1 number</div>
+                    <p class="tier-perday" style="text-align:center;font-size:11px;color:rgba(255,255,255,0.55);margin:6px 0 0;">≈ <strong style="color:rgba(255,255,255,0.85);">$1.23/day</strong> for 30 days</p>
+                    <ul class="tier-features">
+                        <li><span class="ico ico-ok">✅</span><span>Deleted messages <span class="dim">(last 30 days)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Photos &amp; media history</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Email support <span class="dim">(24-48h)</span></span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">Voice notes</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">Real-time alerts</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">GPS history</span></li>
+                        <li><span class="ico ico-no">❌</span><span class="dim">PDF Evidence Report</span></li>
+                        <li class="bonus"><span class="ico">⏱</span><span><strong>BONUS:</strong> Online Monitor 24/7 <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($29 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🎁</span><span><strong>BONUS:</strong> Truth Toolkit (templates &amp; scripts)</span></li>
+                        <li><span class="ico ico-neutral">🛡️</span><span>7-day money-back guarantee</span></li>
+                    </ul>
+                    <button class="tier-cta" onclick="purchaseTier('basic', event)">Get Basic — $37 →</button>
+                </div>
+
+                <div class="tier-card recommended selected" data-tier="complete" onclick="selectTier('complete')" role="button" tabindex="0">
+                    <div class="tier-badge">★ MOST CHOSEN • 73%</div>
+                    <span class="tier-stamp popular">Best value</span>
+                    <div class="tier-icon-wrap">⚡</div>
+                    <h3 class="tier-name">Complete</h3>
+                    <p class="tier-tagline">For real answers — for life.</p>
+                    <div class="tier-anchor-wrap">
+                        <span class="tier-anchor">$197</span>
+                        <div class="tier-price"><span class="tier-currency">$</span>97</div>
+                    </div>
+                    <div style="text-align:center;"><span class="tier-save">Save $100 · 50% off</span></div>
+                    <div class="tier-tag">Lifetime · 3 numbers</div>
+                    <p class="tier-perday" style="text-align:center;font-size:11px;color:rgba(34,197,94,0.85);margin:6px 0 0;">≈ <strong>$0.27/day</strong> over 1 year — less than a coffee</p>
+                    <ul class="tier-features">
+                        <li><span class="ico ico-ok">✅</span><span>Everything in Basic, <strong>plus:</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Deleted messages <span class="dim">(<strong>Lifetime</strong>)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Voice notes recovery</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Real-time push alerts</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>GPS history <span class="dim">(<strong>Lifetime</strong>)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span><strong>PDF Evidence Report — Notarized</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span><strong>Unlimited numbers</strong></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Priority chat support <span class="dim">(&lt;4h)</span></span></li>
+                        <li><span class="ico ico-ok">✅</span><span>1:1 call with case analyst</span></li>
+                        <li><span class="ico ico-ok">✅</span><span>Lawyer-referral network access</span></li>
+                        <li class="bonus"><span class="ico">🎁</span><span><strong>BONUS:</strong> Truth Toolkit (templates &amp; scripts)</span></li>
+                        <li class="bonus"><span class="ico">📷</span><span><strong>BONUS:</strong> Instagram Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($97 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🎵</span><span><strong>BONUS:</strong> TikTok Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($87 value)</span></span></li>
+                        <li class="bonus"><span class="ico">👻</span><span><strong>BONUS:</strong> Snapchat Spy <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($67 value)</span></span></li>
+                        <li class="bonus"><span class="ico">📍</span><span><strong>BONUS:</strong> Real-Time GPS Tracker <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($67 value)</span></span></li>
+                        <li class="bonus"><span class="ico">🔐</span><span><strong>BONUS:</strong> Encrypted evidence vault</span></li>
+                        <li class="bonus"><span class="ico">🏆</span><span><strong>BONUS:</strong> VIP lifetime updates</span></li>
+                        <li class="bonus"><span class="ico">🔔</span><span><strong>BONUS:</strong> Instant Alerts <span style="color:#22c55e;font-weight:700;font-size:11px;white-space:nowrap;">($47 value)</span></span></li>
+                        <li><span class="ico ico-neutral">🛡️</span><span><strong>60-day money-back guarantee</strong></span></li>
+                    </ul>
+                    <p class="tier-spots"><span class="dot"></span>Only 47 Complete spots left this week</p>
+                    <button class="tier-cta" onclick="purchaseTier('complete', event)">Get Complete — $97 →</button>
+                </div>
+            </div>
+
+            <div class="payment-methods" aria-label="Accepted payment methods" style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap;">
+                <span class="payment-method" title="Visa" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 64 22" width="44" height="14" aria-label="Visa"><path fill="#1A1F71" d="M27.4 21.4h-5.2L25.5.6h5.2zm21-20.3a13 13 0 0 0-4.7-.9c-5.1 0-8.7 2.7-8.7 6.6 0 2.9 2.6 4.5 4.6 5.4 2 1 2.7 1.6 2.7 2.5 0 1.4-1.7 2-3.2 2a10.6 10.6 0 0 1-4.9-1l-.7-.4-.7 4.6c1.2.5 3.5 1 5.9 1 5.4 0 8.9-2.7 8.9-6.8 0-2.3-1.4-4-4.4-5.4-1.8-.9-2.9-1.5-2.9-2.5 0-.8 1-1.7 3-1.7a9.4 9.4 0 0 1 4 .8l.5.2.7-4.4zm13.1-.5h-4c-1.3 0-2.2.4-2.8 1.7l-7.7 18.6h5.4l1.1-3h6.6l.6 3h4.8L62 .6zm-6.5 13.4 2.7-7c-.1.1.6-1.5.9-2.5l.5 2.3 1.6 7.2zM18.3.6 13.1 14.7l-.6-2.8c-1-3.3-4-6.8-7.4-8.6L9.8 21.4h5.4l8-20.8z"></path></svg>
+                </span>
+                <span class="payment-method" title="Mastercard" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 36 22" width="34" height="20" aria-label="Mastercard"><circle cx="13" cy="11" r="9" fill="#EB001B"></circle><circle cx="23" cy="11" r="9" fill="#F79E1B"></circle><path fill="#FF5F00" d="M18 4.4a9 9 0 0 0 0 13.2 9 9 0 0 0 0-13.2z"></path></svg>
+                </span>
+                <span class="payment-method" title="American Express" style="background:#016FD0;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <span style="color:#fff;font:800 9px/1 -apple-system,Helvetica,Arial,sans-serif;letter-spacing:0.6px;">AMERICAN<br>EXPRESS</span>
+                </span>
+                <span class="payment-method" title="PayPal" style="background:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 64 22" width="48" height="14" aria-label="PayPal"><path fill="#003087" d="M11.7 5.2H6.5c-.4 0-.7.3-.8.6L3.6 19.7c0 .3.1.5.4.5h2.6c.3 0 .6-.2.7-.5l.6-3.7c0-.3.4-.6.7-.6h1.6c3.5 0 5.5-1.7 6-5 .3-1.5 0-2.6-.6-3.4-.7-.9-2-1.8-3.9-1.8zm.6 4.9c-.3 1.9-1.7 1.9-3.1 1.9h-.8l.6-3.5c0-.2.2-.4.4-.4h.4c1 0 1.9 0 2.4.6.3.4.4.9.1 1.4z"></path><path fill="#003087" d="M28.5 10h-2.6c-.2 0-.4.2-.4.4l-.1.7-.2-.3c-.6-.8-1.8-1-3-1-2.9 0-5.4 2.2-5.9 5.3-.3 1.6.1 3 1 4 .8.9 2 1.3 3.5 1.3 2.3 0 3.6-1.5 3.6-1.5l-.1.7c0 .3.1.5.4.5h2.4c.4 0 .7-.3.8-.6l1.4-9c0-.3-.2-.5-.5-.5zm-3.7 5.1c-.3 1.5-1.5 2.6-3 2.6-.8 0-1.4-.3-1.8-.7-.4-.5-.5-1.1-.4-1.8.3-1.5 1.4-2.6 3-2.6.7 0 1.3.2 1.7.7.4.5.5 1.1.5 1.8z"></path><path fill="#009CDE" d="M42.4 10h-2.6c-.3 0-.5.1-.7.3l-3.6 5.3-1.5-5.1c-.1-.3-.4-.5-.7-.5h-2.6c-.3 0-.5.3-.4.6l2.9 8.5-2.7 3.8c-.2.3 0 .7.4.7h2.6c.2 0 .5-.1.6-.3L42.7 10.7c.2-.3 0-.7-.3-.7zm9.3-4.8h-5.2c-.4 0-.7.3-.8.6l-2.1 13.4c0 .3.1.5.4.5h2.7c.2 0 .5-.2.5-.4l.6-3.8c0-.3.4-.6.7-.6h1.6c3.5 0 5.5-1.7 6-5 .3-1.5 0-2.6-.6-3.4-.7-.9-2-1.7-3.8-1.7zm.6 4.9c-.3 1.9-1.7 1.9-3.1 1.9h-.8l.6-3.5c0-.2.2-.4.4-.4h.4c1 0 1.9 0 2.4.6.3.4.4.9.1 1.4zm15-.1H64.8c-.2 0-.4.2-.4.4l-.1.7-.2-.3c-.6-.8-1.8-1-3-1-2.9 0-5.4 2.2-5.9 5.3-.3 1.6.1 3 1 4 .8.9 2 1.3 3.5 1.3 2.3 0 3.6-1.5 3.6-1.5l-.1.7c0 .3.1.5.4.5h2.4c.4 0 .7-.3.8-.6l1.4-9c0-.3-.1-.5-.4-.5zm-3.7 5.1c-.3 1.5-1.5 2.6-3 2.6-.8 0-1.4-.3-1.8-.7-.4-.5-.5-1.1-.4-1.8.3-1.5 1.4-2.6 3-2.6.7 0 1.3.2 1.7.7.4.5.5 1.1.5 1.8z"></path></svg>
+                </span>
+                <span class="payment-method" title="Apple Pay" style="background:#000;border:1px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 10px;display:inline-flex;align-items:center;height:30px;">
+                    <svg viewBox="0 0 64 24" width="44" height="18" aria-label="Apple Pay"><path fill="#fff" d="M11.6 5.4c-.7.8-1.7 1.4-2.8 1.3-.1-1.1.4-2.2 1.1-2.9.7-.8 1.8-1.4 2.7-1.4.1 1.1-.3 2.2-1 3zm1 1.5c-1.5-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.7 1.1 8.9.7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.5-.7 2.9-.7 1.3 0 1.7.7 2.9.7 1.2 0 2-1.1 2.7-2.2.8-1.2 1.2-2.4 1.2-2.5-.1 0-2.4-.9-2.4-3.6 0-2.3 1.9-3.4 2-3.4-1.1-1.5-2.7-1.7-3.2-1.7zm8.8-3.8v17h2.7v-5.8h3.6c3.3 0 5.6-2.3 5.6-5.6 0-3.3-2.3-5.6-5.5-5.6h-6.4zm2.7 2.2h3c2.2 0 3.5 1.2 3.5 3.4s-1.3 3.4-3.5 3.4h-3V5.3zm14.5 14.9c1.7 0 3.3-.9 4-2.3v2h2.5v-8.5c0-2.5-2-4.1-5-4.1-2.8 0-4.9 1.6-5 3.8h2.4c.2-1.1 1.1-1.8 2.5-1.8 1.6 0 2.5.8 2.5 2.2v1l-3.4.2c-3.1.2-4.8 1.4-4.8 3.6 0 2.2 1.7 3.6 4.3 3.6zm.7-2c-1.4 0-2.3-.7-2.3-1.7 0-1 .9-1.7 2.6-1.8l3-.2v1c0 1.5-1.4 2.7-3.3 2.7zm9.4 5.7c2.5 0 3.7-1 4.7-3.8l4.5-12.6h-2.7l-3 9.7-3-9.7h-2.8l4.4 12.1-.2.7c-.4 1.3-1 1.8-2.2 1.8-.2 0-.6 0-.7-.1V24c.2 0 .8.1 1 .1z"></path></svg>
+                </span>
+            </div>
+
+            <!-- Side-by-side plan matrix -->
+            <div class="plan-matrix" style="margin:20px 8px 18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;">
+                <div style="padding:14px 16px 10px;text-align:center;">
+                    <h3 style="color:#fff;font-size:15px;font-weight:700;margin:0 0 4px;letter-spacing:0.2px;">Compare both plans</h3>
+                    <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:0;">All prices one-time. No subscription.</p>
+                </div>
+                <div class="pm-scroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                    <table style="width:100%;min-width:520px;border-collapse:collapse;font-size:12.5px;color:rgba(255,255,255,0.85);">
+                        <thead>
+                            <tr style="background:rgba(255,255,255,0.04);">
+                                <th style="text-align:left;padding:10px 12px;font-weight:600;color:rgba(255,255,255,0.55);font-size:11px;text-transform:uppercase;letter-spacing:0.6px;">Feature</th>
+                                <th style="padding:10px 8px;text-align:center;font-weight:700;color:#9ca3af;">Basic<br><span style="font-size:11px;font-weight:500;color:#9ca3af;">$37</span></th>
+                                <th style="padding:10px 8px;text-align:center;font-weight:800;color:#22c55e;background:rgba(34,197,94,0.06);">Complete<br><span style="font-size:11px;font-weight:600;color:#22c55e;">$97 ★</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Deleted messages</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">30 days</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong style="color:#22c55e;">Lifetime</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Photos &amp; media</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#22c55e;">✓</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;">✓</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Voice notes</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;">✓</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Real-time alerts</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;">✓</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">GPS history</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong>Lifetime</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">PDF Evidence Report</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);color:#ef4444;">—</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);color:#22c55e;"><strong>Notarized</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Numbers tracked</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">1</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong>Unlimited</strong></td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Support</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">Email 24-48h</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);">Chat &lt;4h</td></tr>
+                            <tr><td style="padding:9px 12px;border-top:1px solid rgba(255,255,255,0.05);">Money-back</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);">7 days</td><td style="text-align:center;border-top:1px solid rgba(255,255,255,0.05);background:rgba(34,197,94,0.04);"><strong style="color:#22c55e;">60 days</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <h3>What changes after you have the truth</h3>
+                <div class="comp-row head">
+                    <div>Without Whats Spy</div>
+                    <div>With Whats Spy</div>
+                </div>
+                <div class="comp-row">
+                    <div class="col-without">❌ Days of insomnia staring at the ceiling</div>
+                    <div class="col-with">✅ Clear answer in 2 minutes</div>
+                </div>
+                <div class="comp-row">
+                    <div class="col-without">❌ Snoop their phone (they catch you)</div>
+                    <div class="col-with">✅ 100% remote — they never know</div>
+                </div>
+                <div class="comp-row">
+                    <div class="col-without">❌ Argue without proof, look paranoid</div>
+                    <div class="col-with">✅ Screenshots &amp; timestamps as evidence</div>
+                </div>
+                <div class="comp-row">
+                    <div class="col-without">❌ Wonder again tomorrow</div>
+                    <div class="col-with">✅ Closure tonight — for good</div>
+                </div>
+            </div>
+
+            <div class="closure-guarantee dual">
+                <div class="cg-icon">🛡️</div>
+                <div>
+                    <h4>Double Guarantee</h4>
+                    <div class="dg-row"><strong>1. Result Guarantee — 7 days</strong>If after 7 days you don't have a clear answer about what's going on, we refund 100% AND you keep all bonuses ($394 value).</div>
+                    <div class="dg-row"><strong>2. Satisfaction Guarantee — 30/60 days</strong>Even after 7 days, change your mind for any reason and we refund 100%.</div>
+                    <p class="dg-foot">* 7 days for Basic, 60 days for Complete.</p>
+                </div>
+            </div>
+
+            <p class="loss-microcopy">Tomorrow you'll still be wondering. Or you'll know.</p>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-section">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Does the tool really work?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="faq-answer">Yes! We use advanced technology to access WhatsApp data completely invisibly. Over 50,000 users have already used our tool successfully.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Will the person know I spied?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="faq-answer">No! Access is 100% invisible. The person receives no notification and will never know you accessed their data.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Does it work on any number?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="faq-answer">Yes! It works on any WhatsApp number worldwide, even with two-step verification enabled.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    How long do I have access?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="faq-answer">Access is lifetime! Once purchased, you can use it forever with no additional fees.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What if I'm not satisfied?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="faq-answer">We offer a 30-day money-back guarantee. If you're not 100% satisfied, we'll refund your purchase in full.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    Do I need to install anything on their phone?
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="faq-answer">No. Whats Spy works 100% remotely using only the phone number. You don't need physical access to the target device at any time.</div>
+            </div>
+        </div>
+
+        <!-- Security Badges -->
+        <div class="security-badges">
+            <div class="security-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                SSL Secure
+            </div>
+            <div class="security-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFCC00" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                Norton Secured
+            </div>
+            <div class="security-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007AFF" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                256-bit Encryption
+            </div>
+        </div>
+
+        <!-- 30-Day Guarantee -->
+        <div class="guarantee-section">
+            <div class="guarantee-seal">
+                <div class="guarantee-seal-circle">
+                    <svg class="guarantee-seal-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span class="guarantee-seal-number">30</span>
+                    <span class="guarantee-seal-days">DAYS</span>
+                </div>
+            </div>
+            <h3 class="guarantee-title">30-Day Money-Back Guarantee</h3>
+            <p class="guarantee-text">Not satisfied? Get a full refund within 30 days, no questions asked. Your purchase is completely risk-free.</p>
+        </div>
+    </div>
+
+    <!-- Fixed CTA removido -->
+
+    <!-- Activity Alert -->
+    <div class="activity-alert" id="activityAlert">
+        <span class="alert-dot"></span>
+        <span id="activityAlertText">New message detected 2 min ago</span>
+    </div>
+
+    <!-- Main Script -->
+    <script>
+        // Detect gender from URL parameter or localStorage
+        function getGender() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const genderParam = urlParams.get('gender');
+            if (genderParam) {
+                localStorage.setItem('targetGender', genderParam);
+                return genderParam;
+            }
+            return localStorage.getItem('targetGender') || 'male'; // default: spying on male
+        }
+
+        const gender = getGender();
+        const utmCampaign = gender === 'female' ? 'cta_female' : (gender === 'male' ? 'cta_male' : 'cta');
+
+        // Set media images based on gender (show opposite gender photos as "suspicious")
+        const mediaGrid = document.getElementById('mediaGrid');
+        const frequentContactImg = document.getElementById('frequentContactImg');
+        const frequentContactName = document.getElementById('frequentContactName');
+
+        if (gender === 'female') {
+            frequentContactImg.src = 'imagens/spy-male-7.jpg';
+            frequentContactName.innerHTML = '<span class="hidden">M. J.</span>';
+            mediaGrid.innerHTML =
+                '<div class="media-item large"><img src="imagens/spy-male-1.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-2.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-3.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-4.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-5.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-male-6.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>';
+        } else {
+            // User spying on male (default), show female photos
+            frequentContactImg.src = 'imagens/spy-female-7.jpg';
+            frequentContactName.innerHTML = '<span class="hidden">J. S.</span>';
+            mediaGrid.innerHTML =
+                '<div class="media-item large"><img src="imagens/spy-female-1.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-2.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-3.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-4.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-5.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>' +
+                '<div class="media-item"><img src="imagens/spy-female-6.jpg" alt="" loading="lazy" decoding="async"><div class="media-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg></div></div>';
+        }
+
+        // Populate dating profiles
+        var datingList = document.getElementById('datingProfilesList');
+        if (datingList) {
+            var dpPhotos = gender === 'female'
+                ? ['imagens/spy-male-3.jpg', 'imagens/spy-male-4.jpg', '', 'imagens/spy-male-5.jpg']
+                : ['imagens/spy-female-3.jpg', 'imagens/spy-female-4.jpg', '', 'imagens/spy-female-5.jpg'];
+
+            var dpData = [
+                { name: 'Tinder', icon: '🔥', cls: 'dp-tinder', found: true,
+                  lines: ['Profile registered with this number', '4 photos uploaded · Recent swipe activity'] },
+                { name: 'Bumble', icon: '🐝', cls: 'dp-bumble', found: true,
+                  lines: ['Verified dating profile found', 'Photo gallery · Connection history available'] },
+                { name: 'Hinge', icon: 'H', cls: 'dp-hinge', found: false,
+                  lines: ['No active profile detected', 'Number not linked to account'] },
+                { name: 'OnlyFans', icon: '🔒', cls: 'dp-onlyfans', found: true,
+                  lines: ['Account registered', 'Content published · Subscriber data'] }
+            ];
+
+            datingList.innerHTML = dpData.map(function(d, i) {
+                var photoHtml = '';
+                if (d.found && dpPhotos[i]) {
+                    photoHtml = '<div class="dp-photo" style="background-image:url(' + dpPhotos[i] + ')"></div>';
+                }
+                return '<div class="dating-profile-card">' +
+                    '<div class="dp-icon ' + d.cls + '">' + d.icon + '</div>' +
+                    '<div class="dp-info">' +
+                        '<div class="dp-name">' + d.name + ' <span class="dp-badge ' + (d.found ? 'dp-found' : 'dp-not-found') + '">' + (d.found ? 'SCANNED' : 'NOT FOUND') + '</span></div>' +
+                        '<div class="dp-detail blurred">' + d.lines[0] + '</div>' +
+                        '<div class="dp-detail blurred">' + d.lines[1] + '</div>' +
+                    '</div>' +
+                    photoHtml +
+                '</div>';
+            }).join('');
+        }
+
+        // Load target info from localStorage
+        var savedPhone = localStorage.getItem('targetPhone') || '+1 (555) 123-4567';
+        var savedName = localStorage.getItem('targetName');
+        var savedCity = localStorage.getItem('userCity');
+        var savedState = localStorage.getItem('userState');
+
+        var nameEl = document.getElementById('profileTargetName');
+        var phoneEl = document.getElementById('targetPhone');
+        var locEl = document.getElementById('profileLocation');
+        var locText = document.getElementById('profileLocationText');
+
+        if (savedName) {
+            nameEl.textContent = savedName;
+        } else {
+            nameEl.textContent = 'Monitored Target';
+        }
+        phoneEl.textContent = savedPhone;
+
+        if (savedCity && locEl && locText) {
+            locText.textContent = savedCity + (savedState ? ', ' + savedState : '');
+            locEl.style.display = 'flex';
+        }
+
+        var btnPhone = document.getElementById('ctaBtnPhone');
+        if (btnPhone) btnPhone.textContent = '📱 ' + savedPhone;
+
+        // Load target avatar from localStorage
+        var targetAvatar = localStorage.getItem('targetAvatar');
+        var avatarImg = document.getElementById('targetAvatar');
+        if (targetAvatar && targetAvatar !== 'null' && targetAvatar.startsWith('http')) {
+            avatarImg.src = targetAvatar;
+        } else {
+            avatarImg.src = 'imagens/default-avatar.png';
+        }
+        avatarImg.onerror = function() {
+            this.src = 'imagens/default-avatar.png';
+        };
+
+        // Random stats
+        // Live viewers counter
+        function updateLiveViewers() {
+            const el = document.getElementById('liveViewers');
+            if (!el) return;
+            const current = parseInt(el.textContent);
+            const change = Math.floor(Math.random() * 5) - 2;
+            const newValue = Math.max(49, Math.min(124, current + change));
+            el.textContent = newValue;
+        }
+        setInterval(updateLiveViewers, 3000);
+
+        // Slots countdown
+        let slots = 3;
+        function updateSlots() {
+            if (slots > 1 && Math.random() > 0.7) {
+                slots--;
+                const slotsEl = document.getElementById('slotsLeft');
+                const slotsFixedEl = document.getElementById('slotsLeftFixed');
+                if (slotsEl) slotsEl.textContent = slots;
+                if (slotsFixedEl) slotsFixedEl.textContent = slots;
+            }
+        }
+        setInterval(updateSlots, 45000);
+
+        // Scroll to pricing
+        function scrollToPricing() {
+            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Toggle FAQ
+        function toggleFaq(element) {
+            element.parentElement.classList.toggle('open');
+        }
+
+        // Tier selection and purchase
+        window.selectedTier = 'complete';
+        window.productValue = 97;
+        window.checkoutCode = 'PPU38CQB6RM';
+
+        function getDigiStoreUrl(tier) {
+            return tier === 'basic'
+                ? 'https://www.checkout-ds24.com/product/557131?aff=ogroupvanta9fd9'
+                : 'https://www.checkout-ds24.com/product/557125?aff=ogroupvanta9fd9';
+        }
+
+        function selectTier(tier) {
+            window.selectedTier = tier;
+            document.querySelectorAll('.tier-card').forEach(function(c) {
+                c.classList.toggle('selected', c.dataset.tier === tier);
+            });
+            if (tier === 'basic') {
+                window.productValue = 37;
+                window.checkoutCode = 'PPU38CQAKMS';
+            } else {
+                window.productValue = 97;
+                window.checkoutCode = 'PPU38CQB6RM';
+            }
+        }
+
+        function purchaseTier(tier, event) {
+            event.stopPropagation();
+            selectTier(tier);
+            if (typeof FacebookCAPI !== 'undefined') {
+                FacebookCAPI.trackAddToCart(window.productValue, 'Whats Spy VIP Access');
+            } else if (typeof fbq !== 'undefined') {
+                var eid = 'AddToCart_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                fbq('track', 'AddToCart', { content_name: 'Whats Spy VIP Access', currency: 'USD', value: window.productValue }, { eventID: eid });
+            }
+            showResponsibilityPopup();
+        }
+
+        function showResponsibilityPopup() {
+            var popup = document.getElementById('responsibilityPopup');
+            if (!popup) { proceedToCheckout(); return; }
+            var nameEl = document.getElementById('rpUserName');
+            var uName = localStorage.getItem('userName') || '';
+            if (uName && nameEl) {
+                var firstName = uName.trim().split(' ')[0];
+                firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+                nameEl.textContent = firstName;
+            }
+            popup.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResponsibilityPopup() {
+            var popup = document.getElementById('responsibilityPopup');
+            if (popup) popup.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        function toggleRpAccept() {
+            var checkbox = document.getElementById('rpCheckbox');
+            var btn = document.getElementById('rpAcceptBtn');
+            if (checkbox && btn) {
+                if (checkbox.checked) {
+                    btn.removeAttribute('disabled');
+                    btn.classList.add('rp-active');
+                } else {
+                    btn.setAttribute('disabled', 'true');
+                    btn.classList.remove('rp-active');
+                }
+            }
+        }
+
+        function acceptResponsibility() {
+            confirmAndProceed();
+        }
+
+        function confirmAndProceed() {
+            var modal = document.querySelector('.rp-modal');
+            if (modal) {
+                var msgs = {
+                    en: ['Redirecting to secure checkout...', 'Please wait, do not close this page.'],
+                    es: ['Redirigiendo al checkout seguro...', 'Por favor espera, no cierres esta página.'],
+                    fr: ['Redirection vers le paiement sécurisé...', 'Veuillez patienter, ne fermez pas cette page.'],
+                    pt: ['Redirecionando para o checkout seguro...', 'Por favor aguarde, não feche esta página.']
+                };
+                var lang = (document.documentElement.lang || '').substring(0, 2).toLowerCase();
+                var m = msgs[lang] || msgs.en;
+                modal.innerHTML = '<div style="text-align:center;padding:48px 24px;">' +
+                    '<div style="width:48px;height:48px;border:4px solid rgba(255,255,255,0.1);border-top-color:#22c55e;border-radius:50%;animation:rp-spin .8s linear infinite;margin:0 auto;"></div>' +
+                    '<h3 style="color:#fff;margin:24px 0 8px;font-size:18px;">' + m[0] + '</h3>' +
+                    '<p style="color:rgba(255,255,255,0.5);font-size:13px;">' + m[1] + '</p></div>';
+                if (!document.getElementById('rpSpinStyle')) {
+                    var s = document.createElement('style');
+                    s.id = 'rpSpinStyle';
+                    s.textContent = '@keyframes rp-spin{to{transform:rotate(360deg)}}';
+                    document.head.appendChild(s);
+                }
+            }
+            proceedToCheckout();
+        }
+
+        // Proceed to checkout with all tracking
+        var checkoutLocked = false;
+        window.addEventListener("pageshow", function(e) { if (e.persisted) { checkoutLocked = false; } });
+        function proceedToCheckout() {
+            if (checkoutLocked) return;
+            checkoutLocked = true;
+            setTimeout(function() { checkoutLocked = false; }, 6000);
+            const currentValue = window.productValue || 97;
+            const currentCheckoutCode = window.checkoutCode || 'PPU38CQB6RM';
+            
+            console.log('🛒 proceedToCheckout: firing InitiateCheckout...', { FacebookCAPI: typeof FacebookCAPI, fbq: typeof fbq, value: currentValue });
+            if (typeof FacebookCAPI !== 'undefined') {
+                FacebookCAPI.trackInitiateCheckout(currentValue, 'Whats Spy VIP Access');
+            } else if (typeof fbq !== 'undefined') {
+                const checkoutEventId = 'InitiateCheckout_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                fbq('track', 'InitiateCheckout', { content_name: 'Whats Spy VIP Access', currency: 'USD', value: currentValue }, { eventID: checkoutEventId });
+                const capiUrl = (window.ZAPSPY_API_URL || 'https://zappspy-backend-v1-production.up.railway.app') + '/api/t/e';
+                const capiData = { eventSourceUrl: window.location.href, funnelLanguage: 'en', email: localStorage.getItem('userEmail'), phone: localStorage.getItem('userWhatsApp'), fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '', fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || '' };
+                fetch(capiUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, keepalive: true, body: JSON.stringify({...capiData, eventName: 'InitiateCheckout', eventId: checkoutEventId, value: currentValue, currency: 'USD', content_name: 'Whats Spy VIP Access'}) }).catch(() => {});
+            }
+            
+            // Track checkout click in funnel
+            if (typeof FunnelTracker !== 'undefined') {
+                FunnelTracker.track(FunnelTracker.events.CHECKOUT_CLICKED);
+            }
+            
+            // Build checkout URL with user data
+            // Use original UTMs from Meta Ads (for Utmify) + custom zs_* params (for internal tracking)
+            const currentTier = window.selectedTier || 'complete';
+            let checkoutUrl = getDigiStoreUrl(currentTier);
+
+            // Get preserved UTMs from Meta Ads (if they exist)
+            const utm_source = localStorage.getItem('utm_source') || 'Whats Spy';
+            const utm_medium = localStorage.getItem('utm_medium') || 'funnel';
+            const utm_campaign = localStorage.getItem('utm_campaign') || utmCampaign;
+            const utm_content = localStorage.getItem('utm_content');
+            const utm_term = localStorage.getItem('utm_term');
+
+            // Add original UTMs (compatible with Utmify)
+            checkoutUrl += '&utm_source=' + encodeURIComponent(utm_source);
+            checkoutUrl += '&utm_medium=' + encodeURIComponent(utm_medium);
+            checkoutUrl += '&utm_campaign=' + encodeURIComponent(utm_campaign);
+            if (utm_content) checkoutUrl += '&utm_content=' + encodeURIComponent(utm_content);
+            if (utm_term) checkoutUrl += '&utm_term=' + encodeURIComponent(utm_term);
+
+            // Add custom zs_* params for internal tracking (won't interfere with Utmify)
+            checkoutUrl += '&zs_source=Whats Spy';
+            checkoutUrl += '&zs_funnel=' + encodeURIComponent(utmCampaign);
+
+            // IMPORTANT: Pass visitor_id for upsell tracking continuity
+            // This allows upsell pages to maintain tracking with the same visitor
+            const visitorId = typeof TrackingUtils !== 'undefined' ? TrackingUtils.getVisitorId() : localStorage.getItem('funnelVisitorId');
+            if (visitorId) {
+                checkoutUrl += '&vid=' + encodeURIComponent(visitorId);
+            }
+
+            // Pass Facebook IDs for CAPI attribution (fallback if lead matching fails)
+            const checkoutFbc = (typeof FacebookCAPI !== 'undefined') ? FacebookCAPI.getFbc() : localStorage.getItem('_fbc');
+            const checkoutFbp = (typeof FacebookCAPI !== 'undefined') ? FacebookCAPI.getFbp() : ((document.cookie.match(/_fbp=([^;]+)/)||[])[1] || localStorage.getItem('_fbp'));
+            if (checkoutFbc) {
+                checkoutUrl += '&zs_fbc=' + encodeURIComponent(checkoutFbc);
+                // Also pass raw fbclid for maximum compatibility
+                const fbclidMatch = checkoutFbc.match(/\.([^.]+)$/);
+                if (fbclidMatch && fbclidMatch[1]) {
+                    checkoutUrl += '&fbclid=' + encodeURIComponent(fbclidMatch[1]);
+                }
+            }
+            if (checkoutFbp) checkoutUrl += '&zs_fbp=' + encodeURIComponent(checkoutFbp);
+
+            // Add user data from localStorage to pre-fill checkout
+            const userName = localStorage.getItem('userName');
+            const userEmail = localStorage.getItem('userEmail');
+            const userWhatsApp = localStorage.getItem('userWhatsApp');
+            const userCountryCode = localStorage.getItem('userCountryCode');
+            const userPhoneNumber = localStorage.getItem('userPhoneNumber');
+
+            if (userName) checkoutUrl += '&name=' + encodeURIComponent(userName);
+            if (userEmail) checkoutUrl += '&email=' + encodeURIComponent(userEmail);
+            if (userPhoneNumber) checkoutUrl += '&phone=' + encodeURIComponent(userPhoneNumber);
+
+            console.log('🛒 Checkout data:', { name: userName, email: userEmail, phone: userPhoneNumber });
+            console.log('🛒 Checkout URL:', checkoutUrl);
+
+            // Delay to ensure tracking events complete before navigation
+            setTimeout(function() { window.location.href = checkoutUrl; }, 1200);
+        }
+
+        // Initialize
+        localStorage.setItem('funnelProgress', 'cta');
+
+
+        // Populate suspicious conversations based on gender
+        (function() {
+            var cl = document.getElementById('convList');
+            if (!cl) return;
+            var p = window.location.pathname;
+            var lang = 'en';
+            if (p.indexOf('/espanhol/') !== -1) lang = 'es';
+            else if (p.indexOf('/portugues/') !== -1) lang = 'pt';
+            else if (p.indexOf('/frances/') !== -1) lang = 'fr';
+
+            var labels = {
+                en: { title: 'Suspicious conversations detected', deleted: 'deleted', suspicious: 'suspicious', evidence: 'evidence' },
+                es: { title: 'Conversaciones sospechosas detectadas', deleted: 'eliminado', suspicious: 'sospechoso', evidence: 'evidencia' },
+                pt: { title: 'Conversas suspeitas detectadas', deleted: 'apagado', suspicious: 'suspeito', evidence: 'evidência' },
+                fr: { title: 'Conversations suspectes détectées', deleted: 'supprimé', suspicious: 'suspect', evidence: 'preuve' }
+            }[lang];
+
+            var audioBars = '';
+            var heights = [4,8,12,6,14,9,5,11,7,13,4,10,8,6,12,3,9,14,5,11];
+            for (var h = 0; h < heights.length; h++) audioBars += '<span style="height:' + heights[h] + 'px"></span>';
+
+            var convsFemale = [
+                { img: 'mulher1.jpg', name: 'J. S.', msg: 'Delete this after rea***...', tags: ['deleted','suspicious'], unread: 12, badge: 'SUSPECT' },
+                { img: 'mulher3.jpg', name: 'A. M.', msg: 'I still thin* abo** us...', tags: ['deleted','evidence'], unread: 18, badge: 'HIGH FREQ' },
+                { img: 'mulher5.jpg', name: 'Blocked Contact', msg: 'I miss y** so much...', tags: ['deleted','evidence'], unread: 6, badge: '' },
+                { img: 'mulher7.jpg', name: 'S. R.', msg: 'audio', tags: ['deleted','suspicious'], unread: 3, badge: 'SUSPECT' },
+                { img: 'mulher9.jpg', name: 'Deleted Contact', msg: 'Nobody has to kn***...', tags: ['deleted','suspicious','evidence'], unread: 11, badge: 'HIGH FREQ' }
+            ];
+            var convsMale = [
+                { img: 'homem1.jpg', name: 'M. J.', msg: 'Delete this after rea***...', tags: ['deleted','suspicious'], unread: 12, badge: 'SUSPECT' },
+                { img: 'homem3.jpg', name: 'K. P.', msg: 'I still thin* abo** us...', tags: ['deleted','evidence'], unread: 18, badge: 'HIGH FREQ' },
+                { img: 'homem5.jpg', name: 'Blocked Contact', msg: 'I miss y** so much...', tags: ['deleted','evidence'], unread: 6, badge: '' },
+                { img: 'homem2.jpg', name: 'D. R.', msg: 'audio', tags: ['deleted','suspicious'], unread: 3, badge: 'SUSPECT' },
+                { img: 'homem4.jpg', name: 'Deleted Contact', msg: 'Nobody has to kn***...', tags: ['deleted','suspicious','evidence'], unread: 11, badge: 'HIGH FREQ' }
+            ];
+
+            if (lang === 'es') {
+                convsFemale[0].msg = 'Borra esto después de le***...'; convsFemale[1].msg = 'Todavía pien** en nosotr**...';
+                convsFemale[2].msg = 'Te extrañ** much**...'; convsFemale[4].msg = 'Nadie tiene que sab***...';
+                convsMale[0].msg = 'Borra esto después de le***...'; convsMale[1].msg = 'Todavía pien** en nosotr**...';
+                convsMale[2].msg = 'Te extrañ** much**...'; convsMale[4].msg = 'Nadie tiene que sab***...';
+                convsFemale[2].name = 'Contacto Bloqueado'; convsFemale[4].name = 'Contacto Eliminado';
+                convsMale[2].name = 'Contacto Bloqueado'; convsMale[4].name = 'Contacto Eliminado';
+                convsFemale[0].badge = 'SOSPECHOSO'; convsFemale[1].badge = 'ALTA FREC'; convsFemale[3].badge = 'SOSPECHOSO'; convsFemale[4].badge = 'ALTA FREC';
+                convsMale[0].badge = 'SOSPECHOSO'; convsMale[1].badge = 'ALTA FREC'; convsMale[3].badge = 'SOSPECHOSO'; convsMale[4].badge = 'ALTA FREC';
+            } else if (lang === 'pt') {
+                convsFemale[2].name = 'Contato Bloqueado'; convsFemale[4].name = 'Contato Excluído';
+                convsMale[2].name = 'Contato Bloqueado'; convsMale[4].name = 'Contato Excluído';
+                convsFemale[0].msg = 'Apaga isso depois de l***...'; convsFemale[1].msg = 'Ainda pen** em nós doi**...';
+                convsFemale[2].msg = 'Sinto sua fal** demais...'; convsFemale[4].msg = 'Ninguém precisa sab***...';
+                convsMale[0].msg = 'Apaga isso depois de l***...'; convsMale[1].msg = 'Ainda pen** em nós doi**...';
+                convsMale[2].msg = 'Sinto sua fal** demais...'; convsMale[4].msg = 'Ninguém precisa sab***...';
+                convsFemale[0].badge = 'SUSPEITO'; convsFemale[1].badge = 'ALTA FREQ'; convsFemale[3].badge = 'SUSPEITO'; convsFemale[4].badge = 'ALTA FREQ';
+                convsMale[0].badge = 'SUSPEITO'; convsMale[1].badge = 'ALTA FREQ'; convsMale[3].badge = 'SUSPEITO'; convsMale[4].badge = 'ALTA FREQ';
+            } else if (lang === 'fr') {
+                convsFemale[2].name = 'Contact Bloqué'; convsFemale[4].name = 'Contact Supprimé';
+                convsMale[2].name = 'Contact Bloqué'; convsMale[4].name = 'Contact Supprimé';
+                convsFemale[0].msg = 'Supprime ça après l***...'; convsFemale[1].msg = 'Je pense encore à no***...';
+                convsFemale[2].msg = 'Tu me manq*** tellement...'; convsFemale[4].msg = 'Personne ne doit sav***...';
+                convsMale[0].msg = 'Supprime ça après l***...'; convsMale[1].msg = 'Je pense encore à no***...';
+                convsMale[2].msg = 'Tu me manq*** tellement...'; convsMale[4].msg = 'Personne ne doit sav***...';
+                convsFemale[0].badge = 'SUSPECT'; convsFemale[1].badge = 'HAUTE FRÉQ'; convsFemale[3].badge = 'SUSPECT'; convsFemale[4].badge = 'HAUTE FRÉQ';
+                convsMale[0].badge = 'SUSPECT'; convsMale[1].badge = 'HAUTE FRÉQ'; convsMale[3].badge = 'SUSPECT'; convsMale[4].badge = 'HAUTE FRÉQ';
+            }
+
+            var convs = gender === 'female' ? convsMale : convsFemale;
+
+            var html = '<div class="conv-list-title"><svg viewBox="0 0 16 16" fill="#ef4444" width="12" height="12"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2a1 1 0 011 1v4a1 1 0 01-2 0V4a1 1 0 011-1zm0 8a1 1 0 110-2 1 1 0 010 2z"/></svg> ' + labels.title + '</div>';
+
+            for (var i = 0; i < convs.length; i++) {
+                var c = convs[i];
+                var isSusp = c.tags.indexOf('evidence') !== -1 || c.tags.indexOf('suspicious') !== -1;
+                html += '<div class="conv-item' + (isSusp ? ' suspicious' : '') + '">';
+                html += '<img class="conv-avatar" src="imagens/' + c.img + '" alt="">';
+                html += '<div class="conv-body"><div class="conv-name">' + c.name + (c.badge ? ' <span class="conv-tag suspicious" style="margin-left:4px;font-size:7px;vertical-align:middle;">' + c.badge + '</span>' : '') + '</div>';
+                if (c.msg === 'audio') {
+                    html += '<div class="conv-audio"><svg viewBox="0 0 24 24" fill="#e91e63" width="14" height="14"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3zM19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg><div class="conv-audio-bar">' + audioBars + '</div><span style="font-size:11px;color:#6c757d;filter:blur(2px)">0:47</span></div>';
+                } else {
+                    html += '<div class="conv-msg">' + c.msg + '</div>';
+                }
+                html += '<div class="conv-tags">';
+                for (var t = 0; t < c.tags.length; t++) html += '<span class="conv-tag ' + c.tags[t] + '">' + labels[c.tags[t]] + '</span>';
+                html += '</div></div>';
+                html += '<div class="conv-meta"><span class="conv-badge">' + c.unread + '</span></div>';
+                html += '</div>';
+            }
+            cl.innerHTML = html;
+        })();
+
+        // Countdown timer
+        (function() {
+            var totalSecs = 14 * 60 + 59;
+            var timerEl = document.getElementById('countdownTimer');
+            if (!timerEl) return;
+            setInterval(function() {
+                if (totalSecs <= 0) return;
+                totalSecs--;
+                var m = Math.floor(totalSecs / 60);
+                var s = totalSecs % 60;
+                timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+                if (totalSecs < 300) timerEl.style.animation = 'pulse-dot 1s infinite';
+            }, 1000);
+        })();
+
+        // OSINT intelligence from localStorage
+        (function() {
+            var raw = localStorage.getItem('targetOsint');
+            var section = document.getElementById('osintSection');
+            var grid = document.getElementById('osintGrid');
+            if (!raw || !section || !grid) return;
+            try {
+                var osint = JSON.parse(raw);
+                var items = [];
+                var loc = osint.location || osint.countryCode;
+                if (loc) items.push({ icon:'📍', label:'Location detected', value: loc, cls:'' });
+                if (typeof osint.breachesCount === 'number') {
+                    if (osint.breachesCount > 0) items.push({ icon:'🔓', label:'Data breaches found', value: osint.breachesCount + ' breach' + (osint.breachesCount > 1 ? 'es' : ''), cls:'red' });
+                    else items.push({ icon:'🔓', label:'Data breaches', value:'None found', cls:'muted' });
+                }
+                if (osint.telegramFound) items.push({ icon:'✈️', label:'Telegram account', value:'Detected' + (osint.telegramUsername ? ' — @' + osint.telegramUsername : ''), cls:'red' });
+                if (osint.reverseImageMatches > 0) items.push({ icon:'🔍', label:'Photo found online', value: osint.reverseImageMatches + ' location' + (osint.reverseImageMatches > 1 ? 's' : ''), cls:'red' });
+                if (osint.aboutHistory && osint.aboutHistory.length > 0) items.push({ icon:'📝', label:'Status changes detected', value: osint.aboutHistory.length + ' change' + (osint.aboutHistory.length > 1 ? 's' : ''), cls:'' });
+                if (osint.businessCategory) items.push({ icon:'💼', label:'Business category', value: osint.businessCategory, cls:'muted' });
+                if (items.length === 0) return;
+                var html = '';
+                for (var i = 0; i < items.length; i++) {
+                    var it = items[i];
+                    html += '<div class="osint-item"><span class="osint-item-icon">' + it.icon + '</span><span class="osint-item-label">' + it.label + '</span><span class="osint-item-value' + (it.cls ? ' ' + it.cls : '') + '">' + it.value + '</span></div>';
+                }
+                grid.innerHTML = html;
+                section.style.display = '';
+            } catch(e) {}
+        })();
+
+        // Activity alerts
+        (function() {
+            var alertEl = document.getElementById('activityAlert');
+            var alertText = document.getElementById('activityAlertText');
+            if (!alertEl || !alertText) return;
+            var msgs = [
+                'New message detected 2 min ago',
+                'Deleted photo recovered just now',
+                'New contact added to their list',
+                'Voice message erased 5 min ago',
+                'Location shared and then deleted',
+                'Status changed 3 min ago'
+            ];
+            var idx = 0;
+            function showAlert() {
+                alertText.textContent = msgs[idx % msgs.length];
+                idx++;
+                alertEl.classList.add('show');
+                setTimeout(function() { alertEl.classList.remove('show'); }, 4000);
+            }
+            setTimeout(showAlert, 8000);
+            setInterval(function() { if (Math.random() > 0.4) showAlert(); }, 25000);
+        })();
+
+        // Animate suspicion bar
+        setTimeout(() => {
+            const bar = document.getElementById('suspicionBar');
+            if (bar) bar.style.width = '87%';
+        }, 500);
+
+        // Typing indicator
+        function showTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.style.opacity = '1';
+                setTimeout(() => { indicator.style.opacity = '0'; }, 3000);
+            }
+        }
+        setInterval(() => {
+            if (Math.random() > 0.5) showTypingIndicator();
+        }, 15000);
+        setTimeout(showTypingIndicator, 5000);
+
+        // Floating CTA - show when user scrolls past pricing section
+        (function() {
+            var floatingCta = document.getElementById('floatingCta');
+            var pricingSection = document.getElementById('pricing');
+            if (floatingCta && pricingSection) {
+                var shown = false;
+                window.addEventListener('scroll', function() {
+                    var rect = pricingSection.getBoundingClientRect();
+                    if (rect.bottom < 0 && !shown) {
+                        floatingCta.style.display = 'block';
+                        floatingCta.style.animation = 'slideUp 0.3s ease-out';
+                        shown = true;
+                        var fv = document.getElementById('floatViewers');
+                        if (fv) fv.textContent = document.getElementById('liveViewers') ? document.getElementById('liveViewers').textContent : '73';
+                    } else if (rect.bottom >= 0 && shown) {
+                        floatingCta.style.display = 'none';
+                        shown = false;
+                    }
+                });
+            }
+        })();
+
+        // Animated deleted message reveal
+        (function() {
+            var el = document.getElementById('deletedMessageContent');
+            if (!el) return;
+            var original = el.innerHTML;
+            el.style.opacity = '0';
+            setTimeout(function() {
+                el.style.transition = 'opacity 0.5s';
+                el.style.opacity = '1';
+            }, 2000);
+        })();
+
+        // Populate dynamic stats from localStorage
+        (function() {
+            var storedTotal = parseInt(localStorage.getItem('totalMsgs'));
+            var storedDeleted = parseInt(localStorage.getItem('deletedMsgs'));
+            if (storedTotal && !isNaN(storedTotal)) {
+                var el = document.getElementById('ctaTotalMsgs');
+                if (el) el.textContent = storedTotal.toLocaleString();
+            }
+            if (storedDeleted && !isNaN(storedDeleted)) {
+                var el = document.getElementById('ctaDeletedMsgs');
+                if (el) el.textContent = storedDeleted.toLocaleString();
+            }
+        })();
+
+
+    </script>
+
+    <!-- Responsibility Popup -->
+    <div id="responsibilityPopup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;">
+        <div class="rp-modal">
+            <button class="rp-close" onclick="closeResponsibilityPopup()" aria-label="Close">✕</button>
+            <div class="rp-icon">⚠️</div>
+            <h2 class="rp-title"><span id="rpUserName">User</span>, read this before proceeding.</h2>
+            <p class="rp-text">You are about to unlock <strong>classified-level technology</strong> capable of recovering deleted messages, tracking real-time location, and exposing hidden conversations — all <strong>100% undetectable</strong>.</p>
+            <div class="rp-warning">This tool is <strong>extremely powerful</strong>. Misuse will result in <strong>immediate and permanent</strong> access revocation.</div>
+            <p class="rp-text rp-fee">The one-time fee covers military-grade encrypted servers and secure data routing. Due to high demand, access is strictly limited.</p>
+            <div class="rp-blacklist-warning">
+                <strong>⛔ Important:</strong> By proceeding, you are reserving one of the remaining slots. If you <strong>do not complete payment</strong>, your slot will be <strong>permanently revoked</strong> and your access will be blocked. This cannot be undone.
+            </div>
+            <label class="rp-checkbox-label" for="rpCheckbox">
+                <input type="checkbox" id="rpCheckbox" onchange="toggleRpAccept()">
+                <span class="rp-checkmark"></span>
+                <span>I understand and accept <strong>full responsibility</strong> for how I use this tool.</span>
+            </label>
+            <button class="rp-accept-btn" id="rpAcceptBtn" disabled onclick="acceptResponsibility()">
+                I Accept — Unlock Access Now →
+            </button>
+        </div>
+    </div>
+    <style>
+        .rp-modal {
+            background: #1a1a1e;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 32px 24px;
+            max-width: 420px;
+            width: 100%;
+            position: relative;
+            z-index: 10000;
+            animation: rpSlideUp 0.4s cubic-bezier(0.16,1,0.3,1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        @keyframes rpSlideUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .rp-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: #8e8e93;
+            font-size: 18px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .rp-close:hover { background: rgba(255,255,255,0.08); }
+        .rp-icon { font-size: 40px; text-align: center; margin-bottom: 16px; }
+        .rp-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin: 0 0 16px;
+            line-height: 1.3;
+        }
+        .rp-text {
+            font-size: 14px;
+            color: #b0b0b5;
+            line-height: 1.6;
+            margin: 0 0 12px;
+            text-align: center;
+        }
+        .rp-text strong { color: #e5e5ea; }
+        .rp-warning {
+            background: rgba(255,59,48,0.08);
+            border: 1px solid rgba(255,59,48,0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #ff6b6b;
+            text-align: center;
+            margin: 0 0 12px;
+            line-height: 1.5;
+        }
+        .rp-warning strong { color: #ff453a; }
+        .rp-fee { font-size: 13px; color: #8e8e93; }
+        .rp-confirm-section {
+            margin: 16px 0 8px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+        }
+        .rp-confirm-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e5e5ea;
+            margin-bottom: 12px;
+        }
+        .rp-field { margin-bottom: 10px; }
+        .rp-field:last-of-type { margin-bottom: 0; }
+        .rp-field-label {
+            display: block;
+            font-size: 11px;
+            color: #8e8e93;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        .rp-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .rp-input:focus { border-color: #22c55e; }
+        .rp-input::placeholder { color: #555; }
+        .rp-field-error {
+            font-size: 12px;
+            color: #ff453a;
+            margin-top: 8px;
+            min-height: 16px;
+        }
+        .rp-slots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #ff9500;
+            font-weight: 600;
+            margin: 16px 0;
+        }
+        .rp-slots strong { color: #ff9500; }
+        .rp-slots-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff3b30;
+            animation: rpPulse 1.5s infinite;
+        }
+        @keyframes rpPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        .rp-blacklist-warning {
+            background: rgba(255, 59, 48, 0.08);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 11px;
+            color: #b0b0b5;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .rp-blacklist-warning strong {
+            color: #FF3B30;
+        }
+        .rp-checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            margin: 16px 0;
+            transition: border-color 0.2s;
+        }
+        .rp-checkbox-label:hover { border-color: rgba(34,197,94,0.3); }
+        .rp-checkbox-label input[type="checkbox"] { display: none; }
+        .rp-checkmark {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin-top: 1px;
+        }
+        .rp-checkbox-label input:checked ~ .rp-checkmark {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+        .rp-checkbox-label input:checked ~ .rp-checkmark::after {
+            content: '✓';
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .rp-checkbox-label span:last-child {
+            font-size: 13px;
+            color: #b0b0b5;
+            line-height: 1.5;
+        }
+        .rp-checkbox-label span:last-child strong { color: #e5e5ea; }
+        .rp-accept-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 14px;
+            cursor: default;
+            pointer-events: none;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.06);
+            color: #555;
+        }
+        .rp-accept-btn.rp-active {
+            background: linear-gradient(135deg,#22c55e,#16a34a);
+            color: #fff;
+            cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 4px 20px rgba(34,197,94,0.4);
+        }
+        .rp-accept-btn.rp-active:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(34,197,94,0.5);
+        }
+    </style>
+
+    <!-- Floating CTA for Mobile -->
+    <div id="floatingCta" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:1000; padding:10px 16px 12px; background:linear-gradient(to top, rgba(0,0,0,0.97), rgba(0,0,0,0.9)); backdrop-filter:blur(12px); border-top:1px solid rgba(34,197,94,0.3);">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; padding:0 4px;">
+            <span style="font-size:13px; color:#e5e5ea; font-weight:600;"><span style="text-decoration:line-through;color:#8e8e93;font-weight:400;">$197</span> → <span style="color:#22c55e;">$37</span></span>
+            <span style="font-size:11px; color:#8e8e93;">one-time payment • 30-day guarantee</span>
+        </div>
+        <button onclick="handlePurchase()" style="width:100%; padding:14px; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:700; border:none; border-radius:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 20px rgba(34,197,94,0.5); animation:floatPulse 2s infinite;">
+            🔓 Unlock Full Access Now
+        </button>
+    </div>
+    <style>
+        @keyframes floatPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 20px rgba(34,197,94,0.5); }
+            50% { transform: scale(1.02); box-shadow: 0 4px 30px rgba(34,197,94,0.7); }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+    <script src="js/urgency-bar.js"></script>
+</body>
+</html>
