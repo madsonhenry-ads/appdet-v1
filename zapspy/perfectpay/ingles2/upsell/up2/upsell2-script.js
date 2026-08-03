@@ -153,7 +153,7 @@
     for (var i = 0; i < scrollLinks.length; i++) {
         scrollLinks[i].addEventListener('click', function (e) {
             var href = this.getAttribute('href');
-            if (href === '#' || href.startsWith('https://go.centerpag.com')) return;
+            if (href === '#' || href.startsWith('https://checkout.relationshipcheck.online')) return;
             
             e.preventDefault();
             var target = document.querySelector(href);
