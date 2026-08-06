@@ -62,16 +62,13 @@
         if (st) userData.st = st.toLowerCase().replace(/[^a-z]/g, '');
     } catch(e) {}
     fbq('init', '1123687999653173', userData);
-    fbq('init', '1533299911750042', userData);
     var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     fbq('track', 'PageView', {}, { eventID: pvId });
     window._fbPageViewFired = true;
+    window._fbPageViewId = pvId;
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1123687999653173&ev=PageView&noscript=1"
-    /></noscript>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1533299911750042&ev=PageView&noscript=1"
     /></noscript>
 
     <link rel="stylesheet" href="../css/global.css">

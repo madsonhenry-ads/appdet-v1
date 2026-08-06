@@ -272,7 +272,8 @@ const FacebookCAPI = {
 
             if (pageName) {
                 if (window._fbPageViewFired) {
-                    var eventId = self.generateEventId('PageView');
+                    // Reuse the same event_id from the browser pixel for deduplication
+                    var eventId = window._fbPageViewId || self.generateEventId('PageView');
                     var userData = self.getUserData();
                     self.sendToServer('PageView', eventId, userData, { content_name: pageName });
                 } else {
