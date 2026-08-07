@@ -1,0 +1,79 @@
+/* ===================================================================
+   ZapSpy Design System — TYPOGRAPHY
+   - Inter for body text (excellent legibility, mature)
+   - Geist for display headings (modern, brand-defining)
+   - JetBrains Mono for numbers (timer, prices, phone codes)
+   All loaded from Google Fonts with display=swap (no FOIT).
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root {
+    --font-display: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* Type scale (mobile-first, optimized for 375-414px) */
+    --fs-xs:    11px;
+    --fs-sm:    13px;
+    --fs-base:  15px;
+    --fs-md:    17px;
+    --fs-lg:    20px;
+    --fs-xl:    24px;
+    --fs-2xl:   30px;
+    --fs-3xl:   36px;
+    --fs-4xl:   44px;
+
+    /* Line heights */
+    --lh-tight:  1.15;
+    --lh-snug:   1.30;
+    --lh-normal: 1.55;
+    --lh-relaxed:1.70;
+
+    /* Letter spacing */
+    --tracking-tight:  -0.025em;
+    --tracking-snug:   -0.015em;
+    --tracking-normal: 0;
+    --tracking-wide:   0.025em;
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--text-1);
+    background: var(--bg);
+}
+
+/* Display (use class, do not auto-apply to h1) so existing layouts don't shift */
+.t-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--lh-tight);
+}
+
+.t-h1 { font-size: var(--fs-3xl); font-weight: 700; line-height: var(--lh-tight); letter-spacing: var(--tracking-tight); font-family: var(--font-display); }
+.t-h2 { font-size: var(--fs-2xl); font-weight: 700; line-height: var(--lh-tight); letter-spacing: var(--tracking-snug); font-family: var(--font-display); }
+.t-h3 { font-size: var(--fs-xl);  font-weight: 600; line-height: var(--lh-snug);  font-family: var(--font-display); }
+.t-h4 { font-size: var(--fs-lg);  font-weight: 600; line-height: var(--lh-snug); }
+.t-body  { font-size: var(--fs-base); line-height: var(--lh-normal); }
+.t-small { font-size: var(--fs-sm);   line-height: var(--lh-normal); color: var(--text-2); }
+.t-xs    { font-size: var(--fs-xs);   line-height: var(--lh-normal); color: var(--text-3); letter-spacing: var(--tracking-wide); text-transform: uppercase; font-weight: 600; }
+.t-mono  { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+/* Color helpers */
+.t-muted    { color: var(--text-2); }
+.t-faint    { color: var(--text-3); }
+.t-brand    { color: var(--brand-primary); }
+.t-danger   { color: var(--color-danger); }
+.t-success  { color: var(--brand-success); }
+
+/* Selection color matches the brand */
+::selection { background: var(--brand-primary-ring); color: var(--text-1); }

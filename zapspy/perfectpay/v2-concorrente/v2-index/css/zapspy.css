@@ -1,0 +1,12 @@
+/* ZapSpy Design System — single entrypoint
+   Each funnel page should import only this file:
+
+   <link rel="stylesheet" href="/shared/css/zapspy.css">
+   <body class="theme-light"> ... </body>           (or theme-dark)
+*/
+@import url('tokens.css');
+@import url('typography.css');
+@import url('components.css');
+@import url('animations.css');
+/* polish is loaded via the bridge step below so it can override
+   page-level inline <style> blocks. See README in this folder. */

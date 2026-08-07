@@ -1,0 +1,146 @@
+/* ===================================================================
+   ZapSpy Design System — TOKENS
+   Single source of truth for colors, spacing, radius, shadows, motion.
+
+   Theme is selected by adding ONE class to <body>:
+     <body class="theme-light">  -> Light premium (WhatsApp Web vibe)
+     <body class="theme-dark">   -> Dark premium (WhatsApp dark vibe)
+
+   Brand colors (green, accents) are IDENTICAL across both themes.
+   Only neutral surfaces / text invert.
+   =================================================================== */
+
+:root {
+    /* ── Brand: same in every theme ───────────────────────────── */
+    --brand-primary:        #00A884;   /* WhatsApp 2024 green */
+    --brand-primary-strong: #008069;   /* hover / active */
+    --brand-primary-soft:   rgba(0, 168, 132, 0.10);
+    --brand-primary-ring:   rgba(0, 168, 132, 0.30);
+
+    --brand-success:        #25D366;   /* classic WhatsApp green (checks) */
+    --brand-accent:         #D4A24C;   /* premium gold (subtle) */
+
+    --color-info:           #3B82F6;
+    --color-warning:        #F59E0B;
+    --color-warning-soft:   rgba(245, 158, 11, 0.10);
+    --color-danger:         #DC3545;
+    --color-danger-soft:    rgba(220, 53, 69, 0.10);
+
+    /* ── Spacing scale (4-px grid) ─────────────────────────────── */
+    --space-1:  4px;
+    --space-2:  8px;
+    --space-3:  12px;
+    --space-4:  16px;
+    --space-5:  20px;
+    --space-6:  24px;
+    --space-8:  32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+
+    /* ── Radius ────────────────────────────────────────────────── */
+    --radius-xs:   6px;
+    --radius-sm:  10px;
+    --radius-md:  14px;
+    --radius-lg:  20px;
+    --radius-xl:  28px;
+    --radius-pill: 999px;
+
+    /* ── Motion ────────────────────────────────────────────────── */
+    --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast:    140ms;
+    --dur-base:    220ms;
+    --dur-slow:    360ms;
+
+    /* ── Z-index ───────────────────────────────────────────────── */
+    --z-sticky:   100;
+    --z-overlay:  9000;
+    --z-modal:    9500;
+    --z-toast:    9800;
+    --z-loading:  9900;
+}
+
+/* ── LIGHT THEME ─────────────────────────────────────────────── */
+.theme-light {
+    color-scheme: light;
+
+    --bg:           #F0F2F5;        /* page background (WhatsApp Web) */
+    --surface:      #FFFFFF;        /* cards, modals */
+    --surface-2:    #F8F9FA;        /* nested cards, inputs */
+    --surface-3:    #EFF2F4;        /* hover, dividers */
+
+    --text-1:       #111B21;        /* primary text */
+    --text-2:       #54656F;        /* secondary text */
+    --text-3:       #8696A0;        /* tertiary, captions */
+    --text-on-brand:#FFFFFF;        /* text on green buttons */
+
+    --border:       #E9EDEF;
+    --border-strong:#D1D7DB;
+
+    /* Chat bubbles (WhatsApp light) */
+    --chat-bg:      #EFEAE2;
+    --bubble-in:    #FFFFFF;
+    --bubble-out:   #D9FDD3;
+
+    /* Shadows (multilayer for depth) */
+    --shadow-sm:  0 1px 2px rgba(11, 20, 27, 0.06),
+                  0 1px 1px rgba(11, 20, 27, 0.04);
+    --shadow-md:  0 4px 12px rgba(11, 20, 27, 0.06),
+                  0 2px 4px rgba(11, 20, 27, 0.04);
+    --shadow-lg:  0 12px 28px rgba(11, 20, 27, 0.10),
+                  0 4px 10px rgba(11, 20, 27, 0.06);
+    --shadow-cta: 0 8px 20px rgba(0, 168, 132, 0.28),
+                  0 2px 4px rgba(0, 128, 105, 0.20);
+    --shadow-ring: 0 0 0 4px var(--brand-primary-ring);
+
+    /* Glass effect */
+    --glass-bg:     rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.40);
+}
+
+/* ── DARK THEME ──────────────────────────────────────────────── */
+.theme-dark {
+    color-scheme: dark;
+
+    --bg:           #0B141B;        /* WhatsApp dark base */
+    --surface:      #1F2C33;        /* cards */
+    --surface-2:    #2A3942;        /* inputs, nested */
+    --surface-3:    #374248;        /* hover */
+
+    --text-1:       #E9EDEF;
+    --text-2:       #8696A0;
+    --text-3:       #667781;
+    --text-on-brand:#FFFFFF;
+
+    --border:       #2A3942;
+    --border-strong:#374248;
+
+    /* Chat bubbles (WhatsApp dark) */
+    --chat-bg:      #0B141B;
+    --bubble-in:    #1F2C33;
+    --bubble-out:   #005C4B;
+
+    --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.50);
+    --shadow-md:  0 4px 14px rgba(0, 0, 0, 0.45);
+    --shadow-lg:  0 14px 32px rgba(0, 0, 0, 0.55),
+                  0 4px 10px rgba(0, 0, 0, 0.35);
+    --shadow-cta: 0 10px 24px rgba(0, 168, 132, 0.32),
+                  0 2px 6px rgba(0, 0, 0, 0.50);
+    --shadow-ring: 0 0 0 4px var(--brand-primary-ring);
+
+    --glass-bg:     rgba(31, 44, 51, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.06);
+}
+
+/* Default to light if no theme class is set (defensive) */
+body:not(.theme-light):not(.theme-dark) {
+    color-scheme: light;
+    --bg: #F0F2F5;
+    --surface: #FFFFFF;
+    --surface-2: #F8F9FA;
+    --text-1: #111B21;
+    --text-2: #54656F;
+    --border: #E9EDEF;
+}

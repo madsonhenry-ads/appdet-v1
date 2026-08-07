@@ -1,0 +1,416 @@
+/* ===================================================================
+   ZapSpy Design System — COMPONENTS
+   Reusable building blocks. Use as classes; avoid inline styles.
+
+   Usage:
+     <button class="zs-btn zs-btn-primary zs-btn-lg">Begin</button>
+     <div class="zs-card zs-card-premium">…</div>
+     <input class="zs-input" />
+     <span class="zs-badge zs-badge-success">Online</span>
+   =================================================================== */
+
+/* Base reset that won't break anything ----------------------------- */
+.zs-reset, .zs-reset *, .zs-reset *::before, .zs-reset *::after {
+    box-sizing: border-box;
+}
+
+/* =============================================================
+   BUTTONS
+   ============================================================= */
+.zs-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 44px;            /* Apple HIG / accessibility */
+    padding: 0 var(--space-5);
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    line-height: 1;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform var(--dur-fast) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out),
+                background var(--dur-base) var(--ease-out),
+                color var(--dur-base) var(--ease-out),
+                border-color var(--dur-base) var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    white-space: nowrap;
+}
+.zs-btn:active { transform: translateY(1px) scale(0.99); }
+.zs-btn:focus-visible { outline: none; box-shadow: var(--shadow-ring); }
+.zs-btn[disabled], .zs-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Sizes */
+.zs-btn-sm { min-height: 36px; padding: 0 var(--space-4); font-size: var(--fs-sm); border-radius: var(--radius-sm); }
+.zs-btn-lg { min-height: 56px; padding: 0 var(--space-6); font-size: var(--fs-md); border-radius: var(--radius-lg); }
+.zs-btn-block { display: flex; width: 100%; }
+
+/* Primary — gradient WhatsApp green w/ glow */
+.zs-btn-primary {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-strong));
+    color: var(--text-on-brand);
+    box-shadow: var(--shadow-cta);
+}
+.zs-btn-primary:hover {
+    background: linear-gradient(135deg, #06BB94, var(--brand-primary));
+    box-shadow: 0 14px 28px rgba(0, 168, 132, 0.40), 0 4px 8px rgba(0, 128, 105, 0.25);
+}
+
+/* Secondary — outlined */
+.zs-btn-secondary {
+    background: var(--surface);
+    color: var(--text-1);
+    border-color: var(--border-strong);
+}
+.zs-btn-secondary:hover {
+    background: var(--surface-2);
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+}
+
+/* Ghost — text only */
+.zs-btn-ghost {
+    background: transparent;
+    color: var(--text-2);
+}
+.zs-btn-ghost:hover {
+    background: var(--surface-3);
+    color: var(--text-1);
+}
+
+/* Danger */
+.zs-btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(220, 53, 69, 0.30);
+}
+
+/* Shimmer overlay for primary CTA — adds a subtle moving glint */
+.zs-btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -120%; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+    pointer-events: none;
+}
+.zs-btn-primary { position: relative; overflow: hidden; }
+.zs-btn-primary:hover::after { left: 120%; }
+
+/* =============================================================
+   CARDS
+   ============================================================= */
+.zs-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+}
+.zs-card-flat   { box-shadow: none; }
+.zs-card-raised { box-shadow: var(--shadow-md); }
+.zs-card-elevated { box-shadow: var(--shadow-lg); }
+
+/* Premium glass card */
+.zs-card-premium {
+    background: var(--glass-bg);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Alert variants — soft tinted card */
+.zs-card-alert {
+    background: var(--color-danger-soft);
+    border-color: rgba(220, 53, 69, 0.22);
+    border-left: 3px solid var(--color-danger);
+}
+.zs-card-warning {
+    background: var(--color-warning-soft);
+    border-color: rgba(245, 158, 11, 0.22);
+    border-left: 3px solid var(--color-warning);
+}
+.zs-card-success {
+    background: rgba(37, 211, 102, 0.08);
+    border-color: rgba(37, 211, 102, 0.22);
+    border-left: 3px solid var(--brand-success);
+}
+
+/* =============================================================
+   INPUTS
+   ============================================================= */
+.zs-input,
+.zs-select,
+.zs-textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 var(--space-4);
+    background: var(--surface-2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-1);
+    font-family: var(--font-body);
+    font-size: var(--fs-md);
+    line-height: 1.4;
+    transition: border-color var(--dur-base) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out),
+                background var(--dur-base) var(--ease-out);
+    -webkit-appearance: none;
+    appearance: none;
+}
+.zs-textarea { padding: var(--space-3) var(--space-4); min-height: 96px; resize: vertical; line-height: 1.55; }
+
+.zs-input::placeholder,
+.zs-textarea::placeholder { color: var(--text-3); }
+
+.zs-input:hover,
+.zs-select:hover,
+.zs-textarea:hover { border-color: var(--border-strong); }
+
+.zs-input:focus,
+.zs-select:focus,
+.zs-textarea:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    background: var(--surface);
+    box-shadow: var(--shadow-ring);
+}
+
+.zs-input-error,
+.zs-select-error,
+.zs-textarea-error {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 4px var(--color-danger-soft);
+}
+
+/* Country code + phone group */
+.zs-input-group {
+    display: flex;
+    gap: var(--space-2);
+}
+.zs-input-group .zs-select { width: 110px; flex: none; }
+.zs-input-group .zs-input { flex: 1; }
+
+/* =============================================================
+   BADGES / PILLS
+   ============================================================= */
+.zs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 4px var(--space-3);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--text-2);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+.zs-badge-success { background: rgba(37, 211, 102, 0.12); border-color: rgba(37, 211, 102, 0.30); color: #1F9E54; }
+.theme-dark .zs-badge-success { color: #25D366; }
+.zs-badge-danger  { background: var(--color-danger-soft);   border-color: rgba(220, 53, 69, 0.30); color: var(--color-danger); }
+.zs-badge-warning { background: var(--color-warning-soft);  border-color: rgba(245, 158, 11, 0.30); color: var(--color-warning); }
+.zs-badge-brand   { background: var(--brand-primary-soft);  border-color: var(--brand-primary-ring); color: var(--brand-primary-strong); }
+.theme-dark .zs-badge-brand { color: var(--brand-primary); }
+
+.zs-badge-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: var(--space-1);
+}
+.zs-badge-dot-pulse { animation: zs-pulse 2s var(--ease-out) infinite; }
+
+/* =============================================================
+   AVATAR
+   ============================================================= */
+.zs-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--surface-2);
+    color: var(--text-2);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.zs-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.zs-avatar-sm { width: 32px; height: 32px; font-size: 13px; }
+.zs-avatar-lg { width: 56px; height: 56px; font-size: 18px; }
+
+/* =============================================================
+   CHAT BUBBLES (for chat.html / conversas.html)
+   ============================================================= */
+.zs-chat-bg { background: var(--chat-bg); }
+
+.zs-bubble {
+    max-width: 78%;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-base);
+    line-height: 1.4;
+    word-wrap: break-word;
+    box-shadow: 0 1px 0.5px rgba(11, 20, 27, 0.13);
+    position: relative;
+}
+.zs-bubble-in {
+    background: var(--bubble-in);
+    color: var(--text-1);
+    border-top-left-radius: var(--radius-xs);
+    margin-right: auto;
+}
+.zs-bubble-out {
+    background: var(--bubble-out);
+    color: var(--text-1);
+    border-top-right-radius: var(--radius-xs);
+    margin-left: auto;
+}
+.theme-dark .zs-bubble-out { color: var(--text-1); }
+
+/* =============================================================
+   MODAL / OVERLAY
+   ============================================================= */
+.zs-overlay {
+    position: fixed; inset: 0;
+    background: rgba(11, 20, 27, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: var(--z-overlay);
+    display: flex; align-items: center; justify-content: center;
+    padding: var(--space-5);
+    animation: zs-fade-in var(--dur-base) var(--ease-out);
+}
+.zs-modal {
+    background: var(--surface);
+    color: var(--text-1);
+    width: 100%; max-width: 460px;
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
+    animation: zs-pop-in var(--dur-base) var(--ease-spring);
+}
+
+/* =============================================================
+   STICKY URGENCY BAR (used at top of light/dark funnels)
+   ============================================================= */
+.zs-urgency-bar {
+    position: sticky; top: 0; z-index: var(--z-sticky);
+    display: flex; align-items: center; justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: linear-gradient(90deg, #0B141B, #1F2C33);
+    color: #FFFFFF;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.zs-urgency-bar strong { color: var(--brand-success); font-family: var(--font-mono); }
+.zs-urgency-bar .zs-urgency-sep { opacity: 0.4; margin: 0 var(--space-2); }
+
+/* =============================================================
+   PRICING TIER (used in cta-unified / recovery)
+   ============================================================= */
+.zs-tier {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    transition: border-color var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out);
+}
+.zs-tier:hover {
+    border-color: var(--brand-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.zs-tier-featured {
+    border-color: var(--brand-primary);
+    background: linear-gradient(180deg, var(--brand-primary-soft), var(--surface));
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+.zs-tier-featured::before {
+    content: 'MOST POPULAR';
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--brand-primary);
+    color: var(--text-on-brand);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    padding: 4px var(--space-3);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-sm);
+}
+
+/* =============================================================
+   DIVIDERS / SEPARATORS
+   ============================================================= */
+.zs-divider {
+    height: 1px;
+    background: var(--border);
+    border: 0;
+    margin: var(--space-5) 0;
+}
+.zs-divider-text {
+    display: flex; align-items: center; gap: var(--space-3);
+    color: var(--text-3);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: var(--space-6) 0;
+}
+.zs-divider-text::before,
+.zs-divider-text::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* =============================================================
+   LOADING SPINNER (used on bridge.html etc)
+   ============================================================= */
+.zs-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--brand-primary-ring);
+    border-top-color: var(--brand-primary);
+    border-radius: 50%;
+    animation: zs-spin 0.8s linear infinite;
+}
+
+/* =============================================================
+   UTILITY HELPERS (used sparingly)
+   ============================================================= */
+.zs-flex          { display: flex; }
+.zs-flex-col      { display: flex; flex-direction: column; }
+.zs-items-center  { align-items: center; }
+.zs-justify-between { justify-content: space-between; }
+.zs-gap-2 { gap: var(--space-2); }
+.zs-gap-3 { gap: var(--space-3); }
+.zs-gap-4 { gap: var(--space-4); }
+.zs-text-center { text-align: center; }
+.zs-mt-4 { margin-top: var(--space-4); }
+.zs-mt-6 { margin-top: var(--space-6); }
+.zs-mt-8 { margin-top: var(--space-8); }
+
+/* Mobile safety (44pt touch targets, no horizontal scroll) */
+html, body { max-width: 100vw; overflow-x: hidden; }
+@media (max-width: 480px) {
+    .zs-btn, button:not([class*="close"]):not([class*="icon"]),
+    [role="button"], a.zs-btn { min-height: 44px; }
+    .zs-input, .zs-select, .zs-textarea { min-height: 48px; font-size: 16px; }
+}
+img, video, iframe { max-width: 100%; height: auto; }
+@supports (padding: env(safe-area-inset-bottom)) {
+    body { padding-bottom: env(safe-area-inset-bottom); }
+}

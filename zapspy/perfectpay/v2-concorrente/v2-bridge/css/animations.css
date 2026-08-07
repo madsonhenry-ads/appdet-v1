@@ -1,0 +1,64 @@
+/* ===================================================================
+   ZapSpy Design System — ANIMATIONS
+   Reusable keyframes + motion classes.
+   Respects prefers-reduced-motion.
+   =================================================================== */
+
+@keyframes zs-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes zs-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes zs-pop-in {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes zs-pulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.10); opacity: 0.85; }
+}
+
+@keyframes zs-pulse-ring {
+    0%   { box-shadow: 0 0 0 0    rgba(0, 168, 132, 0.45); }
+    70%  { box-shadow: 0 0 0 14px rgba(0, 168, 132, 0); }
+    100% { box-shadow: 0 0 0 0    rgba(0, 168, 132, 0); }
+}
+
+@keyframes zs-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes zs-shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+}
+
+@keyframes zs-bounce-soft {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+}
+
+/* Application classes ----------------------------------------- */
+.zs-anim-fade-in    { animation: zs-fade-in    var(--dur-base) var(--ease-out) both; }
+.zs-anim-fade-up    { animation: zs-fade-up    var(--dur-slow) var(--ease-out) both; }
+.zs-anim-pop        { animation: zs-pop-in     var(--dur-base) var(--ease-spring) both; }
+.zs-anim-pulse      { animation: zs-pulse      2s var(--ease-out) infinite; }
+.zs-anim-pulse-ring { animation: zs-pulse-ring 2s var(--ease-out) infinite; }
+.zs-anim-bounce     { animation: zs-bounce-soft 1.4s var(--ease-out) infinite; }
+
+/* Stagger helper (apply to children with --i: 0, 1, 2...) */
+.zs-stagger > * { animation: zs-fade-up var(--dur-slow) var(--ease-out) both; animation-delay: calc(var(--i, 0) * 80ms); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

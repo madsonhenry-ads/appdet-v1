@@ -1,0 +1,120 @@
+/* ===================================================================
+   ZapSpy Design System — LEGACY VARIABLE BRIDGE
+   Backwards-compat mapping for older inline CSS that uses ad-hoc names
+   like --green-primary, --bg-primary, --red-alert etc.
+
+   Loading this AFTER any inline <style> in the page makes every legacy
+   var() lookup resolve to the new design-system token, instantly
+   unifying the visual language WITHOUT touching any HTML structure or
+   JavaScript.
+
+   Load order MUST be:
+     1. (page's own <style> block, if any)
+     2. /shared/css/zapspy.css           ← defines new tokens & components
+     3. /shared/css/funnel-bridge.css    ← THIS file (maps old → new)
+
+   Pages must also have <body class="theme-light"> or "theme-dark".
+   =================================================================== */
+
+:root {
+    /* ── Backgrounds ─────────────────────────────────────────── */
+    --bg-primary:        var(--bg);
+    --bg-secondary:      var(--surface);
+    --bg-tertiary:       var(--surface-2);
+    --bg-conversation:   var(--surface);
+    --bg-light:          var(--bg);
+    --bg-card:           var(--surface);
+    --bg:                var(--bg);
+    --surface:           var(--surface);
+    --black:             var(--text-1);   /* legacy quiz alias */
+    --white:             var(--text-1);   /* legacy quiz alias */
+
+    /* ── Text ─────────────────────────────────────────────────── */
+    --text-primary:      var(--text-1);
+    --text-secondary:    var(--text-2);
+    --text-muted:        var(--text-3);
+
+    /* ── Brand greens (every alias points to WhatsApp green) ──── */
+    --green:             var(--brand-primary);
+    --green-primary:     var(--brand-primary);
+    --green-dark:        var(--brand-primary-strong);
+    --green-dim:         var(--brand-primary-strong);
+    --green-light:       var(--brand-success);
+
+    /* ── Borders / dividers ──────────────────────────────────── */
+    --border:            var(--border);
+    --border-color:      var(--border);
+    --divider:           var(--border);
+
+    /* ── Status / semantic ───────────────────────────────────── */
+    --red:               var(--color-danger);
+    --red-alert:         var(--color-danger);
+    --red-bg:            var(--color-danger-soft);
+    --red-border:        rgba(220, 53, 69, 0.22);
+    --orange-alert:      var(--color-warning);
+    --yellow:            var(--color-warning);
+    --yellow-bg:         var(--color-warning-soft);
+    --yellow-border:     rgba(245, 158, 11, 0.22);
+    --ok:                var(--brand-success);
+    --ok-bg:             rgba(37, 211, 102, 0.10);
+    --ok-border:         rgba(37, 211, 102, 0.22);
+    --blue-check:        #53BDEB;          /* WhatsApp double-check blue */
+
+    /* ── Chat bubbles (chat.html / conversas.html) ───────────── */
+    --msg-in:            var(--bubble-in);
+    --msg-out:           var(--bubble-out);
+
+    /* ── Radius (legacy quiz aliases) ────────────────────────── */
+    --radius:            var(--radius-md);
+
+    /* ── Font (legacy quiz alias) ────────────────────────────── */
+    --font:              var(--font-body);
+    --ease:              var(--ease-out);
+}
+
+/* ── Page-level typography upgrade ───────────────────────────── */
+html, body {
+    font-family: var(--font-body) !important;
+    background: var(--bg);
+    color: var(--text-1);
+}
+
+/* Headings get the display font automatically — no class needed.
+   We don't override sizes/weights so existing layouts stay intact. */
+h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: var(--tracking-snug);
+}
+
+/* ── Universal upgrades for very common ad-hoc patterns ─────── */
+
+/* Most pages have a generic .btn-primary / .cta button — upgrade them */
+.btn-primary,
+button.btn-primary,
+a.btn-primary {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-strong)) !important;
+    color: var(--text-on-brand) !important;
+    box-shadow: var(--shadow-cta);
+    border-color: transparent !important;
+    transition: transform var(--dur-fast) var(--ease-out),
+                box-shadow var(--dur-base) var(--ease-out);
+}
+.btn-primary:hover,
+button.btn-primary:hover,
+a.btn-primary:hover {
+    box-shadow: 0 14px 28px rgba(0, 168, 132, 0.40), 0 4px 8px rgba(0, 128, 105, 0.25);
+    transform: translateY(-1px);
+}
+.btn-primary:active { transform: translateY(0) scale(0.99); }
+
+/* Inputs — softer focus ring matching brand */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--brand-primary) !important;
+    box-shadow: var(--shadow-ring);
+}
+
+/* Selection */
+::selection { background: var(--brand-primary-ring); color: var(--text-1); }
