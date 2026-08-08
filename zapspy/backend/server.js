@@ -235,6 +235,7 @@ app.use('/digi/mr2', express.static(path.join(funnelPath, 'digi', 'mr2')));
 app.use('/digi/liw', express.static(path.join(funnelPath, 'digi', 'liw')));
 app.use('/digi/lm2', express.static(path.join(funnelPath, 'digi', 'lm2')));
 app.use('/digi/mk2', express.static(path.join(funnelPath, 'digi', 'mk2')));
+app.use('/digi/ew2', express.static(path.join(funnelPath, 'digi', 'ew2')));
 app.use('/digi', express.static(path.join(funnelPath, 'digi', 'ingles2')));
 app.use('/vega', express.static(path.join(__dirname, '..', 'vega', 'ingles2')));
 
