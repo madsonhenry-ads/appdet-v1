@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Whats Spy – Special Returning Visitor Offer</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" href="../../imagens/icon-site.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/remarketing.css">
+    <style>
+        .hero-headline {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-align: center;
+            line-height: 1.25;
+            margin-bottom: 10px;
+        }
+        .hero-headline span { color: var(--green-primary); }
+        .hero-subtext {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .wa-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 18px 24px;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            color: #fff;
+            font-size: 17px;
+            font-weight: 800;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(233, 30, 99, 0.35);
+            animation: glowPulse 2s ease-in-out infinite;
+            transition: transform 0.2s ease;
+        }
+        .wa-cta:hover { transform: translateY(-2px); }
+        .wa-cta svg { width: 26px; height: 26px; fill: #fff; flex-shrink: 0; }
+        .wa-cta-inner { display: flex; flex-direction: column; align-items: flex-start; }
+        .wa-cta-main { font-size: 17px; font-weight: 800; line-height: 1.2; }
+        .wa-cta-sub { font-size: 12px; font-weight: 400; opacity: 0.9; margin-top: 2px; }
+        .offer-ribbon {
+            background: linear-gradient(135deg, #FF3B30, #cc2d25);
+            color: #fff;
+            text-align: center;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            animation: ctaPulse 2s ease-in-out infinite;
+        }
+        .visitor-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(233, 30, 99, 0.12);
+            border: 1px solid rgba(233, 30, 99, 0.3);
+            color: var(--green-primary);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            width: fit-content;
+        }
+        .visitor-badge-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--green-primary);
+            animation: alertPulse 1.5s ease-in-out infinite;
+        }
+        .step-list { list-style: none; margin-bottom: 0; }
+        .step-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--divider);
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .step-list li:last-child { border-bottom: none; }
+        .step-num {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: rgba(233, 30, 99, 0.15);
+            color: var(--green-primary);
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .whatsapp-icon-large {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: #e91e63;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 20px rgba(233, 30, 99, 0.4);
+        }
+        .whatsapp-icon-large svg { width: 32px; height: 32px; fill: #fff; }
+    </style>
+
+    <!-- Meta Pixel -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+
+    var userData = {};
+    try {
+        var em = localStorage.getItem('userEmail');
+        var ph = localStorage.getItem('userWhatsApp');
+        if (em) userData.em = em.toLowerCase().trim();
+        if (ph) userData.ph = ph.replace(/\D/g, '');
+    } catch(e) {}
+    fbq('init', '1309866191223635', userData);
+    fbq('init', '1309866191223635', userData);
+    var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    fbq('track', 'PageView', {}, { eventID: pvId });
+    window._fbPageViewFired = true;
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1309866191223635&ev=PageView&noscript=1"/></noscript>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1309866191223635&ev=PageView&noscript=1"/></noscript>
+</head>
+<body>
+
+<div class="rmk-container">
+
+    <!-- Header -->
+    <div class="rmk-header">
+        <div class="rmk-logo">Zap<span>Spy</span>.ai</div>
+    </div>
+
+    <!-- Returning visitor badge -->
+    <div style="text-align:center;">
+        <div class="visitor-badge">
+            <span class="visitor-badge-dot"></span>
+            Special offer for returning visitors
+        </div>
+    </div>
+
+    <!-- Offer ribbon -->
+    <div class="offer-ribbon">
+        ⏳ LIMITED TIME — EXCLUSIVE 50% DISCOUNT RESERVED FOR YOU
+    </div>
+
+    <!-- Hero headline -->
+    <h1 class="hero-headline">
+        You Came Back.<br>
+        <span>The Truth Is Still Waiting.</span>
+    </h1>
+    <p class="hero-subtext">
+        Those deleted WhatsApp messages aren't gone forever. You were this close to finding out the truth — and today we reserved a <strong style="color:var(--text-primary)">special 50% discount</strong> just for you.
+    </p>
+
+    <!-- Blurred messages preview -->
+    <div class="rmk-blurred-messages" style="margin-bottom:20px;">
+        <div class="rmk-msg-row">
+            <div class="rmk-msg-avatar">👤</div>
+            <div class="rmk-msg-content">
+                <div class="rmk-msg-name">Unknown Contact</div>
+                <div class="rmk-msg-preview">Hey, are you free tonight? I miss yo...</div>
+            </div>
+            <div class="rmk-msg-deleted">DELETED</div>
+        </div>
+        <div class="rmk-msg-row">
+            <div class="rmk-msg-avatar">👤</div>
+            <div class="rmk-msg-content">
+                <div class="rmk-msg-name">+1 (555) *** ****</div>
+                <div class="rmk-msg-preview">I deleted this before you could see it...</div>
+            </div>
+            <div class="rmk-msg-badge">12</div>
+        </div>
+        <div class="rmk-msg-row">
+            <div class="rmk-msg-avatar">👤</div>
+            <div class="rmk-msg-content">
+                <div class="rmk-msg-name">Hidden Number</div>
+                <div class="rmk-msg-preview">Don't tell anyone about last night...</div>
+            </div>
+            <div class="rmk-msg-deleted">DELETED</div>
+        </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="rmk-stats-row" style="margin-bottom:20px;">
+        <div class="rmk-stat">
+            <div class="rmk-stat-value">147</div>
+            <div class="rmk-stat-label">Deleted Msgs Recovered</div>
+        </div>
+        <div class="rmk-stat">
+            <div class="rmk-stat-value">23</div>
+            <div class="rmk-stat-label">Hidden Chats Found</div>
+        </div>
+        <div class="rmk-stat">
+            <div class="rmk-stat-value" style="color:var(--red-alert);">87%</div>
+            <div class="rmk-stat-label">Suspicion Score</div>
+        </div>
+    </div>
+
+    <!-- What you'll discover -->
+    <div class="rmk-card" style="margin-bottom:20px;">
+        <div class="rmk-card-header">
+            <div class="rmk-card-icon red">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div>
+                <div class="rmk-card-title">What You'll Discover</div>
+                <div class="rmk-card-subtitle">All hidden. All recovered. All revealed.</div>
+            </div>
+        </div>
+        <ul class="rmk-features">
+            <li>All deleted WhatsApp messages — recovered instantly</li>
+            <li>Hidden conversations and secret contacts</li>
+            <li>Photos & videos sent and received</li>
+            <li>Late-night messages they hoped you'd never see</li>
+            <li>GPS location history and check-ins</li>
+            <li>100% anonymous — they will never know</li>
+        </ul>
+    </div>
+
+    <!-- Timer -->
+    <div class="rmk-timer" style="margin-bottom:20px;">
+        <div class="rmk-timer-label">⚠️ Your exclusive offer expires in</div>
+        <div class="rmk-timer-value" id="countdown">20:00</div>
+    </div>
+
+    <!-- Price comparison -->
+    <div class="rmk-comparison" style="margin-bottom:8px;">
+        <div class="rmk-compare-col dimmed">
+            <div class="rmk-compare-label">Regular</div>
+            <div class="rmk-compare-price">$47</div>
+            <div class="rmk-compare-note">Website price</div>
+        </div>
+        <div class="rmk-compare-col highlight">
+            <div class="rmk-compare-label">Your Price</div>
+            <div class="rmk-compare-price">$24.00</div>
+            <div class="rmk-compare-note">50% OFF — Today only</div>
+        </div>
+    </div>
+    <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:24px;">One-time payment · No subscription · No hidden fees</p>
+
+    <!-- How it works -->
+    <div class="rmk-section-title">How It Works in 3 Steps</div>
+    <div class="rmk-card" style="margin-bottom:20px;">
+        <ul class="step-list">
+            <li>
+                <div class="step-num">1</div>
+                <span><strong style="color:var(--text-primary)">Click the button below</strong> and our sales specialist will answer you directly on WhatsApp.</span>
+            </li>
+            <li>
+                <div class="step-num">2</div>
+                <span><strong style="color:var(--text-primary)">Tell us the target's number</strong> — our team activates the scan instantly.</span>
+            </li>
+            <li>
+                <div class="step-num">3</div>
+                <span><strong style="color:var(--text-primary)">Get full access</strong> to all recovered messages, photos, and hidden conversations.</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- WhatsApp CTA block -->
+    <div style="text-align:center; margin-bottom:8px;">
+        <div class="whatsapp-icon-large">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.533 5.854L0 24l6.335-1.512A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.988-1.366l-.357-.212-3.757.896.952-3.654-.232-.373A9.8 9.8 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        </div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">Talk to a specialist and activate your access now</div>
+    </div>
+
+    <a href="https://wa.me/5527981346417?text=Hi!%20I%20saw%20the%20special%2050%25%20offer%20and%20want%20to%20know%20how%20to%20recover%20deleted%20WhatsApp%20messages%20%F0%9F%94%8D" target="_blank" class="wa-cta" onclick="trackWhatsApp()">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.533 5.854L0 24l6.335-1.512A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.988-1.366l-.357-.212-3.757.896.952-3.654-.232-.373A9.8 9.8 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        <div class="wa-cta-inner">
+            <span class="wa-cta-main">TALK TO A SPECIALIST NOW</span>
+            <span class="wa-cta-sub">Get 50% OFF · Respond in under 2 minutes</span>
+        </div>
+    </a>
+
+    <div class="rmk-social-proof" style="margin-top:12px;">
+        <span class="rmk-live-dot"></span>
+        <span id="liveCount">1,847</span> people chatted with us today
+    </div>
+
+    <!-- Trust badges -->
+    <div class="rmk-trust-badges" style="margin-top:8px;">
+        <div class="rmk-trust-badge">
+            <div class="rmk-trust-badge-icon">🔒</div>
+            <div class="rmk-trust-badge-text">100% Anonymous</div>
+        </div>
+        <div class="rmk-trust-badge">
+            <div class="rmk-trust-badge-icon">⚡</div>
+            <div class="rmk-trust-badge-text">Instant Activation</div>
+        </div>
+        <div class="rmk-trust-badge">
+            <div class="rmk-trust-badge-icon">🛡️</div>
+            <div class="rmk-trust-badge-text">30-Day Guarantee</div>
+        </div>
+        <div class="rmk-trust-badge">
+            <div class="rmk-trust-badge-icon">💬</div>
+            <div class="rmk-trust-badge-text">Live Support</div>
+        </div>
+    </div>
+
+    <div class="rmk-gradient-divider"></div>
+
+    <!-- Testimonials -->
+    <div class="rmk-section-title mt-8">What Others Discovered</div>
+
+    <div class="rmk-testimonial">
+        <div class="rmk-testimonial-header">
+            <div class="rmk-testimonial-avatar">👩</div>
+            <div>
+                <div class="rmk-testimonial-name">Sarah M. — California</div>
+                <div class="rmk-testimonial-date">3 days ago</div>
+            </div>
+        </div>
+        <div class="rmk-testimonial-stars">★★★★★</div>
+        <div class="rmk-testimonial-text">"I almost didn't come back. So glad I did. The specialist on WhatsApp answered instantly and helped me recover 89 deleted messages. I finally know the truth."</div>
+    </div>
+
+    <div class="rmk-testimonial">
+        <div class="rmk-testimonial-header">
+            <div class="rmk-testimonial-avatar">👨</div>
+            <div>
+                <div class="rmk-testimonial-name">James R. — Texas</div>
+                <div class="rmk-testimonial-date">1 week ago</div>
+            </div>
+        </div>
+        <div class="rmk-testimonial-stars">★★★★★</div>
+        <div class="rmk-testimonial-text">"The 50% discount made the decision easy. Within minutes I had access to everything. The hidden chats were exactly what I suspected. Worth every cent."</div>
+    </div>
+
+    <div class="rmk-testimonial">
+        <div class="rmk-testimonial-header">
+            <div class="rmk-testimonial-avatar">👩</div>
+            <div>
+                <div class="rmk-testimonial-name">Emily T. — Florida</div>
+                <div class="rmk-testimonial-date">5 days ago</div>
+            </div>
+        </div>
+        <div class="rmk-testimonial-stars">★★★★★</div>
+        <div class="rmk-testimonial-text">"Super easy. I messaged them on WhatsApp, they set everything up for me. No more living in doubt — the deleted messages said it all."</div>
+    </div>
+
+    <!-- Guarantee -->
+    <div class="rmk-guarantee mt-16">
+        <div class="rmk-guarantee-icon">🛡️</div>
+        <div class="rmk-guarantee-text">
+            <strong>30-Day Money-Back Guarantee.</strong> Not satisfied? Get a full refund. No questions asked. Zero risk.
+        </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div style="margin-top:24px; margin-bottom:8px; text-align:center;">
+        <div style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">
+            ⚠️ This <strong style="color:var(--text-primary)">50% discount</strong> disappears when the timer hits zero.
+        </div>
+    </div>
+
+    <a href="https://wa.me/5527981346417?text=Hi!%20I%20saw%20the%20special%2050%25%20offer%20and%20want%20to%20know%20how%20to%20recover%20deleted%20WhatsApp%20messages%20%F0%9F%94%8D" target="_blank" class="wa-cta" onclick="trackWhatsApp()">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.533 5.854L0 24l6.335-1.512A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.988-1.366l-.357-.212-3.757.896.952-3.654-.232-.373A9.8 9.8 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        <div class="wa-cta-inner">
+            <span class="wa-cta-main">CLAIM 50% OFF VIA WHATSAPP</span>
+            <span class="wa-cta-sub">Talk to us now · Activate in minutes</span>
+        </div>
+    </a>
+
+    <div class="rmk-footer">
+        Whats Spy — Secure Intelligence Platform<br>
+        &copy; 2025 Whats Spy. All rights reserved.<br>
+        This offer is exclusively for returning visitors.
+    </div>
+
+    <div style="height:90px;"></div>
+</div>
+
+<!-- Sticky Footer -->
+<div class="rmk-sticky-footer">
+    <a href="https://wa.me/5527981346417?text=Hi!%20I%20saw%20the%20special%2050%25%20offer%20and%20want%20to%20know%20how%20to%20recover%20deleted%20WhatsApp%20messages%20%F0%9F%94%8D" target="_blank" class="wa-cta" style="max-width:480px;margin:0 auto;display:flex;" onclick="trackWhatsApp()">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.533 5.854L0 24l6.335-1.512A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.988-1.366l-.357-.212-3.757.896.952-3.654-.232-.373A9.8 9.8 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+        <div class="wa-cta-inner">
+            <span class="wa-cta-main">TALK TO A SPECIALIST — 50% OFF</span>
+            <span class="wa-cta-sub">WhatsApp · Responds in under 2 min</span>
+        </div>
+    </a>
+</div>
+
+<!-- Activity Feed -->
+<div class="rmk-activity-feed" id="activityFeed"></div>
+
+<!-- Exit Intent Overlay -->
+<div class="rmk-exit-overlay" id="exitOverlay" style="display:none;">
+    <div class="rmk-exit-modal">
+        <div class="rmk-exit-modal-icon">💬</div>
+        <div class="rmk-exit-modal-title">Wait! Your 50% OFF is still active!</div>
+        <div class="rmk-exit-modal-text">
+            A specialist is ready to answer you right now on WhatsApp. Don't leave without the truth — this discount expires soon.
+        </div>
+        <a href="https://wa.me/5527981346417?text=Hi!%20I%20saw%20the%20special%2050%25%20offer%20and%20want%20to%20know%20how%20to%20recover%20deleted%20WhatsApp%20messages%20%F0%9F%94%8D" target="_blank" class="rmk-cta primary" style="display:flex;align-items:center;justify-content:center;gap:8px;" onclick="closeExit(); trackWhatsApp();">
+            YES, I WANT 50% OFF NOW
+        </a>
+        <button class="rmk-exit-modal-close" onclick="closeExit()">No thanks, I don't want the truth</button>
+    </div>
+</div>
+
+<script src="../js/remarketing-tracking.js"></script>
+<script>
+(function() {
+    // Init pixel tracking
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'ViewContent', { content_name: 'Meta Ads Remarketing Page' });
+    }
+
+    // Countdown — 20 minutes
+    startTimer('countdown', 1200, function() {
+        document.getElementById('countdown').textContent = 'EXPIRED';
+        document.getElementById('countdown').style.color = 'var(--red-alert)';
+    });
+
+    // Live counter
+    var liveEl = document.getElementById('liveCount');
+    setInterval(function() {
+        var n = 1600 + Math.floor(Math.random() * 400);
+        liveEl.textContent = n.toLocaleString();
+    }, 6000);
+
+    // Activity feed
+    var activities = [
+        { emoji: '👩', name: 'Maria from California', action: 'just messaged us and got 50% OFF', time: '1 min ago' },
+        { emoji: '👨', name: 'John from Texas', action: 'recovered 89 deleted messages today', time: '3 min ago' },
+        { emoji: '👩', name: 'Rachel from Florida', action: 'activated access via WhatsApp', time: '2 min ago' },
+        { emoji: '👨', name: 'Alex from New York', action: 'found hidden conversations — now he knows', time: '5 min ago' },
+        { emoji: '👩', name: 'Sophia from Ohio', action: 'saved $24.00 with the exclusive offer', time: '4 min ago' },
+        { emoji: '👨', name: 'Marcus from Georgia', action: 'is chatting with a specialist right now', time: 'just now' },
+        { emoji: '👩', name: 'Jessica from Arizona', action: 'unlocked full access in under 3 minutes', time: '6 min ago' },
+    ];
+    startActivityFeed(activities, 9000);
+
+    // Tab title
+    initTabTitle('💬 50% OFF — Specialist Waiting!');
+
+    // Exit intent
+    var exitShown = false;
+    document.addEventListener('mouseleave', function(e) {
+        if (e.clientY < 10 && !exitShown) {
+            exitShown = true;
+            document.getElementById('exitOverlay').style.display = 'flex';
+        }
+    });
+})();
+
+function closeExit() {
+    document.getElementById('exitOverlay').style.display = 'none';
+}
+
+function trackWhatsApp() {
+    if (typeof fbq !== 'undefined') {
+        fbq('track', 'Contact', { content_name: 'WhatsApp CTA - Meta Ads Remarketing' });
+        fbq('track', 'InitiateCheckout', { value: 24, currency: 'USD' });
+    }
+}
+</script>
+
+</body>
+</html>
