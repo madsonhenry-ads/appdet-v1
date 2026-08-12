@@ -1,0 +1,2789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Capture fbclid and poll for _fbp cookie ASAP -->
+    <script>
+    (function() {
+        var m = window.location.search.match(/[?&]fbclid=([^&]+)/);
+        if (m) {
+            var fbc = 'fb.1.' + Date.now() + '.' + decodeURIComponent(m[1]);
+            try { localStorage.setItem('_fbc', fbc); } catch(e) {}
+        }
+        var polls = 0;
+        var pi = setInterval(function() {
+            var c = document.cookie.match(/_fbp=([^;]+)/);
+            if (c) { try { localStorage.setItem('_fbp', c[1]); } catch(e) {} clearInterval(pi); }
+            if (++polls > 25) clearInterval(pi);
+        }, 200);
+    })();
+    </script>
+    <!-- UTMify tracking -->
+    <script src="https://cdn.utmify.com.br/scripts/utms/latest.js" data-utmify-prevent-xcod-sck data-utmify-prevent-subids async defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
+    <title>WhatsApp</title>
+    <link rel="shortcut icon" href="../imagens/icon-site.png">
+    
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../css/global.css">
+    <script src="../js/sentry-init.js" defer></script>
+
+    <!-- Shared Audio & Vibration Systems -->
+    <script src="../js/audio-vibration.js"></script>
+    
+    <!-- Enhanced Tracking -->
+    <script src="../js/tracking-utils.js"></script>
+    <script>if(typeof TrackingUtils!=='undefined')TrackingUtils.captureUTMs();</script>
+    <script src="../js/tracking.js"></script>
+    <script src="../js/funnel-tracking.js"></script>
+    
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    
+    // Advanced Matching - get user data from localStorage
+    var userData = {};
+    try {
+        var em = localStorage.getItem('userEmail');
+        var ph = localStorage.getItem('userWhatsApp');
+        var fn = localStorage.getItem('userName');
+        var ct = localStorage.getItem('userCity');
+        var co = localStorage.getItem('userCountryCode');
+        var ge = localStorage.getItem('targetGender');
+        var st = localStorage.getItem('userState');
+        if (em) userData.em = em.toLowerCase().trim();
+        if (ph) userData.ph = ph.replace(/\D/g, '');
+        if (fn) {
+            var names = fn.trim().split(' ');
+            userData.fn = names[0].toLowerCase();
+            if (names.length > 1) userData.ln = names.slice(1).join(' ').toLowerCase();
+        }
+        if (ct) userData.ct = ct.toLowerCase().replace(/[^a-z]/g, '');
+        if (co) userData.country = co.toLowerCase();
+        if (ge) userData.ge = ge === 'female' ? 'f' : 'm';
+        if (st) userData.st = st.toLowerCase().replace(/[^a-z]/g, '');
+    } catch(e) {}
+    
+    fbq('init', '1402416467697896', userData);
+    fbq('init', '1402416467697896', userData);
+    var pvId = 'PageView_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    fbq('track', 'PageView', {}, { eventID: pvId });
+    window._fbPageViewFired = true;
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1402416467697896&ev=PageView&noscript=1"
+    /></noscript>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1402416467697896&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    
+    <!-- Facebook CAPI Client -->
+    <script src="../js/fc.js"></script>
+    <script src="../js/funnel-config.js"></script>
+    <script src="../js/google-ads-loader.js" async></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof FacebookCAPI !== 'undefined') {
+                FacebookCAPI.init('Conversations List');
+                FacebookCAPI.trackViewContent('Conversations List', 'Funnel Step', 47);
+            }
+        });
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e9edef;
+            --bg-conversation: #ffffff;
+            --text-primary: #111b21;
+            --text-secondary: #667781;
+            --text-muted: #8696a0;
+            --green-primary: #e91e63;
+            --green-dark: #c2185b;
+            --blue-check: #53bdeb;
+            --red-alert: #ea0038;
+            --orange-alert: #ff9500;
+            --divider: #e5e7eb;
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(240, 242, 245, 0.85);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Status Bar - iOS Style Light */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 28px 10px;
+            padding-top: calc(14px + var(--safe-area-top));
+            background: var(--bg-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .status-time {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-icons svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-primary);
+        }
+
+        .battery {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .battery-icon {
+            width: 27px;
+            height: 13px;
+            border: 1.5px solid var(--text-primary);
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 2px;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            width: 3px;
+            height: 7px;
+            background: var(--text-primary);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .battery-level {
+            height: 100%;
+            width: 25%;
+            background: #ff3b30;
+            border-radius: 2px;
+        }
+
+        .battery-percent {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Header - WhatsApp Light Style */
+        .header {
+            padding: 0 20px 16px;
+            background: var(--bg-secondary);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header-menu {
+            width: 34px;
+            height: 34px;
+            background: none;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .header-menu svg {
+            width: 4px;
+            height: 16px;
+            color: var(--text-primary);
+        }
+
+        .header-title {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-actions svg {
+            width: 26px;
+            height: 26px;
+            color: var(--green-primary);
+        }
+
+        .btn-new-chat {
+            width: 32px;
+            height: 32px;
+            background: var(--green-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-new-chat svg {
+            width: 18px;
+            height: 18px;
+            color: white !important;
+        }
+
+        /* Search Bar - Light */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+        }
+
+        .search-bar svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .search-bar span {
+            font-size: 17px;
+            color: var(--text-muted);
+        }
+
+        /* Filters - Light Style */
+        .filters {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            background: var(--bg-secondary);
+        }
+
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-notice {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            margin: 0 16px 0;
+            background: rgba(0,0,0,0.03);
+            border-radius: 8px;
+            border-left: 3px solid #8a8d91;
+            font-size: 11.5px;
+            color: #667781;
+            line-height: 1.4;
+        }
+        .filter-notice svg {
+            flex-shrink: 0;
+            opacity: 0.7;
+        }
+        .filter-notice strong {
+            color: #3b4a54;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid #d1d5db;
+        }
+
+        .filter-btn.active {
+            background: var(--green-primary);
+            color: white;
+        }
+
+        .filter-btn .badge {
+            background: rgba(0,0,0,0.1);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .filter-btn.active .badge {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Alert Banner - Light */
+        .alert-banner {
+            margin: 0 16px 12px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(234, 0, 56, 0.08), rgba(255, 149, 0, 0.06));
+            border: 1px solid rgba(234, 0, 56, 0.2);
+            border-radius: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            min-height: auto;
+        }
+
+        .alert-banner svg {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            color: var(--red-alert);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .alert-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .alert-banner-text strong {
+            display: block;
+            font-size: 14px;
+            color: var(--red-alert);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .alert-banner-text span {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: block;
+            line-height: 1.4;
+        }
+
+        /* Conversations List */
+        .conversations-list {
+            padding-bottom: 180px;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 14px;
+            cursor: default;
+            transition: background 0.15s;
+            border-bottom: 0.5px solid var(--divider);
+            position: relative;
+            background: var(--bg-secondary);
+        }
+
+        .conversation-item:active {
+            background: var(--bg-tertiary);
+        }
+
+        .conversation-item.deleted-conv {
+            border-left: 3px solid var(--red-alert);
+        }
+
+        /* Avatar */
+        .avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg-tertiary);
+        }
+
+        .avatar.blurred {
+            filter: blur(8px);
+        }
+
+        .avatar.semi-blurred {
+            filter: blur(4px);
+        }
+
+        .avatar-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .avatar-badge.deleted {
+            background: var(--red-alert);
+        }
+
+        .avatar-badge.suspicious {
+            background: var(--orange-alert);
+        }
+
+        .avatar-badge.lock {
+            background: var(--bg-tertiary);
+        }
+
+        .avatar-badge svg {
+            width: 12px;
+            height: 12px;
+            color: white;
+        }
+
+        .avatar-badge.lock svg {
+            color: var(--text-muted);
+        }
+
+        /* Group Avatar */
+        .group-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .group-avatar svg {
+            width: 28px;
+            height: 28px;
+            color: var(--text-muted);
+        }
+
+        .group-avatar.blurred {
+            filter: blur(4px);
+        }
+
+        /* Conversation Content */
+        .conversation-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .conversation-name {
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .conversation-name.blurred {
+            filter: blur(4px);
+        }
+
+        .conversation-name.semi-blurred {
+            filter: blur(2px);
+        }
+
+
+        .conversation-preview {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .conversation-preview svg {
+            width: 18px;
+            height: 12px;
+            color: var(--blue-check);
+            flex-shrink: 0;
+        }
+
+        .conversation-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .conversation-text.blurred {
+            filter: blur(5px);
+        }
+
+        .conversation-text.semi-blurred {
+            filter: blur(2px);
+        }
+
+        /* Tags - Light */
+        .conversation-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .tag {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .tag.deleted {
+            background: rgba(234, 0, 56, 0.1);
+            color: var(--red-alert);
+        }
+
+        .tag.suspicious {
+            background: rgba(255, 149, 0, 0.12);
+            color: #cc7a00;
+        }
+
+        .tag.evidence {
+            background: rgba(234, 0, 56, 0.12);
+            color: var(--red-alert);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Right Side Badges */
+        .conversation-badges {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .unread-badge {
+            min-width: 22px;
+            height: 22px;
+            background: var(--green-primary);
+            color: white;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+        }
+
+        .unread-badge.alert {
+            background: var(--red-alert);
+        }
+
+        .icon-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pin-icon svg, .mute-icon svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+        }
+
+        /* Bottom Navigation - Light */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top: 0.5px solid var(--divider);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 6px;
+            padding-bottom: calc(6px + var(--safe-area-bottom));
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            cursor: pointer;
+            padding: 4px 12px;
+            position: relative;
+            min-width: 60px;
+        }
+
+        .nav-item svg {
+            width: 28px;
+            height: 28px;
+            color: var(--text-muted);
+        }
+
+        .nav-item.active svg {
+            color: #111b21;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .nav-item.active span {
+            color: #111b21;
+            font-weight: 600;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 0;
+            right: 6px;
+            min-width: 18px;
+            height: 18px;
+            background: var(--red-alert);
+            color: white;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+        }
+
+        .nav-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Modal - Light */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 28px 24px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            animation: modalSlideUp 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--green-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .modal-icon svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .modal-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .modal-text strong {
+            color: #ff3b30;
+        }
+
+        .modal-bonuses {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .modal-bonus-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .modal-bonus-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .modal-bonus-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #e9edef;
+            line-height: 1.2;
+        }
+
+        .modal-bonus-text span {
+            display: block;
+            font-size: 9px;
+            font-weight: 400;
+            color: #8696a0;
+            margin-top: 1px;
+        }
+
+        .modal-user-info {
+            margin-bottom: 10px;
+        }
+
+        .modal-user-data {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .modal-user-line {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 10px;
+            color: #8696a0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal-user-warning {
+            background: rgba(255, 59, 48, 0.1);
+            border: 1px solid rgba(255, 59, 48, 0.25);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 11px;
+            color: #333;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .modal-user-warning strong {
+            color: #ff3b30;
+        }
+
+        .modal-user-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--green-primary);
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .modal-user-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .modal-user-header-text {
+            flex: 1;
+        }
+        .modal-user-header-text .modal-user-name-display {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        .modal-user-header-text .modal-user-status {
+            font-size: 11px;
+            color: var(--red-alert);
+            margin-top: 2px;
+        }
+
+        .modal-user-avatar-fallback {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 2px solid var(--green-primary);
+            margin-right: 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #c2185b, #e91e63);
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .modal-pricing {
+            background: linear-gradient(135deg, rgba(233,30,99,0.1), rgba(18,140,126,0.08));
+            border: 1px solid rgba(233, 30, 99, 0.25);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .modal-price-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .modal-price-old {
+            font-size: 17px;
+            color: #636366;
+            text-decoration: line-through;
+            font-weight: 400;
+        }
+
+        .modal-price-new {
+            font-size: 40px;
+            font-weight: 900;
+            color: #e91e63;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+
+        .modal-price-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff3b30, #ff6b6b);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-guarantee {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .modal-guarantee-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+
+        .modal-guarantee-text {
+            font-size: 12px;
+            color: #e9edef;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .modal-guarantee-text span {
+            display: block;
+            font-size: 10px;
+            color: #8696a0;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 0;
+            box-shadow: 0 4px 24px rgba(233, 30, 99, 0.4);
+        }
+
+        @keyframes modalPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 24px rgba(233,30,99,0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 6px 32px rgba(233,30,99,0.6); }
+        }
+
+        /* Responsive */
+        @media (max-width: 380px) {
+            .header-title {
+                font-size: 28px;
+            }
+            .conversation-name {
+                font-size: 15px;
+            }
+            .conversation-preview {
+                font-size: 13px;
+            }
+            .conversation-avatar {
+                width: 50px;
+                height: 50px;
+            }
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .status-bar {
+                padding: 8px 20px 6px;
+            }
+            .header {
+                padding: 8px 20px 12px;
+            }
+            .header-title {
+                font-size: 28px;
+            }
+            .conversation-item {
+                padding: 10px 20px;
+            }
+        }
+
+        /* ========== AUDIO PREVIEW ========== */
+        .audio-preview {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(233, 30, 99, 0.08);
+            padding: 8px 12px;
+            border-radius: 20px;
+            margin-top: 4px;
+        }
+
+        .audio-play-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--green-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .audio-play-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--green-primary);
+            animation: audio-pulse 1.5s infinite;
+        }
+
+        @keyframes audio-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .audio-play-btn svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+            margin-left: 2px;
+        }
+
+        .audio-waveform {
+            flex: 1;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .audio-bar {
+            width: 3px;
+            background: var(--green-primary);
+            border-radius: 2px;
+            animation: wave 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes wave {
+            from { height: 4px; }
+            to { height: 20px; }
+        }
+
+        .audio-duration {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .audio-lock {
+            font-size: 10px;
+            color: var(--red-alert);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ========== DELETED MESSAGE REVEAL - Light ========== */
+        .deleted-message-reveal {
+            background: linear-gradient(135deg, rgba(234, 0, 56, 0.06), rgba(255, 149, 0, 0.04));
+            border: 1px solid rgba(234, 0, 56, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 12px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deleted-message-reveal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .deleted-message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .deleted-message-header svg {
+            width: 20px;
+            height: 20px;
+            color: var(--red-alert);
+        }
+
+        .deleted-message-header span {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--red-alert);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .deleted-message-content {
+            font-size: 15px;
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .deleted-message-content .blocked {
+            background: var(--text-primary);
+            color: var(--text-primary);
+            border-radius: 2px;
+            padding: 0 2px;
+            user-select: none;
+        }
+
+        .deleted-message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--divider);
+        }
+
+        .deleted-message-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .deleted-message-unlock {
+            font-size: 11px;
+            color: var(--green-primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ========== SUSPICION DETECTOR - Light ========== */
+        .suspicion-detector {
+            background: linear-gradient(135deg, rgba(234, 0, 56, 0.05), rgba(255, 255, 255, 0.8));
+            border: 1px solid rgba(234, 0, 56, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 12px 20px;
+        }
+
+        .suspicion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .suspicion-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suspicion-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--red-alert);
+        }
+
+        .suspicion-title span {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--red-alert);
+            text-transform: uppercase;
+        }
+
+        .suspicion-score {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--red-alert);
+        }
+
+        .suspicion-bar {
+            height: 8px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .suspicion-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange-alert), var(--red-alert));
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .suspicion-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .suspicion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .suspicion-item-label {
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .suspicion-item-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .suspicion-item-value.high {
+            color: var(--red-alert);
+        }
+
+        /* ========== FREQUENT CONTACT - Light ========== */
+        .frequent-contact {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.08), rgba(234, 0, 56, 0.04));
+            border: 1px solid rgba(255, 149, 0, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .frequent-contact-avatar {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+        }
+
+        .frequent-contact-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: blur(8px);
+        }
+
+        .frequent-contact-avatar::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+        }
+
+        .frequent-contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .frequent-contact-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--orange-alert);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .frequent-contact-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .frequent-contact-name .hidden {
+            background: var(--text-primary);
+            color: var(--text-primary);
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
+        .frequent-contact-stats {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .frequent-contact-stats strong {
+            color: var(--red-alert);
+        }
+
+        .frequent-contact-badge {
+            background: var(--red-alert);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .frequent-contact-badge span {
+            display: block;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        /* ========== BLURRED PHOTO PREVIEW ========== */
+        .photo-preview {
+            position: relative;
+            width: 100%;
+            max-width: 200px;
+            margin-top: 8px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            filter: blur(15px);
+        }
+
+        .photo-preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .photo-preview-overlay svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+
+        .photo-preview-overlay span {
+            font-size: 11px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .photo-count-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(234,0,56,0.9);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        /* Fade-in animation for conversations */
+        .conversation-item.fade-in {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: convFadeIn 0.4s ease forwards;
+        }
+
+        @keyframes convFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Inline widget: Suspicion Detector - Light */
+        .widget-suspicion {
+            background: linear-gradient(135deg, rgba(234,0,56,0.04), rgba(255,149,0,0.03));
+            border: 1px solid rgba(234,0,56,0.12);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 8px 16px;
+        }
+
+        .widget-suspicion .ws-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .widget-suspicion .ws-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--red-alert);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .widget-suspicion .ws-score {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--red-alert);
+        }
+
+        .widget-suspicion .ws-bar {
+            height: 6px;
+            background: rgba(0,0,0,0.06);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .widget-suspicion .ws-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--orange-alert), var(--red-alert));
+            border-radius: 3px;
+            transition: width 1.5s ease;
+        }
+
+        .widget-suspicion .ws-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .widget-suspicion .ws-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .widget-suspicion .ws-row-label { color: var(--text-secondary); }
+        .widget-suspicion .ws-row-value { color: var(--text-primary); font-weight: 600; }
+        .widget-suspicion .ws-row-value.danger { color: var(--red-alert); }
+
+        /* Inline widget: Deleted Message Reveal - Light */
+        .widget-deleted-reveal {
+            background: linear-gradient(135deg, rgba(234,0,56,0.05), rgba(255,149,0,0.03));
+            border: 1px solid rgba(234,0,56,0.15);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin: 8px 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .widget-deleted-reveal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.02), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .widget-deleted-reveal .wdr-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .widget-deleted-reveal .wdr-badge {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--red-alert);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: blink 1.5s infinite;
+        }
+
+        .widget-deleted-reveal .wdr-content {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-style: italic;
+            position: relative;
+        }
+
+        .widget-deleted-reveal .wdr-content .blocked {
+            background: var(--text-primary);
+            color: var(--text-primary);
+            border-radius: 2px;
+            padding: 0 3px;
+            user-select: none;
+        }
+
+        .widget-deleted-reveal .wdr-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 11px;
+            position: relative;
+        }
+
+        .widget-deleted-reveal .wdr-time { color: var(--text-muted); }
+        .widget-deleted-reveal .wdr-unlock { color: var(--green-primary); font-weight: 600; }
+
+        /* Inline widget: Frequent Contact Alert - Light */
+        .widget-frequent {
+            background: linear-gradient(135deg, rgba(255,149,0,0.06), rgba(234,0,56,0.03));
+            border: 1px solid rgba(255,149,0,0.2);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+        }
+
+        .widget-frequent .wf-avatar {
+            position: relative;
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+        }
+
+        .widget-frequent .wf-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: blur(8px);
+        }
+
+        .widget-frequent .wf-avatar::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+        }
+
+        .widget-frequent .wf-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .widget-frequent .wf-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--orange-alert);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .widget-frequent .wf-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2px 0;
+        }
+
+        .widget-frequent .wf-stats {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .widget-frequent .wf-stats strong { color: var(--red-alert); }
+
+        .widget-frequent .wf-badge {
+            background: var(--red-alert);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 8px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .widget-frequent .wf-badge span {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        /* Inline widget: Audio Intercepted - Light */
+        .widget-audio {
+            background: rgba(233,30,99,0.05);
+            border: 1px solid rgba(233,30,99,0.15);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin: 8px 16px;
+            cursor: pointer;
+        }
+
+        .widget-audio .wa-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--red-alert);
+            text-transform: uppercase;
+        }
+
+        .widget-audio .wa-player {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .widget-audio .wa-play-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--green-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .widget-audio .wa-play-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--green-primary);
+            animation: audio-pulse 1.5s infinite;
+        }
+
+        .widget-audio .wa-waveform {
+            flex: 1;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .widget-audio .wa-bar {
+            width: 3px;
+            background: var(--green-primary);
+            border-radius: 2px;
+            opacity: 0.6;
+        }
+
+        .widget-audio .wa-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        .widget-audio .wa-duration { color: var(--text-muted); }
+        .widget-audio .wa-lock { color: var(--red-alert); display: flex; align-items: center; gap: 4px; }
+
+        /* Screenshot Warning Overlay - Light */
+        .screenshot-warning {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.95);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .screenshot-warning.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .screenshot-warning .sw-icon {
+            width: 72px;
+            height: 72px;
+            background: var(--red-alert);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: iconBounce 0.6s ease;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .screenshot-warning .sw-icon svg {
+            width: 36px;
+            height: 36px;
+            color: white;
+        }
+
+        .screenshot-warning .sw-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--red-alert);
+            text-align: center;
+        }
+
+        .screenshot-warning .sw-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 280px;
+            line-height: 1.5;
+        }
+
+    </style>
+</head>
+<body>
+<div data-zs-hp="v1" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none" tabindex="-1">
+<label>Leave this empty<input type="text" name="email_confirm" tabindex="-1" autocomplete="off" value=""></label>
+<label>Website<input type="text" name="website_url" tabindex="-1" autocomplete="off" value=""></label>
+<label>Company<input type="text" name="company_name" tabindex="-1" autocomplete="off" value=""></label>
+</div>
+
+<style id="mobile-safety">
+html,body{max-width:100vw;overflow-x:hidden;}
+*{box-sizing:border-box;}
+@media (max-width: 480px) {
+  button:not([class*="close"]):not([class*="icon"]),
+  .btn, [role="button"], a.tier-cta, a.spy-btn, a[class*="cta"]:not([class*="floating"]) {
+    min-height: 44px;
+  }
+  input, select, textarea { min-height: 44px; font-size: 16px; }
+}
+img,video,iframe{max-width:100%;height:auto;}
+@supports (padding: env(safe-area-inset-bottom)) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+  [class*="floatingCta"], #floatingCta, .floating-cta, .sticky-cta-bar,
+  .bottom-bar, .bottom-cta, .fixed-bottom {
+    padding-bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+}
+</style>
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span class="status-time" id="currentTime">16:52</span>
+        <div class="status-icons">
+            <!-- Signal -->
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <rect x="1" y="14" width="4" height="8" rx="1"/>
+                <rect x="7" y="10" width="4" height="12" rx="1"/>
+                <rect x="13" y="6" width="4" height="16" rx="1" opacity="0.3"/>
+                <rect x="19" y="2" width="4" height="20" rx="1" opacity="0.3"/>
+            </svg>
+            <!-- WiFi -->
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 18c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4.9-2.3l1.4 1.4C9.4 18 10.6 18.5 12 18.5s2.6-.5 3.5-1.4l1.4-1.4c-1.3-1.3-3.1-2.1-4.9-2.1s-3.6.8-4.9 2.1zm-2.8-2.8l1.4 1.4C7.3 16 9.5 17 12 17s4.7-1 6.3-2.7l1.4-1.4C17.5 10.7 14.9 9.5 12 9.5S6.5 10.7 4.3 12.9z"/>
+            </svg>
+            <!-- Battery -->
+            <div class="battery">
+                <span class="battery-percent">25</span>
+                <div class="battery-icon">
+                    <div class="battery-level"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-top">
+            <div class="header-menu">
+                <svg viewBox="0 0 4 16" fill="currentColor">
+                    <circle cx="2" cy="2" r="1.5"/>
+                    <circle cx="2" cy="8" r="1.5"/>
+                    <circle cx="2" cy="14" r="1.5"/>
+                </svg>
+            </div>
+            <h1 class="header-title">Chats</h1>
+            <div class="header-actions">
+                <button>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                </button>
+                <button class="btn-new-chat">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="search-bar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <span>Ask Meta AI or Search</span>
+        </div>
+    </div>
+
+    <div style="background:var(--bg-secondary);padding:12px 0 8px;">
+    <!-- Alert Banner -->
+    <div class="alert-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <div class="alert-banner-text">
+            <strong id="deletedAlert">Loading...</strong>
+            <span>Conversations deleted to hide something from you</span>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterConversations('all', this)">All</button>
+        <button class="filter-btn" onclick="filterConversations('unread', this)">Unread</button>
+        <button class="filter-btn" onclick="filterConversations('favorites', this)">Favorites</button>
+        <button class="filter-btn" onclick="filterConversations('groups', this)">Groups</button>
+        <button class="filter-btn">+</button>
+    </div>
+
+    <!-- Filter Notice -->
+    <div class="filter-notice" id="filterNotice">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a8d91" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+        <span>Showing only conversations with <strong>suspicious activity</strong> detected. <span id="filteredOutCount">312</span> normal conversations were filtered out.</span>
+    </div>
+    </div>
+
+    <!-- Conversations List -->
+    <div class="conversations-list" id="conversationsList"></div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Updates</span>
+        </div>
+        <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <span>Calls</span>
+            <span class="nav-badge">3</span>
+        </div>
+        <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>Communities</span>
+        </div>
+        <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+            <span>Chats</span>
+            <span class="nav-badge">99+</span>
+        </div>
+        <div class="nav-item" id="navYou">
+            <img id="navAvatar" class="nav-avatar" src="" alt="" style="display:none;">
+            <svg id="navAvatarFallback" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M20 21a8 8 0 1 0-16 0"/>
+            </svg>
+            <span>You</span>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-header-row">
+                <div class="modal-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <h3 class="modal-title">Blocked Conversation</h3>
+            </div>
+            <p class="modal-text" id="modalText">This conversation contains <strong>deleted messages</strong> and suspicious content.</p>
+
+
+            <div id="modalDataSummary" style="background:rgba(233,30,99,0.08);border:1px solid rgba(233,30,99,0.2);border-radius:10px;padding:10px 12px;margin:10px 0 6px;">
+                <div style="font-size:11px;color:#e91e63;font-weight:600;margin-bottom:6px;">📊 Data recovered from this number:</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:12px;color:#3b4a54;">
+                    <span>🗑️ <strong id="modalDeleted">--</strong> deleted msgs</span>
+                    <span>📸 <strong id="modalMedia">--</strong> hidden media</span>
+                    <span>👤 <strong id="modalContacts">--</strong> secret contacts</span>
+                    <span>🌙 <strong id="modalNight">--</strong> late night chats</span>
+                </div>
+            </div>
+
+
+            <button class="modal-btn" id="modalCTA" onclick="goToCTAPage()" style="animation:modalPulse 2s infinite;">
+                🔓 Unlock All Conversations
+            </button>
+        </div>
+    </div>
+
+    <!-- Screenshot Warning -->
+    <div class="screenshot-warning" id="screenshotWarning">
+        <div class="sw-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+        </div>
+        <div class="sw-title">⚠️ Screenshot Detected!</div>
+        <div class="sw-text">This content is protected. Screenshots are being monitored for security purposes.</div>
+    </div>
+
+    <script>
+        // Get the gender being spied on from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetGender = urlParams.get('gender') || localStorage.getItem('targetGender') || 'male';
+        
+        // Determine which gender should appear as suspicious contacts
+        const suspiciousGender = targetGender === 'female' ? 'male' : 'female';
+        
+        // Detect country code from the target phone number
+        var targetPhone = urlParams.get('phone') || localStorage.getItem('userWhatsApp') || '';
+        targetPhone = targetPhone.replace(/[\s\-\(\)]/g, '');
+        
+        var detectedDDI = '+1';
+        // All country codes sorted longest-first for correct matching
+        var ddiCodes = [
+            '+1684','+1264','+1268','+1242','+1246','+1441','+1284','+1345','+1767','+1809','+1829','+1849','+1473','+1671','+1876','+1664','+1787','+1939','+1869','+1758','+1784','+1868','+1649','+1340',
+            '+994','+993','+992','+998','+996','+995',
+            '+880','+886','+855','+856','+853','+852',
+            '+690','+691','+692','+670','+672','+673','+674','+675','+676','+677','+678','+679','+680','+681','+682','+683','+685','+686','+687','+688','+689',
+            '+590','+591','+592','+593','+594','+595','+596','+597','+598','+599',
+            '+500','+501','+502','+503','+504','+505','+506','+507','+508','+509',
+            '+420','+421','+423',
+            '+380','+381','+382','+383','+385','+386','+387','+389',
+            '+370','+371','+372','+373','+374','+375','+376','+377','+378','+379',
+            '+350','+351','+352','+353','+354','+355','+356','+357','+358','+359',
+            '+297','+298','+299',
+            '+290','+291','+292','+293','+294','+295','+296',
+            '+269','+268','+267','+266','+265','+264','+263','+262','+261','+260',
+            '+258','+257','+256','+255','+254','+253','+252','+251','+250','+249','+248','+247','+246','+245','+244','+243','+242','+241','+240','+239','+238','+237','+236','+235','+234','+233','+232','+231','+230','+229','+228','+227','+226','+225','+224','+223','+222','+221','+220','+218','+216','+213','+212','+211','+210',
+            '+971','+974','+973','+972','+970','+968','+967','+966','+965','+964','+963','+962','+961','+960',
+            '+98','+95','+94','+93','+92','+91','+90',
+            '+86','+84','+82','+81','+80',
+            '+77','+76',
+            '+66','+65','+64','+63','+62','+61','+60',
+            '+58','+57','+56','+55','+54','+53','+52','+51',
+            '+49','+48','+47','+46','+45','+44','+43','+41','+40',
+            '+39','+36','+34','+33','+32','+31','+30',
+            '+27','+20',
+            '+7','+1'
+        ];
+        
+        var phoneToCheck = targetPhone.startsWith('+') ? targetPhone : '+' + targetPhone;
+        for (var i = 0; i < ddiCodes.length; i++) {
+            if (phoneToCheck.startsWith(ddiCodes[i])) {
+                detectedDDI = ddiCodes[i];
+                break;
+            }
+        }
+        
+        function fakePhone(suffix) {
+            var digits = suffix || (Math.floor(Math.random() * 90) + 10);
+            return detectedDDI + ' ***-***-**' + digits;
+        }
+
+        const allConversations = [
+            // Pinned normal contacts
+            { name: '❤️ My L***', avatar: '../imagens/spy-female-1.jpg', message: '✓✓ You: Love you t**!', time: '09:19', pinned: true, blur: 'full', tags: [] },
+            { name: 'Best Fr***', avatar: '../imagens/spy-male-3.jpg', message: '✓✓ You: Call you lat**!', time: '10:45', pinned: true, blur: 'full', tags: [] },
+
+            // Suspicious unknown numbers
+            { name: fakePhone(47), avatar: '../imagens/spy-male-2.jpg', message: 'Delete this after reading, I don\'t want an***...', time: '01:22', unread: 13, blur: 'semi', lateNight: true, tags: ['deleted', 'suspicious'], deleted: true, suspectGender: 'neutral' },
+            { name: fakePhone(83), avatar: '../imagens/spy-female-3.jpg', message: "Come over, they're not ho***...", time: '02:34', unread: 8, blur: 'full', lateNight: true, tags: ['deleted', 'suspicious', 'evidence'], deleted: true, suspectGender: 'neutral' },
+
+            // Normal
+            { name: 'Jam**', avatar: '../imagens/spy-male-1.jpg', message: '✓✓ You: Thanks m**!', time: '08:30', blur: 'full', tags: [], suspectGender: 'male' },
+
+            // Suspicious - coworker
+            { name: 'Kev** (Work)', avatar: '../imagens/spy-male-5.jpg', message: '📷 Photo (view on**)', time: '23:45', unread: 5, blur: 'full', lateNight: true, tags: ['deleted', 'evidence'], deleted: true, suspectGender: 'male' },
+            { name: 'Ash***', avatar: '../imagens/spy-female-4.jpg', message: 'When are you com*** ton***?', time: '01:33', unread: 9, blur: 'full', lateNight: true, tags: ['deleted', 'suspicious'], deleted: true, suspectGender: 'female' },
+
+            // Normal
+            { name: 'Emi**', avatar: '../imagens/spy-female-6.jpg', message: '✓✓ You: See you lat**!', time: '10:15', blur: 'full', tags: [] },
+
+            // Group
+            { name: 'Weekend Plans 🎉', avatar: null, message: '✓✓ You: Good mor**!', time: '09:30', blur: 'full', isGroup: true, tags: [] },
+
+            // Suspicious - intimate
+            { name: 'J', avatar: '../imagens/spy-female-2.jpg', message: 'I need to see you toni***...', time: '03:12', unread: 15, blur: 'semi', lateNight: true, tags: ['deleted', 'evidence'], deleted: true },
+            { name: 'M', avatar: '../imagens/spy-male-6.jpg', message: 'Is our secr*** saf***...', time: '23:58', unread: 7, blur: 'full', lateNight: true, tags: ['deleted', 'suspicious', 'evidence'], deleted: true },
+
+            // Normal
+            { name: 'Mik*', avatar: '../imagens/spy-male-3.jpg', message: 'Game ton***?', time: '15:45', blur: 'full', unread: 2, tags: [] },
+
+            // Suspicious - hidden contacts
+            { name: 'Do Not Answer', avatar: '../imagens/spy-female-5.jpg', message: 'Why aren\'t you replyi*** me?', time: '02:15', unread: 6, blur: 'full', lateNight: true, tags: ['deleted', 'evidence'], deleted: true },
+            { name: 'Ale** (Gym)', avatar: '../imagens/spy-male-1.jpg', message: '🎤 Audio (2:34)', time: '22:15', unread: 3, blur: 'full', tags: ['suspicious'] },
+
+            // Normal
+            { name: 'Jes**', avatar: '../imagens/spy-female-4.jpg', message: 'OMG you won\'t beli***...', time: '13:20', blur: 'full', unread: 5, tags: [] },
+
+            // Group
+            { name: 'Work Team', avatar: null, message: '~ Mike: Meeting tom***?', time: '16:00', blur: 'full', isGroup: true, muted: true, tags: [] },
+
+            // Suspicious - ex contacts
+            { name: 'Blocked Contact', avatar: '../imagens/spy-male-4.jpg', message: 'I still thin* abo** us...', time: '03:45', unread: 18, blur: 'full', lateNight: true, tags: ['deleted', 'suspicious', 'evidence'], deleted: true },
+            { name: 'Deleted Contact', avatar: '../imagens/spy-female-6.jpg', message: 'I never stop** lov*** you...', time: '03:30', unread: 16, blur: 'full', lateNight: true, tags: ['deleted', 'suspicious', 'evidence'], deleted: true },
+
+            // Normal
+            { name: 'Dav** (Boss)', avatar: '../imagens/spy-male-2.jpg', message: 'Report due tom***', time: '17:00', blur: 'full', tags: [] },
+            { name: 'Rya*', avatar: '../imagens/spy-female-3.jpg', message: '✓✓ You: Will do!', time: '16:30', blur: 'full', tags: [] },
+
+            // Suspicious - late night
+            { name: fakePhone(62), avatar: '../imagens/spy-male-5.jpg', message: '📍 Location shar*****', time: '00:45', unread: 2, blur: 'full', lateNight: true, tags: ['deleted'], deleted: true },
+            { name: 'Sam**', avatar: '../imagens/spy-female-1.jpg', message: 'Left my earrin** at your pla***', time: '02:05', unread: 4, blur: 'full', lateNight: true, tags: ['deleted'], deleted: true },
+
+            // Normal
+            { name: 'Aman**', avatar: '../imagens/spy-male-6.jpg', message: 'Lunch bre**?', time: '12:00', blur: 'full', tags: [] },
+
+            // Group
+            { name: 'Friends', avatar: null, message: '~ Sarah: This Sat*** at my pla**!', time: '15:30', blur: 'full', isGroup: true, unread: 47, tags: [] },
+
+            // Suspicious - nicknames
+            { name: 'Babe', avatar: '../imagens/spy-female-2.jpg', message: 'Same pla** as last ti**?', time: '01:15', unread: 6, blur: 'full', lateNight: true, tags: ['deleted', 'suspicious'], deleted: true },
+
+            // Normal
+            { name: 'Clinic', avatar: '../imagens/spy-female-4.jpg', message: 'Appointment conf*** for...', time: 'Yesterday', blur: 'full', tags: [] },
+
+            // Suspicious
+            { name: 'New Contact', avatar: '../imagens/spy-male-4.jpg', message: 'Drinks after wo***?', time: '12:45', unread: 2, blur: 'full', tags: ['suspicious'] },
+
+            // Group
+            { name: 'Gaming Squad', avatar: null, message: '~ Alex: Anyone on ton***?', time: '22:15', blur: 'full', isGroup: true, unread: 12, tags: [] },
+
+            // Normal
+            { name: 'Chris', avatar: '../imagens/spy-male-1.jpg', message: '✓✓ You: Happy birth***!', time: 'Friday', blur: 'full', tags: [] },
+            { name: 'Maria', avatar: '../imagens/spy-female-3.jpg', message: 'Recipe you ask** for...', time: 'Last week', blur: 'full', tags: [] },
+
+            // Suspicious
+            { name: '(Blocked)', avatar: '../imagens/spy-male-5.jpg', message: 'Why did you blo** me? I didn\'t do any***...', time: '04:30', unread: 22, blur: 'full', lateNight: true, tags: ['deleted', 'suspicious'], deleted: true },
+            { name: 'Hotel Booking', avatar: '../imagens/spy-male-6.jpg', message: 'Reservation conf*** for 2 gue***...', time: '11:30', unread: 1, blur: 'full', tags: ['suspicious', 'evidence'], deleted: true }
+        ];
+
+        var maleNames = ['Kev**','Dan**','Jam**','Ry**','Brad**','Mik**','Chris**','Ale**','Sam**','Aman**','Jord**','Tay**','Nick**'];
+        var femaleNames = ['Ash***','Jess**','Emi**','Laur**','Soph**','Rach**','Melis**','Steph**','Aman**','Nicol**','Jord**','Tay**','Valer**'];
+        var nameIndex = 0;
+
+        function getFilteredConversations() {
+            nameIndex = 0;
+            return allConversations.map(conv => {
+                const newConv = {...conv};
+                const avatarPath = conv.avatar || '';
+
+                if (conv.deleted || conv.tags?.includes('suspicious') || conv.tags?.includes('evidence')) {
+                    if (conv.name && !conv.name.startsWith('+') && conv.name.length > 2 && !['Blocked Contact','Deleted Contact','Do Not Answer','Private Number','Unknown','New Contact','Hotel Booking','Uber Trip','(Blocked)','(Deleted)','Babe','Ex - Do Not Ans***'].includes(conv.name) && !conv.name.startsWith('fakePhone') && !/^[A-Z]$/.test(conv.name) && !conv.isGroup && !/^[\u2764\uFE0F\u{1F525}\u{1F48B}]$/u.test(conv.name)) {
+                        var names = suspiciousGender === 'female' ? femaleNames : maleNames;
+                        newConv.name = names[nameIndex % names.length];
+                        nameIndex++;
+                    }
+                }
+                return newConv;
+            });
+        }
+        
+        const conversations = getFilteredConversations();
+        
+        // Widget definitions for injection between conversations
+        const widgetPositions = {
+            18: 'frequentContact'
+        };
+
+        function createDeletedRevealWidget(variant) {
+            const messages = [
+                { text: '"Babe, don\'t tell <span class="blocked">██████</span> that we <span class="blocked">████████</span> yesterday at the <span class="blocked">██████</span>..."', time: 'Deleted yesterday at 11:47 PM' },
+                { text: '"I miss you so much, when can we <span class="blocked">███████</span> again? Last time was <span class="blocked">████████</span>..."', time: 'Deleted today at 2:34 AM' },
+                { text: '"Delete this after reading: I\'ll be at the <span class="blocked">██████</span> at <span class="blocked">████</span> tonight..."', time: 'Deleted today at 1:15 AM' },
+                { text: '"The photos from last night are <span class="blocked">███████</span>. Delete them before <span class="blocked">█████</span> sees..."', time: 'Deleted 2 days ago at 11:58 PM' }
+            ];
+            const msg = messages[variant % messages.length];
+            const div = document.createElement('div');
+            div.className = 'widget-deleted-reveal';
+            div.onclick = () => openConversation({name: 'Deleted', blur: 'full', tags: ['deleted']});
+            div.innerHTML = `
+                <div class="wdr-header">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <span class="wdr-badge">🔴 DELETED MESSAGE RECOVERED</span>
+                </div>
+                <div class="wdr-content">${msg.text}</div>
+                <div class="wdr-footer">
+                    <span class="wdr-time">${msg.time}</span>
+                    <span class="wdr-unlock">🔓 Tap to unlock full message</span>
+                </div>`;
+            return div;
+        }
+
+        function createSuspicionDetectorWidget() {
+            var lateNightCount = conversations.filter(function(c){return c.lateNight}).length;
+            var deletedCount = conversations.filter(function(c){return c.deleted}).length;
+            var suspiciousCount = conversations.filter(function(c){return c.tags && c.tags.indexOf('suspicious')!==-1}).length;
+            var evidenceCount = conversations.filter(function(c){return c.tags && c.tags.indexOf('evidence')!==-1}).length;
+            var unknownCount = conversations.filter(function(c){return !c.avatar || c.avatar.indexOf('default')!==-1}).length;
+            var score = Math.min(97, 70 + Math.floor(deletedCount / 2) + Math.floor(evidenceCount));
+            const div = document.createElement('div');
+            div.className = 'widget-suspicion';
+            div.innerHTML = `
+                <div class="ws-header">
+                    <div class="ws-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff3b30" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        SUSPICION ANALYSIS
+                    </div>
+                    <span class="ws-score">${score}%</span>
+                </div>
+                <div class="ws-bar"><div class="ws-bar-fill" id="wsSuspicionBar" style="width:0%;" data-target="${score}"></div></div>
+                <div class="ws-details">
+                    <div class="ws-row"><span class="ws-row-label">🕐 Late-night messages (12AM-5AM)</span><span class="ws-row-value danger">${lateNightCount} found</span></div>
+                    <div class="ws-row"><span class="ws-row-label">🗑️ Deleted conversations</span><span class="ws-row-value danger">${deletedCount} recovered</span></div>
+                    <div class="ws-row"><span class="ws-row-label">📷 View-once media</span><span class="ws-row-value danger">${evidenceCount} intercepted</span></div>
+                    <div class="ws-row"><span class="ws-row-label">📍 Shared locations</span><span class="ws-row-value danger">${suspiciousCount} tracked</span></div>
+                    <div class="ws-row"><span class="ws-row-label">👤 Unknown contacts</span><span class="ws-row-value danger">${unknownCount} detected</span></div>
+                </div>`;
+            return div;
+        }
+
+        function createFrequentContactWidget() {
+            const avatarSrc = generateAvatarSvg('Frequent', 90, {deleted: true, tags: ['suspicious']});
+            const div = document.createElement('div');
+            div.className = 'widget-frequent';
+            div.onclick = () => openConversation({name: 'Frequent Contact', blur: 'full', tags: ['evidence']});
+            div.innerHTML = `
+                <div class="wf-avatar"><img src="${avatarSrc}" alt=""></div>
+                <div class="wf-info">
+                    <div class="wf-label">⚠️ Most Frequent Contact</div>
+                    <div class="wf-name">${fakePhone(47)}</div>
+                    <div class="wf-stats"><strong>347 messages</strong> in the last 7 days • <strong>89% at night</strong></div>
+                </div>
+                <div class="wf-badge"><span>🔴</span>HIGH<br>RISK</div>`;
+            return div;
+        }
+
+        function createAudioWidget() {
+            const div = document.createElement('div');
+            div.className = 'widget-audio';
+            div.onclick = () => openConversation({name: 'Audio', blur: 'full', tags: ['deleted']});
+            let bars = '';
+            for (let i = 0; i < 35; i++) {
+                const h = Math.floor(Math.random() * 22) + 4;
+                const delay = (i * 0.03).toFixed(2);
+                bars += `<div class="wa-bar" style="height:${h}px;animation:wave 0.${3 + Math.floor(Math.random()*4)}s ease-in-out ${delay}s infinite alternate;"></div>`;
+            }
+            div.innerHTML = `
+                <div class="wa-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#ff3b30"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                    AUDIO INTERCEPTED - DELETED
+                </div>
+                <div class="wa-player">
+                    <div class="wa-play-btn" id="audioPlayBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></div>
+                    <div class="wa-waveform">${bars}</div>
+                </div>
+                <div class="wa-meta">
+                    <span class="wa-duration">Duration: 2:47</span>
+                    <span class="wa-lock">🔒 Unlock to listen</span>
+                </div>`;
+            return div;
+        }
+
+        var _avatarCache = null;
+        function _initAvatarPool() {
+            if (_avatarCache) return _avatarCache;
+            var basePath = '../../whatsapp-profile-photos-women/';
+            var men = [], women = [];
+            for (var i = 1; i <= 77; i++) {
+                men.push(basePath + 'men/man_' + String(i).padStart(2,'0') + '.jpg');
+                women.push(basePath + 'women/woman_' + String(i).padStart(2,'0') + '.jpg');
+            }
+            function shuffle(a) { for (var j = a.length - 1; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)); var t = a[j]; a[j] = a[k]; a[k] = t; } return a; }
+            _avatarCache = { men: shuffle(men), women: shuffle(women), mi: 0, wi: 0 };
+            return _avatarCache;
+        }
+        function generateAvatarSvg(name, index, conv) {
+            var pool = _initAvatarPool();
+            var gender = 'women';
+            if (conv && (conv.deleted || (conv.tags && (conv.tags.includes('suspicious') || conv.tags.includes('evidence'))))) {
+                gender = suspiciousGender === 'female' ? 'women' : 'men';
+            } else if (conv && conv.avatar) {
+                gender = conv.avatar.includes('male') ? 'men' : 'women';
+            } else {
+                gender = index % 2 === 0 ? 'women' : 'men';
+            }
+            if (gender === 'men') {
+                return pool.men[pool.mi++ % pool.men.length];
+            } else {
+                return pool.women[pool.wi++ % pool.women.length];
+            }
+        }
+
+        function renderConversations() {
+            const container = document.getElementById('conversationsList');
+            container.innerHTML = '';
+
+            conversations.forEach((conv, idx) => {
+                // Inject widgets at specific positions
+                if (widgetPositions[idx]) {
+                    const wType = widgetPositions[idx];
+                    let widget;
+                    if (wType === 'deletedReveal1') widget = createDeletedRevealWidget(0);
+                    else if (wType === 'deletedReveal2') widget = createDeletedRevealWidget(1);
+                    else if (wType === 'suspicionDetector') widget = createSuspicionDetectorWidget();
+                    else if (wType === 'frequentContact') widget = createFrequentContactWidget();
+                    else if (wType === 'audioIntercepted') widget = createAudioWidget();
+                    if (widget) container.appendChild(widget);
+                }
+
+                const item = document.createElement('div');
+                item.className = `conversation-item fade-in ${conv.deleted ? 'deleted-conv' : ''}`;
+                item.style.animationDelay = Math.min(idx * 0.03, 1.5) + 's';
+                item.onclick = () => openConversation(conv);
+
+                let avatarClass = 'avatar' + (conv.blur === 'full' ? ' blurred' : conv.blur === 'semi' ? ' semi-blurred' : '');
+                let nameClass = 'conversation-name' + (conv.blur === 'full' ? ' blurred' : conv.blur === 'semi' ? ' semi-blurred' : '');
+                let textClass = 'conversation-text' + (conv.blur === 'full' ? ' blurred' : conv.blur === 'semi' ? ' semi-blurred' : '');
+
+                let badgeType = (conv.tags && conv.tags.includes('evidence')) || conv.deleted ? 'deleted' : (conv.tags && conv.tags.includes('suspicious')) ? 'suspicious' : conv.blur !== 'none' ? 'lock' : '';
+
+                let tagsHtml = (conv.tags && conv.tags.length > 0) ? '<div class="conversation-tags">' + conv.tags.map(tag => 
+                    tag === 'deleted' ? '<span class="tag deleted">DELETED</span>' : 
+                    tag === 'suspicious' ? '<span class="tag suspicious">SUSPICIOUS</span>' : 
+                    tag === 'evidence' ? '<span class="tag evidence">🔴 EVIDENCE</span>' : ''
+                ).join('') + '</div>' : '';
+
+                let avatarHtml;
+                if (conv.isGroup && !conv.avatar) {
+                    avatarHtml = `
+                        <div class="group-avatar ${conv.blur === 'semi' ? 'blurred' : ''}">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                            </svg>
+                        </div>`;
+                } else {
+                    avatarHtml = `<img src="${generateAvatarSvg(conv.name, idx, conv)}" alt="" class="${avatarClass}">`;
+                }
+
+                let checkmarks = '';
+                if (conv.message.includes('You:') || conv.message.startsWith('✓✓')) {
+                    checkmarks = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/><polyline points="20 6 9 17 4 12" transform="translate(4, 0)"/></svg>`;
+                }
+
+                let iconsHtml = '';
+                if (conv.pinned || conv.muted) {
+                    iconsHtml = '<div class="icon-row">';
+                    if (conv.muted) iconsHtml += `<span class="mute-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></span>`;
+                    if (conv.pinned) iconsHtml += `<span class="pin-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg></span>`;
+                    iconsHtml += '</div>';
+                }
+
+                item.innerHTML = `
+                    <div class="avatar-wrapper">
+                        ${avatarHtml}
+                        ${badgeType ? `<div class="avatar-badge ${badgeType}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${badgeType === 'lock' ? '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>' : badgeType === 'deleted' ? '<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>' : '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'}</svg></div>` : ''}
+                    </div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="${nameClass}">${conv.name}</span>
+                            <span style="font-size:11px;color:#8e8e93;margin-left:auto;flex-shrink:0;">${conv.time || ''}</span>
+                        </div>
+                        <div class="conversation-preview">
+                            ${checkmarks}
+                            <span class="${textClass}">${conv.message.replace('✓✓ ', '')}</span>
+                        </div>
+                        ${tagsHtml}
+                    </div>
+                    <div class="conversation-badges">
+                        ${conv.unread ? `<span class="unread-badge ${(conv.tags && conv.tags.includes('evidence')) ? 'alert' : ''}">${conv.unread}</span>` : iconsHtml}
+                    </div>`;
+                container.appendChild(item);
+            });
+
+            setTimeout(() => {
+                const bar = document.getElementById('wsSuspicionBar');
+                if (bar) bar.style.width = (bar.dataset.target || '87') + '%';
+            }, 800);
+        }
+
+        function openConversation(conv) {
+            if (conv.blur !== 'none' || conv.deleted || conv.blur === 'semi' || conv.blur === 'full') {
+                let modalText = conv.deleted ? `This conversation contains <strong>deleted messages</strong> recovered from backup. Unlock to see what they tried to hide.` :
+                    (conv.tags && conv.tags.includes('evidence')) ? 'This conversation was marked as <strong>EVIDENCE</strong>. Contains important proof.' :
+                    (conv.tags && conv.tags.includes('suspicious')) ? 'This conversation was marked as <strong>SUSPICIOUS</strong> due to timing and content.' :
+                    'This conversation is <strong>locked</strong>. Unlock to see the full content.';
+                
+                document.getElementById('modalText').innerHTML = modalText;
+
+                var targetNum = localStorage.getItem('targetPhone');
+                if (targetNum) {
+                    document.getElementById('modalCTA').innerHTML = '🔓 Unlock Conversations ' + targetNum;
+                }
+
+                var md = localStorage.getItem('deletedMsgs') || Math.floor(Math.random()*50+40);
+                var mm = localStorage.getItem('deletedMedia') || Math.floor(Math.random()*64+64);
+                var mc = localStorage.getItem('hiddenContacts') || Math.floor(Math.random()*6+7);
+                var mn = localStorage.getItem('lateNightCount') || Math.floor(Math.random()*20+28);
+                document.getElementById('modalDeleted').textContent = md;
+                document.getElementById('modalMedia').textContent = mm;
+                document.getElementById('modalContacts').textContent = mc;
+                document.getElementById('modalNight').textContent = mn;
+                document.getElementById('modalOverlay').classList.add('show');
+            } else {
+                const urlParams = new URLSearchParams(window.location.search);
+                const gender = urlParams.get('gender') || '';
+                const phone = urlParams.get('phone') || '';
+                var navUrl = `chat.html?name=${encodeURIComponent(conv.name)}&avatar=${encodeURIComponent(conv.avatar || '')}&gender=${gender}&phone=${encodeURIComponent(phone)}`;
+                window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs(navUrl) : navUrl;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('show');
+            document.getElementById('modalCTA').style.display = '';
+            document.getElementById('modalDataSummary').style.display = '';
+        }
+
+
+        function goToCTAPage() {
+            var g = (typeof targetGender !== 'undefined') ? targetGender : 'male';
+            var url = 'cta-unified.html?gender=' + g;
+            if (typeof TrackingUtils !== 'undefined') url = TrackingUtils.appendUTMs(url);
+            window.location.href = url;
+        }
+
+
+        // Timer countdown with localStorage persistence
+        var timerStorageKey = 'convTimerEnd';
+        var timeLeft = 599;
+        (function initTimer() {
+            var saved = localStorage.getItem(timerStorageKey);
+            if (saved) {
+                var remaining = Math.floor((parseInt(saved) - Date.now()) / 1000);
+                if (remaining > 0 && remaining <= 599) {
+                    timeLeft = remaining;
+                } else {
+                    localStorage.setItem(timerStorageKey, Date.now() + 599000);
+                }
+            } else {
+                localStorage.setItem(timerStorageKey, Date.now() + 599000);
+            }
+        })();
+        function updateTimerBar() {
+            var bar = document.getElementById('timerProgressBar');
+            if (bar) bar.style.width = Math.max(0, (timeLeft / 599) * 100) + '%';
+        }
+        function updateTimer() {
+            var el = document.getElementById('timerDisplay');
+            if (el) {
+                var minutes = Math.floor(timeLeft / 60);
+                var seconds = timeLeft % 60;
+                el.textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+            }
+            updateTimerBar();
+            if (timeLeft > 0) {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            } else {
+                if (el) {
+                    el.textContent = '00:00';
+                    el.style.animation = 'blink 0.5s infinite';
+                }
+                showExpiredModal();
+            }
+        }
+
+        var expiredModalShown = false;
+        function showExpiredModal() {
+            if (expiredModalShown) return;
+            expiredModalShown = true;
+            var overlay = document.getElementById('modalOverlay');
+            var text = document.getElementById('modalText');
+            var title = document.querySelector('.modal-title');
+            if (overlay && text && title) {
+                title.textContent = '⚠️ Access Expiring!';
+                text.innerHTML = 'Your monitoring session is about to be <strong>permanently deleted</strong>. All <strong>' + conversations.filter(function(c){return c.deleted}).length + ' recovered conversations</strong> will be lost. Unlock now before it\'s too late.';
+                overlay.classList.add('show');
+                if (typeof VibrationSystem !== 'undefined') VibrationSystem.alert();
+            }
+        }
+
+        // Update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+        }
+
+        // Audio and Vibration systems are loaded from js/audio-vibration.js
+        document.addEventListener('click', () => {
+            if (typeof WhatsAppAudio !== 'undefined') {
+                if (!WhatsAppAudio.audioContext) WhatsAppAudio.init();
+                if (WhatsAppAudio.audioContext && WhatsAppAudio.audioContext.state === 'suspended') {
+                    WhatsAppAudio.audioContext.resume();
+                }
+            }
+        }, { once: true });
+
+        // Exit-intent detection
+        function initExitIntent() {
+            var exitShown = false;
+            document.addEventListener('mouseleave', function(e) {
+                if (e.clientY < 5 && !exitShown) {
+                    exitShown = true;
+                    var overlay = document.getElementById('modalOverlay');
+                    var text = document.getElementById('modalText');
+                    var title = document.querySelector('.modal-title');
+                    if (overlay && text && title) {
+                        title.textContent = 'Wait! Don\'t Leave Yet!';
+                        text.innerHTML = 'You have <strong>' + conversations.filter(function(c){return c.deleted}).length + ' deleted conversations</strong> waiting to be unlocked. If you leave now, this data may be <strong>permanently erased</strong>.';
+                        overlay.classList.add('show');
+                        if (typeof VibrationSystem !== 'undefined') VibrationSystem.alert();
+                    }
+                }
+            });
+        }
+
+        // Notification sound using Web Audio API
+        function playNotificationSound() {
+            try {
+                if (typeof WhatsAppAudio !== 'undefined' && WhatsAppAudio.audioContext) {
+                    var ctx = WhatsAppAudio.audioContext;
+                    if (ctx.state === 'suspended') return;
+                    var osc = ctx.createOscillator();
+                    var gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.setValueAtTime(800, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                }
+            } catch(e) {}
+        }
+
+        // ========== TYPING INDICATOR EM TEMPO REAL ==========
+        function showTypingIndicator() {
+            const convItems = document.querySelectorAll('.conversation-item');
+            if (convItems.length > 0) {
+                const randomIndex = Math.floor(Math.random() * Math.min(10, convItems.length));
+                const item = convItems[randomIndex];
+                const textEl = item.querySelector('.conversation-text');
+                if (textEl) {
+                    const originalText = textEl.textContent;
+                    textEl.innerHTML = '<span style="color: #e91e63; font-style: italic;">typing...</span>';
+                    textEl.style.filter = 'none';
+                    setTimeout(() => {
+                        textEl.textContent = originalText;
+                        textEl.style.filter = '';
+                    }, 2000 + Math.random() * 2000);
+                }
+            }
+        }
+
+
+
+        // ========== LIVE SPY MODE ==========
+        function liveSpyMode() {
+            const convList = document.getElementById('conversationsList');
+            const firstConv = convList.querySelector('.conversation-item');
+            
+            if (firstConv) {
+                const liveConv = document.createElement('div');
+                liveConv.className = 'conversation-item deleted-conv';
+                liveConv.style.cssText = 'animation: pulse 0.5s ease; border-left: 3px solid #ea0038; background: rgba(234,0,56,0.04);';
+                liveConv.innerHTML = `
+                    <div class="avatar-wrapper">
+                        <img src="${generateAvatarSvg('Secret', 91)}" class="avatar blurred">
+                        <div class="avatar-badge deleted"><svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></div>
+                    </div>
+                    <div class="conversation-content">
+                        <div class="conversation-header">
+                            <span class="conversation-name blurred">🔴 LIVE: Sec*****</span>
+                            <span style="font-size:11px;color:#ff3b30;margin-left:auto;flex-shrink:0;">now</span>
+                        </div>
+                        <div class="conversation-preview">
+                            <span class="conversation-text" style="color:#e91e63;font-style:italic;">typing...</span>
+                        </div>
+                        <div class="conversation-tags">
+                            <span class="tag evidence">🔴 LIVE</span>
+                            <span class="tag deleted">INTERCEPTED</span>
+                        </div>
+                    </div>
+                `;
+                liveConv.onclick = () => openConversation({name: 'LIVE Intercept', blur: 'full'});
+                
+                convList.insertBefore(liveConv, firstConv);
+                playNotificationSound();
+                
+                if (typeof VibrationSystem !== 'undefined') VibrationSystem.alert();
+                
+                setTimeout(() => {
+                    const textEl = liveConv.querySelector('.conversation-text');
+                    if (textEl) {
+                        const msgs = [
+                            '📷 Photo (view once)',
+                            '🎤 Audio (0:34)',
+                            'Delete this after rea***...',
+                            'Miss you so mu***...',
+                            '📍 Location shared',
+                            'Tonight at the usu*** pla***?'
+                        ];
+                        textEl.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+                        textEl.style.color = '';
+                        textEl.style.fontStyle = '';
+                        textEl.classList.add('blurred');
+                        if (typeof VibrationSystem !== 'undefined') VibrationSystem.notification();
+                    }
+                }, 3000);
+            }
+        }
+
+        // ========== UNREAD BADGES INCREASING IN REAL-TIME ==========
+        function incrementUnreadBadges() {
+            const badges = document.querySelectorAll('.unread-badge');
+            if (badges.length === 0) return;
+            const idx = Math.floor(Math.random() * badges.length);
+            const badge = badges[idx];
+            const current = parseInt(badge.textContent);
+            if (!isNaN(current) && current < 99) {
+                badge.textContent = current + 1;
+                badge.style.transform = 'scale(1.3)';
+                setTimeout(() => { badge.style.transform = ''; }, 300);
+            }
+        }
+
+        // ========== SCREENSHOT DETECTION ==========
+        function initScreenshotDetection() {
+            var warning = document.getElementById('screenshotWarning');
+            if (!warning) return;
+
+            function showScreenshotWarning() {
+                warning.classList.add('show');
+                if (typeof VibrationSystem !== 'undefined') VibrationSystem.alert();
+                setTimeout(function() { warning.classList.remove('show'); }, 3500);
+            }
+
+            document.addEventListener('keyup', function(e) {
+                if (e.key === 'PrintScreen' || (e.key === 's' && (e.ctrlKey || e.metaKey))) {
+                    showScreenshotWarning();
+                }
+            });
+
+            var lastHidden = 0;
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    lastHidden = Date.now();
+                } else {
+                    if (Date.now() - lastHidden < 3000) {
+                        showScreenshotWarning();
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderConversations();
+            document.querySelectorAll('.ddi-phone').forEach(function(el) {
+                el.textContent = detectedDDI + ' ***-***';
+            });
+            updateTimer();
+            updateCurrentTime();
+            initScreenshotDetection();
+            initExitIntent();
+            setInterval(updateCurrentTime, 1000);
+            
+            // Live spy - simulate new message arriving
+            setTimeout(liveSpyMode, 20000);
+            
+            // Typing indicator
+            setTimeout(showTypingIndicator, 5000);
+            setInterval(showTypingIndicator, 10000);
+            
+            setInterval(incrementUnreadBadges, 8000);
+            
+            
+            
+            if ('vibrate' in navigator) {
+                setTimeout(() => navigator.vibrate(100), 2500);
+            }
+            
+            // Use consistent deleted count from localStorage
+            var _storedDelBanner = parseInt(localStorage.getItem('deletedMsgs'));
+            let deletedCount = (_storedDelBanner && !isNaN(_storedDelBanner)) ? _storedDelBanner : Math.floor(Math.random() * 142 + 247);
+            var alertEl = document.getElementById('deletedAlert');
+            if (alertEl) alertEl.textContent = deletedCount + ' deleted messages recovered!';
+            var filteredEl = document.getElementById('filteredOutCount');
+            if (filteredEl) filteredEl.textContent = 280 + Math.floor(Math.random() * 120);
+            setInterval(() => {
+                if (Math.random() > 0.6) {
+                    deletedCount += Math.floor(Math.random() * 3) + 1;
+                    const el = document.getElementById('deletedAlert');
+                    if (el) el.textContent = deletedCount + ' deleted messages recovered!';
+                }
+            }, 12000);
+        });
+
+        function filterConversations(type, btn) {
+            document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            var items = document.querySelectorAll('.conversation-item');
+            items.forEach(function(item) {
+                if (type === 'all') { item.style.display = ''; return; }
+                var hasUnread = item.querySelector('.unread-badge');
+                var isPinned = item.querySelector('.pin-icon');
+                var isGroup = item.querySelector('.group-avatar');
+                if (type === 'unread') item.style.display = hasUnread ? '' : 'none';
+                else if (type === 'favorites') item.style.display = isPinned ? '' : 'none';
+                else if (type === 'groups') item.style.display = isGroup ? '' : 'none';
+            });
+            document.querySelectorAll('.widget-deleted-reveal, .widget-suspicion, .widget-frequent, .widget-audio').forEach(function(w) {
+                w.style.display = type === 'all' ? '' : 'none';
+            });
+        }
+
+        (function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var targetGender = urlParams.get('gender') || localStorage.getItem('targetGender') || 'male';
+            var g = targetGender || 'male';
+            document.querySelectorAll('.genderPronoun1').forEach(function(el) { el.textContent = g === 'female' ? 'her' : 'his'; });
+            document.querySelectorAll('.genderPronoun2').forEach(function(el) { el.textContent = g === 'female' ? 'she' : 'he'; });
+            document.querySelectorAll('.genderPronoun3').forEach(function(el) { el.textContent = g === 'female' ? "she's" : "he's"; });
+        })();
+// Load target avatar in bottom nav
+        (function() {
+            var targetAv = localStorage.getItem('targetAvatar');
+            if (targetAv) {
+                var navImg = document.getElementById('navAvatar');
+                var navFallback = document.getElementById('navAvatarFallback');
+                if (navImg) {
+                    navImg.onerror = function() {
+                        navImg.style.display = 'none';
+                        if (navFallback) navFallback.style.display = '';
+                    };
+                    navImg.src = targetAv;
+                    navImg.style.display = 'block';
+                    if (navFallback) navFallback.style.display = 'none';
+                }
+            }
+        })();
+
+        // Auto-popup after time
+        (function() {
+            var popupShown = false;
+            setTimeout(function() {
+                if (popupShown) return;
+                popupShown = true;
+                var firstDeleted = conversations.find(function(c) { return c.deleted; });
+                if (firstDeleted) openConversation(firstDeleted);
+            }, 15000);
+        })();
+    </script>
+    <script src="../js/urgency-bar.js"></script>
+</body>
+</html>
