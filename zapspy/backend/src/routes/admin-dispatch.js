@@ -198,9 +198,9 @@ router.post('/api/admin/dispatch/purge-ac-limit', authenticateToken, async (req,
 
                 console.log(`📋 Processing list: ${listName} (ID: ${listId})`);
 
-                // Get all contacts in this list
-                const contactsInList = await acService.getContactsInList(listId);
-                console.log(`📊 Found ${contactsInList.length} contacts in ${listName}`);
+                // Get the oldest contacts still needed for this purge batch
+                const contactsInList = await acService.getContactsInList(listId, remainingLimit);
+                console.log(`📊 Found ${contactsInList.length} old contacts in ${listName}`);
 
                 let deleted = 0;
                 const toDelete = Math.min(contactsInList.length, remainingLimit);

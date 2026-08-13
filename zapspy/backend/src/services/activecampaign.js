@@ -362,28 +362,32 @@ async function deleteContact(contactId) {
 }
 
 /**
- * Get all contact-list relationships for a specific list
- * This is the proper way to find contacts in a list in AC API v3
+ * Get contacts belonging to a specific list, ordered from oldest
+ * to newest (cdate ASC) so the oldest contacts are returned first.
+ * Uses the contacts endpoint filtered by listid, which supports
+ * the orders[cdate] sorting parameter (same pattern as the admin UI).
+ * @param {string} listId - ActiveCampaign list id
+ * @param {number} [limit] - Optional max number of contacts to fetch
  */
-async function getContactsInList(listId) {
+async function getContactsInList(listId, limit = null) {
     const contacts = [];
     let offset = 0;
+    const pageSize = 100;
 
     while (true) {
-        const data = await apiRequest('GET', `contactLists?listid=${listId}&limit=100&offset=${offset}`);
-        if (!data || !data.contactLists || data.contactLists.length === 0) break;
+        const endpoint = `contacts?listid=${listId}&limit=${pageSize}&offset=${offset}&orders[cdate]=ASC`;
+        const data = await apiRequest('GET', endpoint);
+        if (!data || !data.contacts || data.contacts.length === 0) break;
 
-        for (const cl of data.contactLists) {
-            if (cl.contact) {
-                contacts.push({
-                    id: cl.contact,
-                    listRelationId: cl.id
-                });
+        for (const c of data.contacts) {
+            contacts.push({ id: c.id, contact: c.id });
+            if (limit && contacts.length >= limit) {
+                return contacts;
             }
         }
 
-        if (data.contactLists.length < 100) break;
-        offset += 100;
+        if (data.contacts.length < pageSize) break;
+        offset += pageSize;
     }
 
     return contacts;
