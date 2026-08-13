@@ -96,14 +96,22 @@ async function apiRequest(method, endpoint, body = null) {
 
     try {
         const response = await fetch(url, options);
-        const data = await response.json();
+        const text = await response.text();
+        let data = null;
+        try {
+            data = text ? JSON.parse(text) : null;
+        } catch (e) {
+            data = { raw: text };
+        }
 
         if (!response.ok) {
-            console.error(`❌ AC API Error [${method} ${endpoint}]:`, data);
+            console.error(`❌ AC API Error [${method} ${endpoint}] (${response.status}):`, data);
             return null;
         }
 
-        return data;
+        // A successful DELETE (or other no-body response) returns empty body.
+        // Return true so callers can tell success from failure (null).
+        return data === null ? true : data;
     } catch (error) {
         console.error(`❌ AC API Request failed [${method} ${endpoint}]:`, error.message);
         return null;
@@ -352,7 +360,11 @@ async function removeTagFromContact(contactId, tagName) {
 async function deleteContact(contactId) {
     if (!contactId) return false;
     try {
-        await apiRequest('DELETE', `contacts/${contactId}`);
+        const data = await apiRequest('DELETE', `contacts/${contactId}`);
+        if (data === null || data === undefined) {
+            console.error(`AC: FAILED to delete contact ${contactId} (API returned null/error)`);
+            return false;
+        }
         console.log(`🗑️ AC: Deleted contact ${contactId} from account`);
         return true;
     } catch (error) {

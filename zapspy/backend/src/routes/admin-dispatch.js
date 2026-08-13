@@ -207,9 +207,11 @@ router.post('/api/admin/dispatch/purge-ac-limit', authenticateToken, async (req,
 
                 for (let i = 0; i < toDelete; i++) {
                     try {
-                        await acService.deleteContact(contactsInList[i].id);
-                        deleted++;
-                        remainingLimit--;
+                        const ok = await acService.deleteContact(contactsInList[i].id);
+                        if (ok) {
+                            deleted++;
+                            remainingLimit--;
+                        }
                         await new Promise(r => setTimeout(r, 200));
                     } catch (delErr) {
                         console.error(`Error deleting contact ${contactsInList[i].id}:`, delErr.message);
