@@ -1,0 +1,162 @@
+Subject line: 🎁 30% OFF: Final chance to unlock 
+
+Preheader: Exclusive Private Offer - Offer expires in 12 hours
+
+From: ZapSpy.Ai - support@mail.appdetect.site
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Discount for You</title>
+    <style>
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+        }
+
+        a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        @media only screen and (max-width: 620px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .padding-mobile {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+        }
+    </style>
+    <!--[if mso]><xml>
+    <w:WordDocument xmlns:w="urn:schemas-microsoft-com:office:word">
+      <w:DontUseAdvancedTypographyReadingMail/>
+    </w:WordDocument>
+    </xml><![endif]-->
+    <!--[if !mso]><!-- -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
+    <!--<![endif]-->
+</head>
+
+<body style="margin:0; padding:0; background-color:#0a0a0a;" bis_status="ok" bis_frame_id="3759">
+    <center style="width:100%; background-color:#0a0a0a;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin:auto;" class="email-container">
+            <tbody>
+                <tr>
+                    <td style="padding:30px 0; text-align:center; background-color:#0a0a0a;" class="esd-text">
+                        <h1 style="margin:0; font-family:'Courier New',monospace; font-size:28px; color:#00ff88; letter-spacing:2px;"> ?? Whats Spy<span style="color:#ffffff;">.ai</span></h1>
+                        <p style="margin:5px 0 0; font-family:Arial,sans-serif; font-size:11px; color:#555555; letter-spacing:3px; text-transform:uppercase;"> Advanced Phone Intelligence </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="height:3px; background: linear-gradient(90deg, #ffaa00, #ffdd44, #ffaa00); font-size:0;" class="esd-text">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="background-color:#1a1500; padding:30px 40px; text-align:center;" class="esd-text">
+                        <p style="margin:0 0 5px; font-family:Arial,sans-serif; font-size:13px; color:#ffcc66; letter-spacing:2px; text-transform:uppercase;"> Exclusive Private Offer </p>
+                        <h2 style="margin:0; font-family:Arial,sans-serif; font-size:52px; font-weight:bold; color:#ffdd44;"> 30% OFF </h2>
+                        <p style="margin:5px 0 0; font-family:Arial,sans-serif; font-size:14px; color:#ffcc66;"> Your Full Investigation Report </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:#111111; padding:40px 40px 30px;" class="esd-text">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class=" cke_show_border">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center; padding-bottom:25px;"><span style="display:inline-block; background-color:#2a1a00; color:#ffaa00; font-family:Arial,sans-serif; font-size:13px; font-weight:bold; padding:10px 25px; border-radius:20px; letter-spacing:1px; border:1px solid #ffaa0044;">? OFFER EXPIRES IN 12 HOURS </span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin:0 0 20px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">Hi <strong style="color:#ffffff;">%FIRSTNAME%</strong>,</p>
+                        <p style="margin:0 0 15px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">We noticed you still haven't accessed your report for the number ending in <strong style="color:#00ff88;">...%LAST4DIGITS%</strong>.</p>
+                        <p style="margin:0 0 25px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">We believe <strong style="color:#ffffff;">everyone deserves to know the truth</strong>. To help you get the answers you need, we're offering you an exclusive <strong style="color:#ffdd44;">30% discount</strong> on your full report.</p><!-- PRE�OS CORRIGIDOS PARA $24 -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:30px;" class=" cke_show_border">
+                            <tbody>
+                                <tr>
+                                    <td style="background-color:#0d1117; border:1px solid #1a2a1a; border-radius:12px; padding:25px; text-align:center;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class=" cke_show_border">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="text-align:center; padding:0 25px;">
+                                                        <p style="margin:0 0 5px; font-family:Arial,sans-serif; font-size:12px; color:#666666; text-transform:uppercase; letter-spacing:1px;">Regular Price</p>
+                                                        <p style="margin:0; font-family:Arial,sans-serif; font-size:28px; color:#666666; text-decoration:line-through;">$37</p>
+                                                    </td>
+                                                    <td style="text-align: center; padding: 0px 10px; font-family: Arial, sans-serif; font-size: 30px; color: #444444;" class="esd-text">?</td>
+                                                    <td style="text-align:center; padding:0 25px;">
+                                                        <p style="margin:0 0 5px; font-family:Arial,sans-serif; font-size:12px; color:#00ff88; text-transform:uppercase; letter-spacing:1px;">Your Price Today</p>
+                                                        <p style="margin:0; font-family:Arial,sans-serif; font-size:36px; font-weight:bold; color:#00ff88;">$24</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <p style="margin:15px 0 0; font-family:Arial,sans-serif; font-size:13px; color:#ffaa00;">?? You save $13 with this private offer</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class=" cke_show_border">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center; padding-bottom:20px;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class=" cke_show_border">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-radius:8px; background-color:#ffaa00;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7DK?utm_source=activecampaign&utm_medium=email&utm_campaign=recovery_funnel_abandon_en&utm_content=email3" target="_blank" style="display:inline-block; padding:18px 40px; font-family:Arial,sans-serif; font-size:16px; font-weight:bold; color:#000000; text-decoration:none; border-radius:8px;">?? GET 30% OFF MY REPORT NOW </a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin:0 0 25px; font-family:Arial,sans-serif; font-size:13px; color:#888888; text-align:center; line-height:1.5;">This is a <strong style="color:#ffcc66;">private offer just for you</strong>. It cannot be shared and expires in 12 hours.</p>
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class=" cke_show_border">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center;">
+                                        <p style="margin:0; font-family:Arial,sans-serif; font-size:12px; color:#ffffff;">?? 256-bit SSL Encryption � ?? 100% Anonymous � ? Instant Access</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="height:2px; background: linear-gradient(90deg, #ffaa0000, #ffaa00, #ffaa0000); font-size:0;" class="esd-text">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="background-color:#0a0a0a; padding:30px 40px; text-align:center;" class="esd-text">
+                        <p style="margin:0 0 10px; font-family:Arial,sans-serif; font-size:12px; color:#444444;"> You're receiving this email because you initiated an investigation on Whats Spy </p>
+                        <p style="margin:0 0 10px; font-family:Arial,sans-serif; font-size:12px; color:#444444;"><a href="{{unsubscribe_link}}" style="color:#555555; text-decoration:underline;">Unsubscribe</a> &nbsp;|&nbsp; <a href="{{privacy_link}}" style="color:#555555; text-decoration:underline;">Privacy Policy</a></p>
+                        <p style="margin:0; font-family:Arial,sans-serif; font-size:11px; color:#333333;"> (c) 2026 Whats Spy - All rights reserved. </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+</body>
+
+</html>
+
+
+

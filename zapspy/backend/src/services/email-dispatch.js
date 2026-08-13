@@ -12,6 +12,7 @@
 
 const pool = require('../database');
 const acService = require('./activecampaign');
+const brevo = require('./brevo');
 const { AC_API_URL, AC_API_KEY } = require('../config');
 const trackingService = require('./email-tracking');
 
@@ -166,6 +167,11 @@ async function ensureDispatchTable() {
   } catch (e) {
     console.log('📧 UNIQUE constraint already exists or could not be added:', e.message);
   }
+
+  // Ensure provider column exists (defaults to 'ac'). Safe, additive.
+  await pool.queryRetry(`
+    ALTER TABLE email_dispatch_log ADD COLUMN IF NOT EXISTS provider VARCHAR(20) DEFAULT 'ac';
+  `);
 
   // Ensure indexes exist
   await pool.queryRetry(`
@@ -466,8 +472,18 @@ async function runDispatch(category, language, batchSize, batchId) {
             }
           }
 
-          // 2. Send Email 1 immediately via campaign_send
-          await sendCampaignEmail(lead.email, category, language, 1);
+          // 2. Send Email 1 immediately (Brevo if routed, else AC campaign_send)
+          if (brevo.isCategoryEnabled(category)) {
+            await brevo.sendTransactional({
+              email: lead.email,
+              category,
+              emailNum: 1,
+              name: lead.name || '',
+              last4digits: lead.last4digits || '',
+            });
+          } else {
+            await sendCampaignEmail(lead.email, category, language, 1);
+          }
 
           // 2.5. Unsubscribe from list after sending
           if (listId) {
@@ -495,24 +511,25 @@ async function runDispatch(category, language, batchSize, batchId) {
           }
 
           // 3. Log Email 1 as sent
+          const emailProvider = brevo.isCategoryEnabled(category) ? 'brevo' : 'ac';
           await pool.queryRetry(`
-            INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, ac_contact_id, scheduled_for, sent_at, dispatched_at)
-            VALUES ($1, $2, $3, 1, 'sent', $4, $5, NOW(), NOW(), NOW())
-            ON CONFLICT (email, category, language, email_num) DO UPDATE SET 
-              status = 'sent', batch_id = $4, ac_contact_id = $5, sent_at = NOW()
-          `, [lead.email, category, language, batchId, String(contactId)]);
+            INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, ac_contact_id, scheduled_for, sent_at, dispatched_at, provider)
+            VALUES ($1, $2, $3, 1, 'sent', $4, $5, NOW(), NOW(), NOW(), $6)
+            ON CONFLICT (email, category, language, email_num) DO UPDATE SET
+              status = 'sent', batch_id = $4, ac_contact_id = $5, sent_at = NOW(), provider = $6
+          `, [lead.email, category, language, batchId, String(contactId), emailProvider]);
 
           // 4. Schedule Emails 2, 3, 4
           const now = Date.now();
           for (let emailNum = 2; emailNum <= 4; emailNum++) {
             const delayMs = EMAIL_SCHEDULE[emailNum] * 60 * 60 * 1000;
             const scheduledFor = new Date(now + delayMs);
-            
+
             await pool.queryRetry(`
-              INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, ac_contact_id, scheduled_for, dispatched_at)
-              VALUES ($1, $2, $3, $4, 'scheduled', $5, $6, $7, NOW())
+              INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, ac_contact_id, scheduled_for, dispatched_at, provider)
+              VALUES ($1, $2, $3, $4, 'scheduled', $5, $6, $7, NOW(), $8)
               ON CONFLICT (email, category, language, email_num) DO NOTHING
-            `, [lead.email, category, language, emailNum, batchId, String(contactId), scheduledFor]);
+            `, [lead.email, category, language, emailNum, batchId, String(contactId), scheduledFor, emailProvider]);
           }
 
           globalSuccess++;
@@ -648,8 +665,19 @@ async function processScheduledEmails() {
           }
         }
 
-        // Send the email via campaign_send
-        await sendCampaignEmail(row.email, row.category, row.language, row.email_num);
+        // Send the email (Brevo if routed, else AC campaign_send)
+        if (brevo.isCategoryEnabled(row.category)) {
+          const lead = await brevo.getLeadData(row.email);
+          await brevo.sendTransactional({
+            email: row.email,
+            category: row.category,
+            emailNum: row.email_num,
+            name: lead.name || '',
+            last4digits: lead.last4digits || '',
+          });
+        } else {
+          await sendCampaignEmail(row.email, row.category, row.language, row.email_num);
+        }
 
         // Unsubscribe from list after sending
         if (listId && contactId) {

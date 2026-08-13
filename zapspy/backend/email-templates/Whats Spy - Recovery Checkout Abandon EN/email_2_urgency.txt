@@ -1,0 +1,129 @@
+Subject line: ⚠️ Action Required: Your data for ...%LAST4DIGITS% is about to expire
+
+Preheader: ZapSpy
+
+From: ZapSpy.Ai - support@mail.appdetect.site
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚠️ Your report is about to expire</title>
+    <style>
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #0a0a0a;
+        }
+
+        a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        @media only screen and (max-width: 620px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .padding-mobile {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+        }
+    </style>
+    <!--[if mso]><xml>
+    <w:WordDocument xmlns:w="urn:schemas-microsoft-com:office:word">
+      <w:DontUseAdvancedTypographyReadingMail/>
+    </w:WordDocument>
+    </xml><![endif]-->
+    <!--[if !mso]><!-- -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
+    <!--<![endif]-->
+</head>
+
+<body style="margin:0; padding:0; background-color:#0a0a0a;" bis_status="ok" bis_frame_id="4187">
+    <div style="display:none; font-size:1px; color:#0a0a0a; line-height:1px; max-height:0px; max-width:0px; opacity:0; overflow:hidden;" class="esd-text"> Urgent: Data deletion scheduled for number ...%LAST4DIGITS%. Access your report before it's gone forever. </div>
+    <center style="width:100%; background-color:#0a0a0a;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin:auto;" class="email-container">
+            <!-- HEADER -->
+            <tbody>
+                <tr>
+                    <td style="padding:30px 0; text-align:center; background-color:#0a0a0a;" class="esd-text">
+                        <h1 style="margin:0; font-family:'Courier New',monospace; font-size:28px; color:#00ff88; letter-spacing:2px;"> 🔎 Whats Spy<span style="color:#ffffff;">.ai</span></h1>
+                    </td>
+                </tr><!-- URGENCY LINE -->
+                <tr>
+                    <td style="height:3px; background: linear-gradient(90deg, #ff4444, #ff8800, #ff4444); font-size:0;" class="esd-text">&nbsp;</td>
+                </tr><!-- MAIN BODY -->
+                <tr>
+                    <td style="background-color:#111111; padding:40px 40px 30px;" class="padding-mobile esd-text">
+                        <!-- Alert Badge -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class=" cke_show_border">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center; padding-bottom:25px;"><span style="display:inline-block; background-color:rgba(255, 68, 68, 0.1); color:#ff4444; font-family:Arial,sans-serif; font-size:11px; font-weight:bold; padding:8px 20px; border-radius:20px; letter-spacing:1px; border:1px solid rgba(255, 68, 68, 0.3);">⚠️ FINAL NOTICE: DATA PURGE SCHEDULED </span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin:0 0 20px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">Hi <strong style="color:#ffffff;">%FIRSTNAME%</strong>,</p>
+                        <p style="margin:0 0 15px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">I'm sending this final alert because our system is scheduled to <strong style="color:#ff4444;">permanently delete</strong> the investigation report for the number <strong style="color:#ffffff;">...%LAST4DIGITS%</strong> in just a few hours.</p>
+                        <p style="margin:0 0 25px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">Due to our strict privacy protocols, we cannot store unencrypted data for more than 48 hours. Once the timer hits zero, <strong style="color:#ffffff;">the data is gone forever</strong> and cannot be recovered even by our engineers.</p><!-- CTA Button -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class=" cke_show_border">
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center; padding-bottom:30px;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class=" cke_show_border">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-radius:8px; background-color:#ff4444;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7KN?utm_source=activecampaign&utm_medium=email&utm_campaign=recovery_checkout_abandon_en&utm_content=email2" target="_blank" style="display:inline-block; padding:18px 45px; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">🚨 ACCESS MY REPORT BEFORE DELETION </a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin:0; font-family:Arial,sans-serif; font-size:14px; color:#888888; text-align:center; line-height:1.6;">Don't let the truth slip away. This is your last chance to see the full social media, location, and profile results.</p>
+                    </td>
+                </tr><!-- FOOTER -->
+                <tr>
+                    <td style="background-color:#0a0a0a; padding:30px 40px; text-align:center;" class="esd-text">
+                        <p style="margin:0; font-family:Arial,sans-serif; font-size:11px; color:#333333;"> (c) 2026 Whats Spy - Privacy Guaranteed </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+</body>
+
+</html>
+
+

@@ -1,0 +1,149 @@
+Subject line: Your Access is Ready
+
+Preheader: Start your investigation now. Access the Scanner Pro dashboard.
+
+From: ZapSpy.Ai - support@mail.appdetect.site
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Your Access is Ready</title>
+    <style>
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #0a0a0a;
+        }
+
+        a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        @media only screen and (max-width: 620px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .fluid {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            .stack-column {
+                display: block !important;
+                width: 100% !important;
+            }
+
+            .center-on-narrow {
+                text-align: center !important;
+                display: block !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+
+            .padding-mobile {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+        }
+    </style>
+    <!--[if mso]><xml>
+    <w:WordDocument xmlns:w="urn:schemas-microsoft-com:office:word">
+      <w:DontUseAdvancedTypographyReadingMail/>
+    </w:WordDocument>
+    </xml><![endif]-->
+    <!--[if !mso]><!-- -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
+    <!--<![endif]-->
+</head>
+
+<body style="margin:0; padding:0; background-color:#0a0a0a;" bis_status="ok" bis_frame_id="1149">
+    <center style="width:100%; background-color:#0a0a0a;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin:auto;" class="email-container">
+            <tbody>
+                <tr>
+                    <td style="padding:30px 0; text-align:center; background-color:#0a0a0a;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tbody>
+                                <tr>
+                                    <td style="background-color:#1a1f3a; padding:40px 40px 30px;" class="padding-mobile esd-text">
+                                        <p style="margin:0 0 20px; font-family:Arial,sans-serif; font-size:18px; color:#ffffff; line-height:1.6;">Hi, <strong style="color:#2962FF;">%FIRSTNAME%</strong>!</p>
+                                        <p style="margin:0 0 15px; font-family:Arial,sans-serif; font-size:16px; color:#a0a9c9; line-height:1.6;">Your purchase has been confirmed! Your access to <strong>Whats Spy</strong> is now active.</p>
+                                        <p style="margin:0 0 25px; font-family:Arial,sans-serif; font-size:16px; color:#a0a9c9; line-height:1.6;">To get you started immediately, we have generated a <strong>secure direct access link</strong> for you. No login credentials required.</p>
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:30px;" class="cke_show_border">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="background-color:#0a0e27; border-left:4px solid #2962FF; padding:15px 20px; border-radius:0 8px 8px 0;">
+                                                        <p style="margin:0; font-family:Arial,sans-serif; font-size:14px; color:#ffffff; line-height:1.5; text-align:center;">You can request a full refund at any time within 30 days of your purchase date by visiting:</p>
+                                                        <p style="margin:10px 0 0; font-family:Arial,sans-serif; font-size:14px; line-height:1.5; text-align:center;"><a href="https://go.zappdetect.com/ingles/refund/" target="_blank" style="color:#FF0000; text-decoration:underline; font-weight:bold;">REQUEST A FULL REFUND</a></p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="cke_show_border">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="text-align:center; padding-bottom:30px;">
+                                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class="cke_show_border">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td style="border-radius:8px; background-color:#2962FF;"><a href="https://pv.appdetect.site/thankyou/Access%20now.pdf" target="_blank" style="display:inline-block; padding:20px 50px; font-family:Arial,sans-serif; font-size:16px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:8px; letter-spacing:0.5px; text-transform:uppercase;">ACCESS MY DASHBOARD</a></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" class="cke_show_border">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="text-align:center;">
+                                                        <p style="margin:0; font-family:Arial,sans-serif; font-size:12px; color:#ffffff;">🔒 Secure Access &nbsp;•&nbsp; 🕵 100% Confidential &nbsp;•&nbsp; ✅ Priority Support</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+</body>
+
+</html>
+

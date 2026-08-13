@@ -96,6 +96,17 @@ const ZAPI_BASE_URL = `https://api.z-api.io/instances/${ZAPI_INSTANCE}/token/${Z
 const AC_API_URL = process.env.AC_API_URL || 'https://draculatemer11258320.api-us1.com';
 const AC_API_KEY = process.env.AC_API_KEY || '9437b06992638da05d3f1003f974a936eeddb5fdea800ad335ea1ce9bddff34b3f90d402';
 
+// Brevo (email provider) - transactional sending via API
+const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
+const BREVO_ENABLED = process.env.BREVO_ENABLED === 'true';
+const BREVO_CATEGORIES = (process.env.BREVO_CATEGORIES || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || 'noreply@mail.appdetect.site';
+const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'ZapSpy.Ai';
+const BREVO_API_URL = 'https://api.brevo.com/v3';
+
 // Supabase Auth (for auto-provisioning member area users on purchase)
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
@@ -118,6 +129,12 @@ module.exports = {
     VALID_PRODUCT_CODES,
     AC_API_URL,
     AC_API_KEY,
+    BREVO_API_KEY,
+    BREVO_ENABLED,
+    BREVO_CATEGORIES,
+    BREVO_SENDER_EMAIL,
+    BREVO_SENDER_NAME,
+    BREVO_API_URL,
     SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY
 };

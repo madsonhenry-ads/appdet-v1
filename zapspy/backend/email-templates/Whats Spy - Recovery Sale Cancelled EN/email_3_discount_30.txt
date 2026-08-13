@@ -1,0 +1,125 @@
+Subject line: We want to help: 30% OFF your Whats Spy report
+
+Preheader: Try again with a special discount just for you.
+
+From: ZapSpy.Ai - support@mail.appdetect.site
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?? Special Gift: 30% OFF your report</title>
+    <style>
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #0a0a0a;
+        }
+
+        a {
+            color: #00ff88;
+            text-decoration: none;
+        }
+
+        @media only screen and (max-width: 620px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .padding-mobile {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+        }
+    </style>
+    <!--[if mso]><xml>
+    <w:WordDocument xmlns:w="urn:schemas-microsoft-com:office:word">
+      <w:DontUseAdvancedTypographyReadingMail/>
+    </w:WordDocument>
+    </xml><![endif]-->
+    <!--[if !mso]><!-- -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i" rel="stylesheet">
+    <!--<![endif]-->
+</head>
+
+<body style="margin:0; padding:0; background-color:#0a0a0a;" bis_status="ok" bis_frame_id="3893">
+    <div style="display:none; font-size:1px; color:#0a0a0a; line-height:1px; max-height:0px; max-width:0px; opacity:0; overflow:hidden;" class="esd-text"> Good news! I've authorized a one-time 30% discount for your report on ...%LAST4DIGITS%. Claim it now! </div>
+    <center style="width:100%; background-color:#0a0a0a;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin:auto;" class="email-container">
+            <!-- HEADER -->
+            <tbody>
+                <tr>
+                    <td style="padding:30px 0; text-align:center; background-color:#0a0a0a;" class="esd-text">
+                        <h1 style="margin:0; font-family:'Courier New',monospace; font-size:28px; color:#00ff88; letter-spacing:2px;"> ?? Whats Spy<span style="color:#ffffff;">.ai</span></h1>
+                    </td>
+                </tr><!-- DISCOUNT BANNER -->
+                <tr>
+                    <td style="background-color:#1a3a1a; padding:20px 40px; text-align:center; border-radius: 12px 12px 0 0;" class="padding-mobile esd-text">
+                        <p style="margin:0; font-family:Arial,sans-serif; font-size:14px; color:#00ff88; font-weight:bold; letter-spacing:2px;"> ?? EXCLUSIVE ONE-TIME OFFER: 30% OFF </p>
+                    </td>
+                </tr><!-- MAIN BODY -->
+                <tr>
+                    <td style="background-color:#111111; padding:40px 40px 30px;" class="padding-mobile esd-text">
+                        <p style="margin:0 0 20px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">Hi <strong style="color:#ffffff;">%FIRSTNAME%</strong>,</p>
+                        <p style="margin:0 0 15px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">I know you're looking for answers regarding the number ending in <strong style="color:#00ff88;">...%LAST4DIGITS%</strong>. Sometimes, the only thing standing between you and the truth is a small hurdle.</p>
+                        <p style="margin:0 0 25px; font-family:Arial,sans-serif; font-size:16px; color:#cccccc; line-height:1.6;">Because I want you to have peace of mind today, I have personally authorized a <strong style="color:#ffffff;">30% Discount Coupon</strong> for your investigation report.</p><!-- Discount Box -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:30px;" class=" cke_show_border">
+                            <tbody>
+                                <tr>
+                                    <td style="background-color:#0d1117; border:2px dashed #00ff88; border-radius:12px; padding:30px; text-align:center;">
+                                        <p style="margin:0 0 5px; font-family:Arial,sans-serif; font-size:12px; color:#888888; text-transform:uppercase; letter-spacing:1px;">Your Private Coupon Code:</p>
+                                        <p style="margin:0 0 20px; font-family:'Courier New',monospace; font-size:32px; font-weight:bold; color:#00ff88; letter-spacing:5px;">SAVE30NOW</p>
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class=" cke_show_border">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="border-radius:8px; background-color:#00ff88;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7DK?utm_source=activecampaign&utm_medium=email&utm_campaign=recovery_sale_cancelled_en&utm_content=email3" target="_blank" style="display:inline-block; padding:18px 40px; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">??? CLAIM MY 30% DISCOUNT </a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin:0; font-family:Arial,sans-serif; font-size:14px; color:#888888; text-align:center; line-height:1.6;">This offer is valid only for the next <strong style="color:#ffffff;">2 hours</strong>. After that, the link will expire and the data for ...%LAST4DIGITS% will be purged from our servers.</p>
+                    </td>
+                </tr><!-- FOOTER -->
+                <tr>
+                    <td style="background-color:#0a0a0a; padding:30px 40px; text-align:center;" class="esd-text">
+                        <p style="margin:0; font-family:Arial,sans-serif; font-size:11px; color:#333333;"> (c) 2026 Whats Spy - Verified Security </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+</body>
+
+</html>
+
+
