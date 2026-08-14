@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KidShield — Parental monitoring made simple</title>
+<meta name="description" content="KidShield helps parents keep their children safe online. Monitor messages, calls, location, and app usage — all from one easy dashboard.">
+<meta property="og:title" content="KidShield — Parental monitoring made simple">
+<meta property="og:description" content="Keep your kids safe online. Monitor messages, calls, location, and apps from one dashboard.">
+<meta property="og:type" content="website">
+<style>
+  :root{--c:#059669;--c2:#047857;--acc:#6ee7b7;--ink:#0f172a;--muted:#64748b;--bg:#ffffff;--soft:#eff6ff;--line:#dbeafe;--dark:#0c1929}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+  header{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 0}
+  .logo{display:flex;align-items:center;gap:9px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none}
+  .logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--c),var(--acc));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+  nav.main a{margin-left:24px;text-decoration:none;font-size:14.5px;font-weight:600;color:#475569}
+  nav.main a:hover{color:var(--c)}
+  .nav-cta{margin-left:24px;background:var(--c);color:#fff!important;padding:10px 18px;border-radius:9px;font-weight:700;text-decoration:none;font-size:14px}
+  .nav-cta:hover{background:var(--c2)}
+  .menu-btn{display:none;background:none;border:0;font-size:24px;cursor:pointer}
+  .hero{background:var(--dark);color:#fff;padding:84px 0 76px;position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.45),transparent 60%);top:-180px;right:-120px}
+  .hero .inner{position:relative;z-index:2;text-align:center;max-width:760px;margin:0 auto}
+  .pill{display:inline-block;background:rgba(147,197,253,.18);color:#bfdbfe;font-size:13px;font-weight:700;padding:6px 14px;border-radius:30px;margin-bottom:20px}
+  .hero h1{font-size:50px;line-height:1.08;letter-spacing:-1.2px;margin-bottom:18px}
+  .hero p.lead{font-size:19px;color:#94a3b8;margin:0 auto 28px;max-width:560px}
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;text-decoration:none;font-weight:700;border-radius:10px;padding:15px 30px;font-size:15.5px}
+  .btn-primary{background:var(--c);color:#fff}
+  .btn-primary:hover{background:var(--c2)}
+  .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25)}
+  .btn-ghost:hover{border-color:#fff}
+  .micro{margin-top:16px;font-size:13px;color:#94a3b8}
+  .statbar{background:var(--soft)}
+  .statbar .wrap{display:flex;flex-wrap:wrap;justify-content:space-around;gap:24px;padding:30px 22px;text-align:center}
+  .statbar b{display:block;font-size:30px;color:var(--c);font-weight:800}
+  .statbar span{font-size:13.5px;color:var(--muted)}
+  section.block{padding:70px 0}
+  .eyebrow{text-align:center;color:var(--c);font-weight:800;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+  h2.title{text-align:center;font-size:34px;letter-spacing:-.5px;margin-bottom:10px}
+  p.subtitle{text-align:center;color:var(--muted);font-size:17px;max-width:620px;margin:0 auto 42px}
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .feature{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px;transition:.2s}
+  .feature:hover{box-shadow:0 16px 40px rgba(37,99,235,.1);transform:translateY(-2px)}
+  .feature .ic{width:50px;height:50px;border-radius:13px;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+  .feature h3{font-size:18px;margin-bottom:8px}
+  .feature p{font-size:14.5px;color:var(--muted)}
+  .how{background:var(--soft)}
+  .steps{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;counter-reset:step}
+  .step{flex:1 1 220px;max-width:280px;text-align:center;position:relative}
+  .step:before{counter-increment:step;content:counter(step);width:40px;height:40px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+  .step h3{font-size:17px;margin-bottom:6px}
+  .step p{font-size:14px;color:var(--muted)}
+  .pricing{background:#fff}
+  .plans{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px 28px;width:320px;text-align:center}
+  .plan.pop{border:2px solid var(--c);position:relative}
+  .plan.pop:before{content:"Most popular";position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--c);color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px}
+  .plan h3{font-size:22px;margin-bottom:4px}
+  .plan .desc{font-size:14px;color:var(--muted);margin-bottom:16px}
+  .plan .price{font-size:42px;font-weight:800;color:var(--ink)}
+  .plan .price span{font-size:16px;font-weight:600;color:var(--muted)}
+  .plan ul{text-align:left;margin:20px 0;list-style:none}
+  .plan li{padding:8px 0;font-size:14.5px;border-bottom:1px solid var(--line)}
+  .plan li:last-child{border:0}
+  .plan li:before{content:"✓";color:var(--c);font-weight:700;margin-right:10px}
+  .plan .btn{width:100%;margin-top:8px}
+  .trust{font-size:13px;color:var(--muted);margin-top:32px;text-align:center}
+  .testimonials{background:var(--soft)}
+  .cards{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}
+  .card{background:#fff;border-radius:14px;padding:24px;width:320px;box-shadow:0 4px 20px rgba(0,0,0,.04)}
+  .card .stars{color:#facc15;margin-bottom:10px}
+  .card blockquote{font-size:15px;font-style:italic;color:var(--ink);margin-bottom:14px}
+  .card .author{display:flex;align-items:center;gap:10px}
+  .card .avatar{width:40px;height:40px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--c)}
+  .card .name{font-weight:700;font-size:14px}
+  .card .role{font-size:12px;color:var(--muted)}
+  .faq details{border-bottom:1px solid var(--line);padding:18px 0}
+  .faq summary{font-weight:700;cursor:pointer;font-size:16px}
+  .faq p{margin-top:12px;color:var(--muted);font-size:15px}
+  .cta-section{background:var(--dark);color:#fff;text-align:center;padding:70px 22px}
+  .cta-section h2{font-size:34px;margin-bottom:10px}
+  .cta-section p{color:#94a3b8;margin-bottom:24px}
+  footer{background:var(--dark);color:#94a3b8;padding:40px 22px 30px;font-size:13.5px}
+  .foot-top{display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between;margin-bottom:30px}
+  .foot-top .brand{max-width:280px}
+  .foot-top .brand p{margin-top:10px}
+  .foot-links h4{color:#fff;font-size:14px;margin-bottom:12px}
+  .foot-links a{display:block;color:#94a3b8;text-decoration:none;margin-bottom:8px}
+  .foot-links a:hover{color:#fff}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:20px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
+  @media(max-width:900px){.features{grid-template-columns:1fr 1fr}}
+  @media(max-width:700px){
+    nav.main{display:none}
+    .menu-btn{display:block}
+    .hero h1{font-size:34px}
+    .features{grid-template-columns:1fr}
+    .plans{flex-direction:column;align-items:center}
+    .steps{flex-direction:column;align-items:center}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap topbar">
+    <a class="logo" href="#"><span class="mark">🛡️</span>KidShield</a>
+    <nav class="main">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="nav-cta" href="#pricing">Start free trial</a>
+    <button class="menu-btn" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap inner">
+    <span class="pill">Trusted by 95,000+ parents</span>
+    <h1>Keep your children safe in the digital world</h1>
+    <p class="lead">KidShield lets you monitor your child's phone activity — messages, calls, location, and apps — so you can protect them from online dangers without invading their privacy.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#pricing">Start your 7-day free trial</a>
+      <a class="btn btn-ghost" href="#how">See how it works</a>
+    </div>
+    <p class="micro">No credit card required · Cancel anytime · <b>30-day money-back guarantee</b></p>
+  </div>
+</section>
+
+<div class="statbar">
+  <div class="wrap">
+    <div><b>★ 4.8 / 5</b><span>average rating</span></div>
+    <div><b>COPPA</b><span>compliant</span></div>
+    <div><b>256-bit</b><span>encryption</span></div>
+    <div><b>Featured in</b><span>ParentsTech</span></div>
+    <div><b>iOS & Android</b><span>supported</span></div>
+  </div>
+</div>
+
+<section id="features" class="block">
+  <div class="wrap">
+    <p class="eyebrow">What you get</p>
+    <h2 class="title">Everything to keep your family safe online</h2>
+    <p class="subtitle">Simple, non-intrusive tools that help you guide your children through the digital world responsibly.</p>
+    <div class="features">
+      <div class="feature"><div class="ic">💬</div><h3>Message monitoring</h3><p>See texts, social media messages, and chats to spot cyberbullying or inappropriate contacts early.</p></div>
+      <div class="feature"><div class="ic">📍</div><h3>Real-time location</h3><p>Know where your child is at all times with GPS tracking and location history.</p></div>
+      <div class="feature"><div class="ic">📱</div><h3>App usage reports</h3><p>See which apps they use most and set healthy screen time limits.</p></div>
+      <div class="feature"><div class="ic">📞</div><h3>Call monitoring</h3><p>View call logs and contacts to ensure they're communicating with safe people.</p></div>
+      <div class="feature"><div class="ic">🔔</div><h3>Instant alerts</h3><p>Get notified immediately when concerning keywords or contacts are detected.</p></div>
+      <div class="feature"><div class="ic">🌐</div><h3>Web filtering</h3><p>Block inappropriate websites and monitor browsing history automatically.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="block how">
+  <div class="wrap">
+    <p class="eyebrow">How it works</p>
+    <h2 class="title">Set up in under 5 minutes</h2>
+    <p class="subtitle">No technical skills required. Most parents have it running before their coffee gets cold.</p>
+    <div class="steps">
+      <div class="step"><h3>Create your account</h3><p>Sign up free and set up your parent dashboard.</p></div>
+      <div class="step"><h3>Install on child's phone</h3><p>Quick 2-minute setup on your child's iOS or Android device.</p></div>
+      <div class="step"><h3>Monitor from anywhere</h3><p>View activity from your phone, tablet, or computer 24/7.</p></div>
+      <div class="step"><h3>Stay informed</h3><p>Receive alerts and weekly reports on their digital activity.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" class="block pricing">
+  <div class="wrap">
+    <p class="eyebrow">Pricing</p>
+    <h2 class="title">Plans that fit every family</h2>
+    <p class="subtitle">All plans include a 7-day free trial and our 30-day money-back guarantee.</p>
+    <div class="plans">
+      <div class="plan">
+        <h3>Basic</h3>
+        <div class="desc">For one child.</div>
+        <div class="price">$9.99<span>/mo</span></div>
+        <ul>
+          <li>1 device monitored</li>
+          <li>Message monitoring</li>
+          <li>Location tracking</li>
+          <li>App usage reports</li>
+          <li>Email support</li>
+        </ul>
+        <a class="btn btn-primary" href="#">Start free trial</a>
+      </div>
+      <div class="plan pop">
+        <h3>Family</h3>
+        <div class="desc">For the whole family.</div>
+        <div class="price">$19.99<span>/mo</span></div>
+        <ul>
+          <li>Up to 5 devices</li>
+          <li>All Basic features</li>
+          <li>Call monitoring</li>
+          <li>Web filtering</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn btn-primary" href="#">Start free trial</a>
+      </div>
+      <div class="plan">
+        <h3>Premium</h3>
+        <div class="desc">Maximum protection.</div>
+        <div class="price">$29.99<span>/mo</span></div>
+        <ul>
+          <li>Unlimited devices</li>
+          <li>All Family features</li>
+          <li>Instant alerts</li>
+          <li>Keyword detection</li>
+          <li>24/7 phone support</li>
+        </ul>
+        <a class="btn btn-primary" href="#">Start free trial</a>
+      </div>
+    </div>
+    <p class="trust">🔒 Secure checkout · Cancel in one click · 30-day money-back guarantee</p>
+  </div>
+</section>
+
+<section class="block testimonials">
+  <div class="wrap">
+    <p class="eyebrow">Loved by parents</p>
+    <h2 class="title">What families are saying</h2>
+    <p class="subtitle">Real feedback from parents using KidShield to protect their children.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"I discovered my daughter was being bullied online. Thanks to KidShield, I was able to step in before it got worse."</blockquote>
+        <div class="author"><div class="avatar">SM</div><div><div class="name">Sarah M.</div><div class="role">Mother of 2</div></div></div>
+      </div>
+      <div class="card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"The location feature gives me peace of mind when my kids are out. I always know they're safe."</blockquote>
+        <div class="author"><div class="avatar">JT</div><div><div class="name">James T.</div><div class="role">Father of 3</div></div></div>
+      </div>
+      <div class="card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Easy to set up and the weekly reports help me have meaningful conversations with my teen about online safety."</blockquote>
+        <div class="author"><div class="avatar">LR</div><div><div class="name">Linda R.</div><div class="role">Mother of 1</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="block">
+  <div class="wrap faq" style="max-width:720px">
+    <p class="eyebrow">FAQ</p>
+    <h2 class="title">Questions, answered</h2>
+    <details open><summary>Is KidShield legal to use?</summary><p>Yes. Parental monitoring of minor children's devices is legal in most countries. KidShield is designed for parents to monitor their own children's devices with their knowledge.</p></details>
+    <details><summary>Will my child know they're being monitored?</summary><p>That's up to you. We recommend open communication with your children about digital safety. The app can run visibly or discreetly based on your preference.</p></details>
+    <details><summary>Which devices are supported?</summary><p>KidShield works on iOS 12+ and Android 6.0+. The parent dashboard works on any device with a web browser.</p></details>
+    <details><summary>Can I cancel anytime?</summary><p>Yes — cancel in one click from your account, no questions asked. All plans include a 30-day money-back guarantee.</p></details>
+    <details><summary>Is my family's data secure?</summary><p>Absolutely. All data is encrypted end-to-end and we never share or sell your information.</p></details>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Protect your family today</h2>
+  <p>Join 95,000+ parents keeping their children safe online with KidShield. Free for 7 days.</p>
+  <a class="btn btn-primary" href="#pricing">Start your free trial</a>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="brand">
+        <a class="logo" href="#" style="color:#fff"><span class="mark">🛡️</span>KidShield</a>
+        <p>Helping parents protect their children in the digital age. Simple monitoring tools for peace of mind.</p>
+      </div>
+      <div class="foot-links"><h4>Product</h4><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></div>
+      <div class="foot-links"><h4>Company</h4><a href="#faq">FAQ</a><a href="#faq">Support</a></div>
+      <div class="foot-links"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="y"></span> KidShield. All rights reserved.</span>
+      <span>support@kidshield.app</span>
+    </div>
+  </div>
+</footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+</body>
+</html>

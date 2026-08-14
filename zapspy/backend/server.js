@@ -208,9 +208,11 @@ app.get('/go/:slug', async (req, res) => {
     }
 });
 
-// ==================== ROOT REDIRECT TO ENGLISH FUNNEL ====================
+// ==================== ROOT SERVES WHITE PAGE ====================
+// Domain root (appdetect.site) shows a white page instead of redirecting
+// to the real funnel, hiding the main/affiliate pages.
 app.get('/', (req, res) => {
-    res.redirect('/ingles/');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ==================== STATIC FILE SERVING ====================
