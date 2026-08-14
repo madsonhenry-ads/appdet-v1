@@ -101,7 +101,7 @@ From: ZapSpy.Ai - support@mail.appdetect.site
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class=" cke_show_border">
                                             <tbody>
                                                 <tr>
-                                                    <td style="border-radius:8px; background-color:#00ff88;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7KN?utm_source=activecampaign&utm_medium=email&utm_campaign=recovery_sale_cancelled_en&utm_content=email1" target="_blank" style="display:inline-block; padding:18px 45px; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">?? CLICK HERE TO COMPLETE YOUR ACCESS </a></td>
+                                                    <td style="border-radius:8px; background-color:#00ff88;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7KN?utm_source=brevo&utm_medium=email&utm_campaign=recovery_sale_cancelled_en&utm_content=email1" target="_blank" style="display:inline-block; padding:18px 45px; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">?? CLICK HERE TO COMPLETE YOUR ACCESS </a></td>
                                                 </tr>
                                             </tbody>
                                         </table>

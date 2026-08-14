@@ -32,11 +32,10 @@ const adminAbTestsRoutes = require('./src/routes/admin-ab-tests');
 const adminRecoveryRoutes = require('./src/routes/admin-recovery');
 const adminRefundsRoutes = require('./src/routes/admin-refunds');
 const adminDebugRoutes = require('./src/routes/admin-debug');
-const adminACRoutes = require('./src/routes/admin-activecampaign');
 const adminDispatchRoutes = require('./src/routes/admin-dispatch');
 const trackingRoutes = require('./src/routes/tracking');
 const adminTrackingRoutes = require('./src/routes/admin-tracking');
-const fixPlaceholdersRoutes = require('./src/routes/fix-placeholders');
+const brevoWebhookRoutes = require('./src/routes/brevo-webhook');
 const zapiProxy = require('./src/routes/zapi-proxy');
 
 const app = express();
@@ -285,10 +284,9 @@ app.use('/', adminAbTestsRoutes);
 app.use('/', adminRecoveryRoutes);
 app.use('/', adminRefundsRoutes);
 app.use('/', adminDebugRoutes);
-app.use('/', adminACRoutes);
 app.use('/', adminDispatchRoutes);
 app.use('/', adminTrackingRoutes);
-app.use('/', fixPlaceholdersRoutes);
+app.use('/', brevoWebhookRoutes);
 app.use('/api/zapi', zapiProxy);
 
 // ==================== ERROR HANDLING ====================

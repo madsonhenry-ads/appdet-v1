@@ -30,10 +30,9 @@ function validateEnv() {
         { name: 'ZAPI_INSTANCE_ID', desc: 'Z-API instance for WhatsApp (using fallback)' },
         { name: 'ZAPI_TOKEN', desc: 'Z-API token (using fallback)' },
         { name: 'FRONTEND_URL', desc: 'Allowed CORS origins (using defaults)' },
-        { name: 'AC_API_URL', desc: 'ActiveCampaign API URL (recovery automations disabled without it)' },
-        { name: 'AC_API_KEY', desc: 'ActiveCampaign API Key (recovery automations disabled without it)' },
-        { name: 'SUPABASE_URL', desc: 'Supabase project URL (member area auto-provisioning disabled without it)' },
-        { name: 'SUPABASE_SERVICE_ROLE_KEY', desc: 'Supabase service role key (member area auto-provisioning disabled without it)' }
+        { name: 'BREVO_API_KEY', desc: 'Brevo transactional API key (emails disabled without it)' },
+        { name: 'BREVO_WEBHOOK_SECRET', desc: 'Brevo webhook shared secret (webhook unfiltered without it)' },
+        { name: 'TRACKING_BASE_URL', desc: 'Public base URL for tracking pixel/click links' }
     ];
 
     for (const { name, desc } of optional) {

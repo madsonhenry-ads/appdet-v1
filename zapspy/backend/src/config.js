@@ -92,13 +92,10 @@ const ZAPI_TOKEN = process.env.ZAPI_TOKEN || '';
 const ZAPI_CLIENT_TOKEN = process.env.ZAPI_CLIENT_TOKEN || '';
 const ZAPI_BASE_URL = `https://api.z-api.io/instances/${ZAPI_INSTANCE}/token/${ZAPI_TOKEN}`;
 
-// ActiveCampaign Configuration
-const AC_API_URL = process.env.AC_API_URL || 'https://draculatemer11258320.api-us1.com';
-const AC_API_KEY = process.env.AC_API_KEY || '9437b06992638da05d3f1003f974a936eeddb5fdea800ad335ea1ce9bddff34b3f90d402';
-
 // Brevo (email provider) - transactional sending via API
 const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
-const BREVO_ENABLED = process.env.BREVO_ENABLED === 'true';
+// Brevo is the sole provider; enabled unless explicitly disabled.
+const BREVO_ENABLED = process.env.BREVO_ENABLED !== 'false';
 const BREVO_CATEGORIES = (process.env.BREVO_CATEGORIES || '')
     .split(',')
     .map(s => s.trim())
@@ -106,10 +103,12 @@ const BREVO_CATEGORIES = (process.env.BREVO_CATEGORIES || '')
 const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || 'noreply@mail.appdetect.site';
 const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'ZapSpy.Ai';
 const BREVO_API_URL = 'https://api.brevo.com/v3';
+const BREVO_WEBHOOK_SECRET = process.env.BREVO_WEBHOOK_SECRET || '';
 
-// Supabase Auth (for auto-provisioning member area users on purchase)
-const SUPABASE_URL = process.env.SUPABASE_URL || '';
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+// Public base URL used to build self-hosted tracking pixel/click-link URLs
+// that are embedded in Brevo emails.
+const TRACKING_BASE_URL = process.env.TRACKING_BASE_URL
+    || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : 'http://localhost:3000');
 
 const VALID_PRODUCT_CODES = [
     // PerfectPay English
@@ -127,14 +126,12 @@ module.exports = {
     ZAPI_CLIENT_TOKEN,
     ZAPI_BASE_URL,
     VALID_PRODUCT_CODES,
-    AC_API_URL,
-    AC_API_KEY,
     BREVO_API_KEY,
     BREVO_ENABLED,
     BREVO_CATEGORIES,
     BREVO_SENDER_EMAIL,
     BREVO_SENDER_NAME,
     BREVO_API_URL,
-    SUPABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY
+    BREVO_WEBHOOK_SECRET,
+    TRACKING_BASE_URL
 };

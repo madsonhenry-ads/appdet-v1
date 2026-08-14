@@ -8,7 +8,7 @@ const { sendMissingGoogleAdsPurchases } = require('../services/google-ads-conver
 const { getCountryFromIP, getDetailedGeoFromIP, generateSuspiciousLocations } = require('../services/geolocation');
 const { zapiProfilePicture } = require('../services/zapi');
 const { enrichWhatsappProfileFromRapid } = require('../services/whatsapp-data-rapid');
-const activeCampaign = require('../services/activecampaign');
+const dispatchService = require('../services/email-dispatch');
 
 const WHATSAPP_CHECK_LOG_WIDTH = 76;
 
@@ -470,20 +470,20 @@ router.post('/api/leads', leadLimiter, async (req, res) => {
         
         // Auto-verify removed to protect WhatsApp from bans (too many Z-API calls)
         
-        // ==================== ACTIVECAMPAIGN: Lead Captured ====================
-        // Send lead to ActiveCampaign (async, non-blocking)
+        // ==================== RECOVERY: Funnel Abandon (Lead Captured) ====================
+        // Enqueue funnel-abandon recovery emails (Brevo) for new leads,
+        // unless they already reached checkout (handled there).
         if (isNewLead) {
             setImmediate(async () => {
                 try {
-                    await activeCampaign.processEvent('lead_captured', language, {
+                    await dispatchService.enqueueRecovery({
                         email,
                         name: name || '',
-                        phone: whatsapp || '',
-                        targetPhone: targetPhone || '',
-                        whatsapp: whatsapp || ''
+                        category: 'funnel_abandon',
+                        language
                     });
-                } catch (acError) {
-                    console.error('ActiveCampaign lead_captured error (non-blocking):', acError.message);
+                } catch (enqueueErr) {
+                    console.error('enqueueRecovery funnel_abandon error (non-blocking):', enqueueErr.message);
                 }
             });
         }

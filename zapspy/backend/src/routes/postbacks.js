@@ -6,9 +6,8 @@ const { authenticateToken, requireAdmin, invalidateCache } = require('../middlew
 const { sendToFacebookCAPI, hashData, normalizePhone, normalizeGender, sendMissingCAPIPurchases } = require('../services/facebook-capi');
 const { sendMissingGoogleAdsPurchases } = require('../services/google-ads-conversion');
 const { parseMonetizzeDate, getUTCOffset, getTimezone } = require('../helpers');
-const activeCampaign = require('../services/activecampaign');
 const dispatchService = require('../services/email-dispatch');
-const supabaseAuthService = require('../services/supabase-auth');
+const welcomeEmailService = require('../services/welcome-email');
 
 // ==================== MONETIZZE POSTBACK API ====================
 
@@ -987,31 +986,25 @@ router.all('/api/postback/monetizze', async (req, res) => {
         // Summary log for easy tracking in Railway
         console.log(`📋 POSTBACK SUMMARY: tx=${chave_unica} | email=${finalEmail || 'none'} | status=${statusStr} (${mappedStatus}) | product=${productName} | value=R$${transactionValue} | lang=${funnelLanguage} | source=${funnelSource} | match=${matchMethod} | CAPI_Purchase=${statusStr === '2' || statusStr === '6' ? 'YES' : 'NO'} | CAPI_IC=${statusStr === '1' || statusStr === '7' ? 'YES' : 'NO'}`);
         
-        // ==================== ACTIVECAMPAIGN: Transaction Event ====================
-        // Send transaction event to ActiveCampaign (async, non-blocking)
-        if (finalEmail && mappedStatus) {
+        // ==================== RECOVERY: Enqueue per event (Monetizze) ====================
+        // Enqueue checkout-abandon or sale-cancelled recovery emails (Brevo).
+        if (finalEmail && mappedStatus && mappedStatus !== 'approved') {
             setImmediate(async () => {
                 try {
-                    const acEventMap = {
-                        'abandoned_checkout': 'checkout_abandoned',
-                        'cancelled': 'sale_cancelled',
-                        'refunded': 'sale_cancelled',
-                        'chargeback': 'sale_cancelled',
-                        'approved': 'sale_approved'
-                    };
-                    const acEvent = acEventMap[mappedStatus];
-                    if (acEvent) {
-                        await activeCampaign.processEvent(acEvent, funnelLanguage || 'en', {
+                    const category = mappedStatus === 'abandoned_checkout' ? 'checkout_abandon'
+                                   : (mappedStatus === 'cancelled' || mappedStatus === 'refunded' || mappedStatus === 'chargeback') ? 'sale_cancelled'
+                                   : null;
+                    if (category) {
+                        await dispatchService.enqueueRecovery({
                             email: finalEmail,
                             name: buyerName || '',
-                            phone: buyerPhone || '',
-                            productName: productName || '',
-                            transactionValue: transactionValue || '0'
+                            category,
+                            language: funnelLanguage || 'en'
                         });
-                        console.log(`📧 ActiveCampaign: ${acEvent} event sent for ${finalEmail} (${funnelLanguage})`);
+                        console.log(`📧 Recovery ${category} enqueued for ${finalEmail} (${funnelLanguage}) [Monetizze]`);
                     }
-                } catch (acError) {
-                    console.error('ActiveCampaign Monetizze event error (non-blocking):', acError.message);
+                } catch (enqueueErr) {
+                    console.error('Recovery enqueue error (Monetizze, non-blocking):', enqueueErr.message);
                 }
             });
         }
@@ -1030,19 +1023,13 @@ router.all('/api/postback/monetizze', async (req, res) => {
             });
         }
 
-        // ==================== SUPABASE AUTH: AUTO-PROVISION MEMBER AREA USER ====================
+        // ==================== WELCOME EMAIL ON PURCHASE (BREVO) ====================
         if (finalEmail && mappedStatus === 'approved') {
             setImmediate(async () => {
                 try {
-                    const result = await supabaseAuthService.ensureSupabaseUser(finalEmail, buyerName || '', funnelLanguage);
-                    if (result.created) {
-                        console.log(`🔐 Supabase user created: ${finalEmail}`);
-                        await supabaseAuthService.sendCredentialsEmail(finalEmail, result.magicLink, buyerName || '', funnelLanguage);
-                    } else {
-                        console.log(`🔐 Supabase user already exists: ${finalEmail}`);
-                    }
+                    await welcomeEmailService.sendWelcomeEmail(finalEmail, buyerName || '', funnelLanguage);
                 } catch (sbError) {
-                    console.error('Supabase user creation error (non-blocking):', sbError.message);
+                    console.error('Welcome email error (non-blocking):', sbError.message);
                 }
             });
         }
@@ -1648,35 +1635,28 @@ router.all('/api/postback/perfectpay', async (req, res) => {
         // Summary log
         console.log(`📋 PERFECTPAY SUMMARY: tx=${transactionId} | email=${buyerEmail || 'none'} | status=${statusEnum} (${mappedStatus}) | detail=${statusDetail} | product=${productName} | value=$${saleAmount} | lang=${funnelLanguage} | type=${productType}`);
         
-        // ==================== ACTIVECAMPAIGN: PerfectPay Transaction Event ====================
-        // Send transaction event to ActiveCampaign (async, non-blocking)
-        if (buyerEmail && mappedStatus) {
+        // ==================== RECOVERY: Enqueue per event (PerfectPay) ====================
+        if (buyerEmail && mappedStatus && mappedStatus !== 'approved') {
             setImmediate(async () => {
                 try {
-                    const acEventMap = {
-                        'abandoned_checkout': 'checkout_abandoned',
-                        'cancelled': 'sale_cancelled',
-                        'refunded': 'sale_cancelled',
-                        'chargeback': 'sale_cancelled',
-                        'approved': 'sale_approved'
-                    };
-                    const acEvent = acEventMap[mappedStatus];
-                    if (acEvent) {
-                        await activeCampaign.processEvent(acEvent, funnelLanguage || 'en', {
+                    const category = mappedStatus === 'abandoned_checkout' ? 'checkout_abandon'
+                                   : (mappedStatus === 'cancelled' || mappedStatus === 'refunded' || mappedStatus === 'chargeback') ? 'sale_cancelled'
+                                   : null;
+                    if (category) {
+                        await dispatchService.enqueueRecovery({
                             email: buyerEmail,
                             name: buyerName || '',
-                            phone: buyerPhone || '',
-                            productName: productName || '',
-                            transactionValue: saleAmount || '0'
+                            category,
+                            language: funnelLanguage || 'en'
                         });
-                        console.log(`📧 ActiveCampaign: ${acEvent} event sent for ${buyerEmail} (${funnelLanguage}) [PerfectPay]`);
+                        console.log(`📧 Recovery ${category} enqueued for ${buyerEmail} (${funnelLanguage}) [PerfectPay]`);
                     }
-                } catch (acError) {
-                    console.error('ActiveCampaign PerfectPay event error (non-blocking):', acError.message);
+                } catch (enqueueErr) {
+                    console.error('Recovery enqueue error (PerfectPay, non-blocking):', enqueueErr.message);
                 }
             });
         }
-        
+
         // ==================== CANCEL EMAIL FUNNEL ON PURCHASE ====================
         if (buyerEmail && mappedStatus === 'approved') {
             setImmediate(async () => {
@@ -1691,19 +1671,13 @@ router.all('/api/postback/perfectpay', async (req, res) => {
             });
         }
 
-        // ==================== SUPABASE AUTH: AUTO-PROVISION MEMBER AREA USER ====================
+        // ==================== WELCOME EMAIL ON PURCHASE (BREVO) ====================
         if (buyerEmail && mappedStatus === 'approved') {
             setImmediate(async () => {
                 try {
-                    const result = await supabaseAuthService.ensureSupabaseUser(buyerEmail, buyerName || '', funnelLanguage);
-                    if (result.created) {
-                        console.log(`🔐 Supabase user created: ${buyerEmail} [PerfectPay]`);
-                        await supabaseAuthService.sendCredentialsEmail(buyerEmail, result.magicLink, buyerName || '', funnelLanguage);
-                    } else {
-                        console.log(`🔐 Supabase user already exists: ${buyerEmail} [PerfectPay]`);
-                    }
+                    await welcomeEmailService.sendWelcomeEmail(buyerEmail, buyerName || '', funnelLanguage);
                 } catch (sbError) {
-                    console.error('Supabase PerfectPay user creation error (non-blocking):', sbError.message);
+                    console.error('Welcome email error (PerfectPay, non-blocking):', sbError.message);
                 }
             });
         }
@@ -2185,26 +2159,23 @@ router.all('/api/postback/digistore', async (req, res) => {
             console.error(`❌ DigiStore ${internalStatus} registration error:`, refundError.message);
         }
 
-        // ==================== ACTIVECAMPAIGN ====================
+        // ==================== RECOVERY: Enqueue per event (DigiStore) ====================
         try {
-            let acEvent = '';
-            if (internalStatus === 'approved') acEvent = 'sale_approved';
-            else if (internalStatus === 'cancelled') acEvent = 'sale_cancelled';
-            else if (internalStatus === 'refunded') acEvent = 'sale_refunded';
-            else if (internalStatus === 'chargeback') acEvent = 'sale_chargeback';
-
-            if (acEvent && buyerEmail) {
-                await activeCampaign.processEvent(acEvent, funnelLanguage || 'en', {
-                    email: buyerEmail,
-                    name: buyerFullName || '',
-                    phone: buyerPhoneFormatted || '',
-                    targetPhone: buyerPhoneFormatted || '',
-                    whatsapp: buyerPhoneFormatted || ''
-                });
-                console.log(`✅ DigiStore AC event sent: ${acEvent} for ${buyerEmail}`);
+            if (buyerEmail && internalStatus && internalStatus !== 'approved') {
+                const category = (internalStatus === 'cancelled' || internalStatus === 'refunded' || internalStatus === 'chargeback')
+                               ? 'sale_cancelled' : null;
+                if (category) {
+                    await dispatchService.enqueueRecovery({
+                        email: buyerEmail,
+                        name: buyerFullName || '',
+                        category,
+                        language: funnelLanguage || 'en'
+                    });
+                    console.log(`✅ DigiStore recovery ${category} enqueued for ${buyerEmail}`);
+                }
             }
-        } catch (acError) {
-            console.error('❌ DigiStore AC event error:', acError.message);
+        } catch (enqueueErr) {
+            console.error('❌ DigiStore recovery enqueue error:', enqueueErr.message);
         }
 
         // ==================== CANCELAR FUNIL DE EMAIL (se aprovado) ====================
@@ -2217,28 +2188,19 @@ router.all('/api/postback/digistore', async (req, res) => {
             console.error('❌ DigiStore cancel funnel error:', cancelError.message);
         }
 
-        // ==================== SUPABASE AUTO-PROVISION ====================
+        // ==================== WELCOME EMAIL ON PURCHASE (BREVO) ====================
         try {
             if (internalStatus === 'approved' && buyerEmail) {
-                // Não bloqueante - cria usuário na área de membros e envia magic link
                 setImmediate(async () => {
                     try {
-                        const result = await supabaseAuthService.ensureSupabaseUser(
-                            buyerEmail,
-                            buyerFullName || '',
-                            funnelLanguage || 'en'
-                        );
-
-                        if (result?.isNew) {
-                            await supabaseAuthService.sendCredentialsEmail(buyerEmail, result.magicLink, buyerFullName || '', funnelLanguage);
-                        }
+                        await welcomeEmailService.sendWelcomeEmail(buyerEmail, buyerFullName || '', funnelLanguage || 'en');
                     } catch (sbError) {
-                        console.error('Supabase DigiStore user creation error (non-blocking):', sbError.message);
+                        console.error('Welcome email error (DigiStore, non-blocking):', sbError.message);
                     }
                 });
             }
         } catch (sbError) {
-            console.error('Supabase DigiStore error (non-blocking):', sbError.message);
+            console.error('Welcome email DigiStore error (non-blocking):', sbError.message);
         }
 
         // Return success (DigiStore24 Generic IPN expects plain text "OK")
@@ -2819,30 +2781,23 @@ router.all('/api/postback/vega', async (req, res) => {
             console.error(`❌ Vega ${mappedStatus} registration error:`, refundError.message);
         }
 
-        // ==================== ACTIVECAMPAIGN ====================
+        // ==================== RECOVERY: Enqueue per event (Vega) ====================
         try {
-            const acEventMap = {
-                'approved': 'sale_approved',
-                'cancelled': 'sale_cancelled',
-                'refunded': 'sale_refunded',
-                'chargeback': 'sale_chargeback',
-                'pending_payment': 'initiate_checkout'
-            };
-            const acEvent = acEventMap[mappedStatus];
-            if (acEvent) {
-                await activeCampaign.processEvent(acEvent, {
-                    email: buyerEmail,
-                    name: buyerFullName || '',
-                    phone: finalPhone || '',
-                    product: `Whats Spy ${productTitle || 'VIP'} (Vega)`,
-                    value: totalPrice,
-                    language: funnelLanguage,
-                    source: 'vega'
-                });
-                console.log(`✅ Vega AC event sent: ${acEvent} for ${buyerEmail}`);
+            if (buyerEmail && mappedStatus && mappedStatus !== 'approved') {
+                const category = (mappedStatus === 'cancelled' || mappedStatus === 'refunded' || mappedStatus === 'chargeback')
+                               ? 'sale_cancelled' : null;
+                if (category) {
+                    await dispatchService.enqueueRecovery({
+                        email: buyerEmail,
+                        name: buyerFullName || '',
+                        category,
+                        language: funnelLanguage || 'en'
+                    });
+                    console.log(`✅ Vega recovery ${category} enqueued for ${buyerEmail}`);
+                }
             }
-        } catch (acError) {
-            console.error('❌ Vega AC event error:', acError.message);
+        } catch (enqueueErr) {
+            console.error('❌ Vega recovery enqueue error:', enqueueErr.message);
         }
 
         // ==================== CANCEL EMAIL FUNNEL ====================
@@ -2855,20 +2810,14 @@ router.all('/api/postback/vega', async (req, res) => {
             console.error('❌ Vega cancel funnel error:', cancelError.message);
         }
 
-        // ==================== SUPABASE AUTO-PROVISION ====================
+        // ==================== WELCOME EMAIL ON PURCHASE (BREVO) ====================
         try {
             if (mappedStatus === 'approved') {
-                const sbResult = await supabaseAuthService.ensureSupabaseUser(buyerEmail, buyerFullName || '', funnelLanguage);
-                console.log('Vega Supabase result:', sbResult);
-                if (sbResult && sbResult.created && sbResult.magicLink) {
-                    await supabaseAuthService.sendCredentialsEmail(buyerEmail, sbResult.magicLink, buyerFullName || '', funnelLanguage);
-                    console.log('✅ Vega Supabase user created and notified');
-                } else if (sbResult && !sbResult.created) {
-                    console.log('ℹ️ Vega Supabase user already exists:', buyerEmail);
-                }
+                await welcomeEmailService.sendWelcomeEmail(buyerEmail, buyerFullName || '', funnelLanguage);
+                console.log('✅ Vega welcome email sent');
             }
         } catch (sbError) {
-            console.error('❌ Vega Supabase error (non-blocking):', sbError.message);
+            console.error('❌ Vega welcome email error (non-blocking):', sbError.message);
         }
 
         // ==================== RESPONSE ====================

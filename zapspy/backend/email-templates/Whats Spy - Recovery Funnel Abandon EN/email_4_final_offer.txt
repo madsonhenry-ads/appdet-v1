@@ -142,7 +142,7 @@ From: ZapSpy.Ai - support@mail.appdetect.site
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class=" cke_show_border">
                                             <tbody>
                                                 <tr>
-                                                    <td style="border-radius:8px; background-color:#ff0000;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7DJ?utm_source=activecampaign&utm_medium=email&utm_campaign=recovery_funnel_abandon_en&utm_content=email4" target="_blank" style="display:inline-block; padding:20px 45px; font-family:Arial,sans-serif; font-size:18px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">?? GET 50% OFF NOW - FINAL OFFER </a></td>
+                                                    <td style="border-radius:8px; background-color:#ff0000;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7DJ?utm_source=brevo&utm_medium=email&utm_campaign=recovery_funnel_abandon_en&utm_content=email4" target="_blank" style="display:inline-block; padding:20px 45px; font-family:Arial,sans-serif; font-size:18px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">?? GET 50% OFF NOW - FINAL OFFER </a></td>
                                                 </tr>
                                             </tbody>
                                         </table>

@@ -11,11 +11,9 @@
     "lint": "eslint src/ server.js",
     "lint:fix": "eslint src/ server.js --fix",
     "format": "prettier --write \"src/**/*.js\" server.js",
-    "format:check": "prettier --check \"src/**/*.js\" server.js",
-    "setup:ac": "node src/scripts/setup-activecampaign.js"
+    "format:check": "prettier --check \"src/**/*.js\" server.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.105.1",
     "bcryptjs": "^2.4.3",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",

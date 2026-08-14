@@ -1,60 +1,31 @@
 /**
  * Email Dispatch Service v2
- * 
- * Complete backend-managed email recovery pipeline:
- * 1. Pulls leads from PostgreSQL by category
- * 2. Adds contacts to ActiveCampaign + subscribes to list
- * 3. Sends Email 1 immediately via campaign_send (API v1)
- * 4. Schedules Emails 2-4 in the database
- * 5. Cron job processes scheduled emails at the right time
- * 6. After all 4 emails, removes contact from list (cleanup)
+ *
+ * Complete backend-managed email recovery + welcome pipeline (Brevo only):
+ * 1. Recovery leads are enqueued automatically per event (enqueueRecovery)
+ * 2. Cron processes scheduled emails at their scheduled_for time
+ * 3. Self-hosted tracking pixel/click + Brevo webhook record metrics
+ * 4. cancelEmailFunnel stops pending recovery when a lead converts
  */
 
 const pool = require('../database');
-const acService = require('./activecampaign');
 const brevo = require('./brevo');
-const { AC_API_URL, AC_API_KEY } = require('../config');
 const trackingService = require('./email-tracking');
 
-// ==================== CAMPAIGN MAPPING ====================
-// Maps category_language_emailNumber to message IDs
-const CAMPAIGN_MAP = {
-  'checkout_abandon_en_1': { messageId: 42, listId: 6 },
-  'checkout_abandon_en_2': { messageId: 43, listId: 6 },
-  'checkout_abandon_en_3': { messageId: 44, listId: 6 },
-  'checkout_abandon_en_4': { messageId: 45, listId: 6 },
-  'checkout_abandon_es_1': { messageId: 46, listId: 7 },
-  'checkout_abandon_es_2': { messageId: 47, listId: 7 },
-  'checkout_abandon_es_3': { messageId: 48, listId: 7 },
-  'checkout_abandon_es_4': { messageId: 49, listId: 7 },
-  'sale_cancelled_en_1': { messageId: 50, listId: 8 },
-  'sale_cancelled_en_2': { messageId: 51, listId: 8 },
-  'sale_cancelled_en_3': { messageId: 52, listId: 8 },
-  'sale_cancelled_en_4': { messageId: 53, listId: 8 },
-  'sale_cancelled_es_1': { messageId: 54, listId: 9 },
-  'sale_cancelled_es_2': { messageId: 55, listId: 9 },
-  'sale_cancelled_es_3': { messageId: 56, listId: 9 },
-  'sale_cancelled_es_4': { messageId: 57, listId: 9 },
-  'funnel_abandon_en_1': { messageId: 58, listId: 10 },
-  'funnel_abandon_en_2': { messageId: 59, listId: 10 },
-  'funnel_abandon_en_3': { messageId: 60, listId: 10 },
-  'funnel_abandon_en_4': { messageId: 61, listId: 10 },
-  'funnel_abandon_es_1': { messageId: 62, listId: 11 },
-  'funnel_abandon_es_2': { messageId: 63, listId: 11 },
-  'funnel_abandon_es_3': { messageId: 64, listId: 11 },
-  'funnel_abandon_es_4': { messageId: 65, listId: 11 },
+// ==================== SCHEDULE BY CATEGORY ====================
+// Offsets in hours (accumulated from the event moment) for each email.
+// Email 1 is NOT immediate for recovery categories - it has its own delay.
+const SCHEDULE_BY_CATEGORY = {
+  'sale_cancelled': { 1: 0.33, 2: 6.33, 3: 18.33, 4: 42.33 },   // +20min, e1+6h, e2+12h, e3+24h
+  'funnel_abandon': { 1: 0.33, 2: 2.33, 3: 14.33, 4: 38.33 },   // +20min, e1+2h, e2+12h, e3+24h
+  'checkout_abandon': { 1: 0.083, 2: 3.083, 3: 15.083, 4: 33.083 }, // +5min, e1+3h, e2+12h, e3+18h
+  'welcome': { 1: 0, 2: 1 },                                     // immediate, e1+1h (conditional)
 };
 
-// Email schedule: delay in hours after initial dispatch for each email
-const EMAIL_SCHEDULE = {
-  1: 0,       // Immediately
-  2: 24,      // 1 day later
-  3: 72,      // 3 days later (2 days after email 2)
-  4: 120,     // 5 days later (2 days after email 3)
-};
+const EMAIL_SCHEDULE = SCHEDULE_BY_CATEGORY.checkout_abandon; // backward-compat default
 
-// Cleanup: 48 hours after email 4
-const CLEANUP_DELAY_HOURS = 168; // 7 days after dispatch
+// Cleanup: 7 days after dispatch
+const CLEANUP_DELAY_HOURS = 168;
 
 // ==================== DISPATCH STATUS ====================
 let dispatchStatus = {
@@ -70,54 +41,6 @@ let dispatchStatus = {
   errors: [],
   batchId: null
 };
-
-// ==================== AC API v1 (GET) ====================
-
-async function acApiV1Get(action, params = {}) {
-  if (!AC_API_URL || !AC_API_KEY) {
-    throw new Error('AC_API_URL or AC_API_KEY not configured');
-  }
-
-  const queryParams = new URLSearchParams({
-    api_key: AC_API_KEY,
-    api_action: action,
-    api_output: 'json',
-    ...params
-  });
-
-  const url = `${AC_API_URL}/admin/api.php?${queryParams.toString()}`;
-
-  const response = await fetch(url, { method: 'GET' });
-  const data = await response.json();
-  return data;
-}
-
-// ==================== SEND EMAIL VIA CAMPAIGN_SEND ====================
-
-async function sendCampaignEmail(email, category, language, emailNum) {
-  const key = `${category}_${language}_${emailNum}`;
-  const campaign = CAMPAIGN_MAP[key];
-  
-  if (!campaign) {
-    throw new Error(`No campaign found for key: ${key}`);
-  }
-
-  // Use messageid=0 to send the campaign's default message
-  // Using GET method as per AC API v1 documentation
-  const result = await acApiV1Get('campaign_send', {
-    email: email,
-    campaignid: campaign.campaignId,
-    messageid: 0,
-    type: 'mime',
-    action: 'send',
-  });
-
-  if (result.result_code !== 1) {
-    throw new Error(`campaign_send failed: ${result.result_message || JSON.stringify(result)}`);
-  }
-
-  return result;
-}
 
 // ==================== DATABASE TABLE ====================
 async function ensureDispatchTable() {
@@ -168,9 +91,9 @@ async function ensureDispatchTable() {
     console.log('📧 UNIQUE constraint already exists or could not be added:', e.message);
   }
 
-  // Ensure provider column exists (defaults to 'ac'). Safe, additive.
+  // Ensure provider column exists (defaults to 'brevo'). Safe, additive.
   await pool.queryRetry(`
-    ALTER TABLE email_dispatch_log ADD COLUMN IF NOT EXISTS provider VARCHAR(20) DEFAULT 'ac';
+    ALTER TABLE email_dispatch_log ADD COLUMN IF NOT EXISTS provider VARCHAR(20) DEFAULT 'brevo';
   `);
 
   // Ensure indexes exist
@@ -180,6 +103,55 @@ async function ensureDispatchTable() {
     CREATE INDEX IF NOT EXISTS idx_dispatch_cleanup ON email_dispatch_log(cleaned_up, dispatched_at);
     CREATE INDEX IF NOT EXISTS idx_dispatch_batch ON email_dispatch_log(batch_id);
   `);
+}
+
+// ==================== ENQUEUE RECOVERY (AUTOMATIC PER EVENT) ====================
+
+/**
+ * Enqueue a recovery/welcome funnel for a lead at the moment an event occurs.
+ * Inserts all emails as 'scheduled' with scheduled_for computed from NOW +
+ * SCHEDULE_BY_CATEGORY[category]. The cron (processScheduledEmails) sends
+ * them when their time comes. ON CONFLICT DO NOTHING prevents duplicates if
+ * the same event fires more than once.
+ *
+ * @param {object} opts
+ * @param {string} opts.email
+ * @param {string} [opts.name]
+ * @param {string} opts.category - one of SCHEDULE_BY_CATEGORY keys
+ * @param {string} opts.language - 'en' | 'es' | ...
+ * @param {number} [opts.fromEmailNum] - only schedule emails >= this number
+ *   (default 1). For welcome, email 1 is sent immediately, so pass 2.
+ */
+async function enqueueRecovery({ email, name, category, language, fromEmailNum = 1 }) {
+  if (!email || !category || !SCHEDULE_BY_CATEGORY[category]) {
+    return { enqueued: 0, error: 'invalid_args' };
+  }
+
+  await ensureDispatchTable();
+
+  const schedule = SCHEDULE_BY_CATEGORY[category];
+  const nowMs = Date.now();
+  const emailNums = Object.keys(schedule)
+    .map(Number)
+    .filter(n => n >= fromEmailNum)
+    .sort((a, b) => a - b);
+
+  let enqueued = 0;
+  for (const emailNum of emailNums) {
+    const delayMs = schedule[emailNum] * 60 * 60 * 1000;
+    const scheduledFor = new Date(nowMs + delayMs);
+
+    await pool.queryRetry(`
+      INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, scheduled_for, dispatched_at, provider)
+      VALUES ($1, $2, $3, $4, 'scheduled', $5, $6, NOW(), 'brevo')
+      ON CONFLICT (email, category, language, email_num) DO NOTHING
+    `, [email, category, language, emailNum, `event_${Date.now()}`, scheduledFor]);
+
+    enqueued++;
+  }
+
+  console.log(`📧 Enqueued recovery ${category}/${language} for ${email}: ${enqueued} emails scheduled`);
+  return { enqueued };
 }
 
 // ==================== LEAD COUNT QUERIES ====================
@@ -452,84 +424,38 @@ async function runDispatch(category, language, batchSize, batchId) {
         const lead = leads[i];
 
         try {
-          // 1. Add contact to ActiveCampaign + subscribe to list
-          const contactId = await acService.syncContact(lead.email, lead.name, lead.phone);
-          
-          if (!contactId) {
-            throw new Error('Failed to sync contact to AC');
-          }
+          // Send Email 1 immediately via Brevo (manual dispatch utility).
+          // The automatic flow uses enqueueRecovery + the cron instead.
+          const trackId = await trackingService.createTrackingRecord(lead.email, category, language, 1, batchId);
+          await brevo.sendTransactional({
+            email: lead.email,
+            category,
+            emailNum: 1,
+            name: lead.name || '',
+            last4digits: lead.last4digits || '',
+            trackId,
+          });
 
-          // Subscribe to list → send email → unsubscribe → delete contact
-          // Contact is deleted from AC after sending to free up plan slots
-          const eventType = category === 'checkout_abandon' ? 'checkout_abandoned' : 
-                           category === 'sale_cancelled' ? 'sale_cancelled' : 'lead_captured';
-          const listMapping = acService.LIST_MAP[eventType];
-          let listId = null;
-          if (listMapping && listMapping[language]) {
-            listId = await acService.getOrCreateList(listMapping[language]);
-            if (listId) {
-              await acService.subscribeToList(contactId, listId);
-            }
-          }
-
-          // 2. Send Email 1 immediately (Brevo if routed, else AC campaign_send)
-          if (brevo.isCategoryEnabled(category)) {
-            await brevo.sendTransactional({
-              email: lead.email,
-              category,
-              emailNum: 1,
-              name: lead.name || '',
-              last4digits: lead.last4digits || '',
-            });
-          } else {
-            await sendCampaignEmail(lead.email, category, language, 1);
-          }
-
-          // 2.5. Unsubscribe from list after sending
-          if (listId) {
-            try {
-              await acService.apiRequest('POST', 'contactLists', {
-                contactList: { list: String(listId), contact: String(contactId), status: 2 }
-              });
-            } catch (unsubErr) {
-              console.error(`AC: Error removing ${lead.email} from list after send:`, unsubErr.message);
-            }
-          }
-
-          // 2.6. Delete contact from AC to free plan slots
-          try {
-            await acService.deleteContact(contactId);
-          } catch (delErr) {
-            console.error(`AC: Error deleting ${lead.email} after send:`, delErr.message);
-          }
-
-          // 2.7. Create tracking record for Email 1
-          try {
-            await trackingService.createTrackingRecord(lead.email, category, language, 1, batchId);
-          } catch (trackErr) {
-            console.error(`Tracking record error for ${lead.email}:`, trackErr.message);
-          }
-
-          // 3. Log Email 1 as sent
-          const emailProvider = brevo.isCategoryEnabled(category) ? 'brevo' : 'ac';
+          // Log Email 1 as sent (Brevo only)
           await pool.queryRetry(`
-            INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, ac_contact_id, scheduled_for, sent_at, dispatched_at, provider)
-            VALUES ($1, $2, $3, 1, 'sent', $4, $5, NOW(), NOW(), NOW(), $6)
+            INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, scheduled_for, sent_at, dispatched_at, provider)
+            VALUES ($1, $2, $3, 1, 'sent', $4, NOW(), NOW(), NOW(), 'brevo')
             ON CONFLICT (email, category, language, email_num) DO UPDATE SET
-              status = 'sent', batch_id = $4, ac_contact_id = $5, sent_at = NOW(), provider = $6
-          `, [lead.email, category, language, batchId, String(contactId), emailProvider]);
+              status = 'sent', batch_id = $4, sent_at = NOW(), provider = 'brevo'
+          `, [lead.email, category, language, batchId]);
 
-          // 4. Schedule Emails 2, 3, 4
+          // Schedule Emails 2-4 with per-category schedule
+          const schedule = SCHEDULE_BY_CATEGORY[category] || {};
           const now = Date.now();
           for (let emailNum = 2; emailNum <= 4; emailNum++) {
-            const delayMs = EMAIL_SCHEDULE[emailNum] * 60 * 60 * 1000;
+            const delayMs = (schedule[emailNum] || 0) * 60 * 60 * 1000;
             const scheduledFor = new Date(now + delayMs);
 
             await pool.queryRetry(`
-              INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, ac_contact_id, scheduled_for, dispatched_at, provider)
-              VALUES ($1, $2, $3, $4, 'scheduled', $5, $6, $7, NOW(), $8)
+              INSERT INTO email_dispatch_log (email, category, language, email_num, status, batch_id, scheduled_for, dispatched_at, provider)
+              VALUES ($1, $2, $3, $4, 'scheduled', $5, $6, NOW(), 'brevo')
               ON CONFLICT (email, category, language, email_num) DO NOTHING
-            `, [lead.email, category, language, emailNum, batchId, String(contactId), scheduledFor, emailProvider]);
+            `, [lead.email, category, language, emailNum, batchId, scheduledFor]);
           }
 
           globalSuccess++;
@@ -596,7 +522,7 @@ async function processScheduledEmails() {
 
     // Find emails that are scheduled and due now
     const result = await pool.queryRetry(`
-      SELECT id, email, category, language, email_num, ac_contact_id
+      SELECT id, email, category, language, email_num, batch_id
       FROM email_dispatch_log
       WHERE status = 'scheduled'
       AND scheduled_for <= NOW()
@@ -637,74 +563,39 @@ async function processScheduledEmails() {
           continue;
         }
 
-        // Re-create contact → subscribe → send → unsubscribe → delete
-        // Contact must be re-synced because it was deleted after previous email
-        let contactId = row.ac_contact_id;
-        try {
-          const syncResult = await acService.syncContact(row.email);
-          if (syncResult) {
-            contactId = syncResult;
+        // Welcome email 2 is conditional: only send if email 1 was NOT
+        // opened or clicked (re-engagement follow-up).
+        if (row.category === 'welcome' && row.email_num === 2) {
+          const interacted = await pool.queryRetry(`
+            SELECT e.id
+            FROM email_tracking t
+            JOIN email_tracking_events e ON e.track_id = t.track_id
+            WHERE t.email = $1 AND t.category = 'welcome' AND t.email_num = 1
+            AND e.event_type IN ('open', 'click')
+            LIMIT 1
+          `, [row.email]);
+
+          if (interacted.rows.length > 0) {
+            console.log(`📧 Skipping welcome email #2 for ${row.email} - email 1 was opened/clicked`);
             await pool.queryRetry(`
-              UPDATE email_dispatch_log SET ac_contact_id = $1
-              WHERE LOWER(email) = LOWER($2) AND category = $3 AND language = $4
-            `, [contactId, row.email, row.category, row.language]);
-          }
-        } catch (syncErr) {
-          console.error(`AC: Error re-syncing ${row.email} for scheduled email:`, syncErr.message);
-        }
-
-        const eventType = row.category === 'checkout_abandon' ? 'checkout_abandoned' :
-                         row.category === 'sale_cancelled' ? 'sale_cancelled' : 'lead_captured';
-        const listMapping = acService.LIST_MAP[eventType];
-        let listId = null;
-
-        if (contactId && listMapping && listMapping[row.language]) {
-          listId = await acService.getOrCreateList(listMapping[row.language]);
-          if (listId) {
-            await acService.subscribeToList(contactId, listId);
+              UPDATE email_dispatch_log SET status = 'skipped'
+              WHERE id = $1
+            `, [row.id]);
+            continue;
           }
         }
 
-        // Send the email (Brevo if routed, else AC campaign_send)
-        if (brevo.isCategoryEnabled(row.category)) {
-          const lead = await brevo.getLeadData(row.email);
-          await brevo.sendTransactional({
-            email: row.email,
-            category: row.category,
-            emailNum: row.email_num,
-            name: lead.name || '',
-            last4digits: lead.last4digits || '',
-          });
-        } else {
-          await sendCampaignEmail(row.email, row.category, row.language, row.email_num);
-        }
-
-        // Unsubscribe from list after sending
-        if (listId && contactId) {
-          try {
-            await acService.apiRequest('POST', 'contactLists', {
-              contactList: { list: String(listId), contact: String(contactId), status: 2 }
-            });
-          } catch (unsubErr) {
-            console.error(`AC: Error removing ${row.email} from list after scheduled send:`, unsubErr.message);
-          }
-        }
-
-        // Delete contact from AC to free plan slots
-        if (contactId) {
-          try {
-            await acService.deleteContact(contactId);
-          } catch (delErr) {
-            console.error(`AC: Error deleting ${row.email} after scheduled send:`, delErr.message);
-          }
-        }
-
-        // Create tracking record
-        try {
-          await trackingService.createTrackingRecord(row.email, row.category, row.language, row.email_num, null);
-        } catch (trackErr) {
-          console.error(`Tracking record error for ${row.email} #${row.email_num}:`, trackErr.message);
-        }
+        // Create tracking record and send via Brevo (sole provider).
+        const lead = await brevo.getLeadData(row.email);
+        const trackId = await trackingService.createTrackingRecord(row.email, row.category, row.language, row.email_num, row.batch_id || null);
+        await brevo.sendTransactional({
+          email: row.email,
+          category: row.category,
+          emailNum: row.email_num,
+          name: lead.name || '',
+          last4digits: lead.last4digits || '',
+          trackId,
+        });
 
         // Update status to sent
         await pool.queryRetry(`
@@ -748,7 +639,7 @@ async function cancelEmailFunnel(email, reason = 'sale_approved') {
     if (!email) return { cancelled: false, reason: 'no_email' };
 
     const pending = await pool.queryRetry(`
-      SELECT DISTINCT category, language, ac_contact_id
+      SELECT DISTINCT category, language
       FROM email_dispatch_log
       WHERE LOWER(email) = LOWER($1)
       AND status = 'scheduled'
@@ -756,7 +647,7 @@ async function cancelEmailFunnel(email, reason = 'sale_approved') {
 
     if (pending.rows.length === 0) {
       const existing = await pool.queryRetry(`
-        SELECT DISTINCT category, language, ac_contact_id
+        SELECT DISTINCT category, language
         FROM email_dispatch_log
         WHERE LOWER(email) = LOWER($1)
         AND cleaned_up = FALSE
@@ -784,7 +675,7 @@ async function cancelEmailFunnel(email, reason = 'sale_approved') {
     console.log(`📧 Cancelled ${cancelledCount} scheduled emails for ${email} (reason: ${reason})`);
 
     const distinctEntries = await pool.queryRetry(`
-      SELECT DISTINCT category, language, ac_contact_id
+      SELECT DISTINCT category, language
       FROM email_dispatch_log
       WHERE LOWER(email) = LOWER($1)
       AND cleaned_up = FALSE
@@ -803,16 +694,6 @@ async function cancelEmailFunnel(email, reason = 'sale_approved') {
 
 async function unsubscribeAndCleanup(row, email) {
   try {
-    if (row.ac_contact_id) {
-      // Delete contact entirely from AC to free plan slots
-      try {
-        await acService.deleteContact(row.ac_contact_id);
-        console.log(`🗑️ Deleted ${email} from AC (cleanup)`);
-      } catch (delErr) {
-        console.log(`AC: Contact ${email} may already be deleted: ${delErr.message}`);
-      }
-    }
-
     await pool.queryRetry(`
       UPDATE email_dispatch_log
       SET cleaned_up = TRUE, cleanup_at = NOW()
@@ -832,7 +713,7 @@ async function cleanupCompletedContacts() {
 
     // Find contacts who completed all 4 emails and cleanup delay has passed
     const result = await pool.queryRetry(`
-      SELECT DISTINCT d.email, d.category, d.language, d.ac_contact_id
+      SELECT DISTINCT d.email, d.category, d.language
       FROM email_dispatch_log d
       WHERE d.email_num = 4
       AND d.status = 'sent'
@@ -851,17 +732,6 @@ async function cleanupCompletedContacts() {
 
     for (const row of result.rows) {
       try {
-        if (row.ac_contact_id) {
-          // Try to delete the contact entirely from AC to free plan slots
-          // (it may already be deleted if the per-email deletion worked)
-          try {
-            await acService.deleteContact(row.ac_contact_id);
-          } catch (delErr) {
-            // Contact may already be deleted - that's fine
-            console.log(`AC: Contact ${row.email} may already be deleted: ${delErr.message}`);
-          }
-        }
-
         // Mark all emails for this contact as cleaned
         await pool.queryRetry(`
           UPDATE email_dispatch_log
@@ -948,47 +818,26 @@ async function sendTestEmails(testEmail, category, language, emailNumbers = [1, 
   const results = [];
 
   for (const emailNum of emailNumbers) {
-    const key = `${category}_${language}_${emailNum}`;
-    const campaign = CAMPAIGN_MAP[key];
-
-    if (!campaign) {
-      results.push({ emailNum, success: false, error: `No campaign found for key: ${key}` });
-      continue;
-    }
-
     try {
-      // First ensure the contact exists in AC
-      const contactId = await acService.syncContact(testEmail, 'Test User', '');
-
-      // Send the email using GET method with messageid=0 (default message)
-      const result = await acApiV1Get('campaign_send', {
+      // Send directly via Brevo (sole provider), with a generated track id.
+      const trackId = trackingService.generateTrackId();
+      await brevo.sendTransactional({
         email: testEmail,
-        campaignid: campaign.campaignId,
-        messageid: 0,
-        type: 'mime',
-        action: 'send',
+        category,
+        emailNum,
+        name: 'Test User',
+        trackId,
       });
-
-      if (result.result_code === 1) {
-        results.push({ 
-          emailNum, 
-          success: true, 
-          campaignId: campaign.campaignId,
-          message: `Email ${emailNum} sent successfully` 
-        });
-      } else {
-        results.push({ 
-          emailNum, 
-          success: false, 
-          campaignId: campaign.campaignId,
-          error: result.result_message || 'Unknown error' 
-        });
-      }
+      results.push({
+        emailNum,
+        success: true,
+        message: `Email ${emailNum} sent successfully`,
+      });
     } catch (error) {
-      results.push({ 
-        emailNum, 
-        success: false, 
-        error: error.message 
+      results.push({
+        emailNum,
+        success: false,
+        error: error.message,
       });
     }
 
@@ -1016,8 +865,9 @@ module.exports = {
   processScheduledEmails,
   cleanupCompletedContacts,
   cancelEmailFunnel,
+  enqueueRecovery,
   ensureDispatchTable,
   sendTestEmails,
-  CAMPAIGN_MAP,
+  SCHEDULE_BY_CATEGORY,
   EMAIL_SCHEDULE,
 };

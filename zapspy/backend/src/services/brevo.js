@@ -1,25 +1,27 @@
 /**
  * Brevo Transactional Email Service
  *
- * Sends recovery funnel emails directly via the Brevo Transactional
- * (SMTP) API, reading HTML templates from the local email-templates/
- * folder and substituting lead variables (%FIRSTNAME%, %LAST4DIGITS%)
- * at send time.
+ * Sends recovery funnel emails and welcome emails directly via the Brevo
+ * Transactional (SMTP) API, reading HTML/text templates from the local
+ * email-templates/ folder and substituting lead variables (%FIRSTNAME%,
+ * %LAST4DIGITS%, %MAGICLINK%) at send time.
  *
- * This service is additive: ActiveCampaign remains the default
- * provider. Categories can be routed to Brevo via BREVO_CATEGORIES.
+ * Brevo is the sole provider. Emails get the self-hosted tracking pixel
+ * and click-wrapper injected, and carry a track_id in the Brevo payload
+ * params so transactional webhook events can be correlated in the DB.
  */
 
 const path = require('path');
 const fs = require('fs');
 const pool = require('../database');
+const trackingService = require('./email-tracking');
 const {
     BREVO_API_KEY,
     BREVO_ENABLED,
-    BREVO_CATEGORIES,
     BREVO_SENDER_EMAIL,
     BREVO_SENDER_NAME,
-    BREVO_API_URL
+    BREVO_API_URL,
+    TRACKING_BASE_URL
 } = require('../config');
 
 const TEMPLATES_DIR = path.join(__dirname, '..', '..', 'email-templates');
@@ -29,8 +31,7 @@ const TEMPLATE_FOLDER_MAP = {
     'checkout_abandon': 'Whats Spy - Recovery Checkout Abandon EN',
     'sale_cancelled': 'Whats Spy - Recovery Sale Cancelled EN',
     'funnel_abandon': 'Whats Spy - Recovery Funnel Abandon EN',
-    // Compra aprovada (approved) does not have email_2..4 in the folder set
-    // but email_1/email_2 exist under its own folder.
+    'welcome': 'Whats Spy - Compra aprovada - EN',
 };
 
 // Email file name by number
@@ -41,12 +42,17 @@ const EMAIL_FILE_INDEX = {
     4: 'email_4_final_offer.txt',
 };
 
+// Welcome emails use their own file naming (email_1_access.txt, ...)
+const WELCOME_FILE_INDEX = {
+    1: 'email_1_access.txt',
+    2: 'email_2_urgency.txt',
+};
+
 /**
  * Check whether a given dispatch category should be routed to Brevo.
  */
 function isCategoryEnabled(category) {
-    if (!BREVO_ENABLED) return false;
-    return BREVO_CATEGORIES.includes(category);
+    return BREVO_ENABLED;
 }
 
 /**
@@ -58,7 +64,10 @@ function getTemplateFile(category, emailNum) {
     if (!folder) {
         throw new Error(`No Brevo template folder mapped for category: ${category}`);
     }
-    const fileName = EMAIL_FILE_INDEX[emailNum] || `email_${emailNum}_reminder.txt`;
+    const index = category === 'welcome' ? WELCOME_FILE_INDEX : EMAIL_FILE_INDEX;
+    const fileName = index[emailNum] || (category === 'welcome'
+        ? `email_${emailNum}_access.txt`
+        : `email_${emailNum}_reminder.txt`);
     const filePath = path.join(TEMPLATES_DIR, folder, fileName);
     if (!fs.existsSync(filePath)) {
         throw new Error(`Brevo template file not found: ${filePath}`);
@@ -174,16 +183,55 @@ function substituteVariables(text, vars) {
 }
 
 /**
+ * Inject the self-hosted tracking pixel and click-wrapper into email HTML.
+ * - Pixel: a 1x1 transparent image pointing at /t/o/{trackId}.
+ * - Clicks: wraps external <a href> links with /t/c/{trackId}?url=...
+ * Skips mailto:, privacy links, unsubscribe placeholders and already-wrapped URLs.
+ */
+function injectTracking(html, trackId) {
+    const pixel = `<img src="${TRACKING_BASE_URL}/t/o/${trackId}" width="1" height="1" alt="" style="display:none;height:1px;width:1px;max-height:1px;max-width:1px;opacity:0;overflow:hidden;border:0;margin:0;padding:0" />`;
+
+    let out = html;
+    if (out.includes('</body>')) {
+        out = out.replace('</body>', `${pixel}</body>`);
+    } else {
+        out = out + pixel;
+    }
+
+    // Wrap external links for click tracking.
+    out = out.replace(/<a\b([^>]*)href="(https?:\/\/[^"]*)"([^>]*)>/g, (match, before, url, after) => {
+        const href = url;
+        const lowered = href.toLowerCase();
+        if (
+            lowered.startsWith('mailto:') ||
+            lowered.includes('/privacy') ||
+            lowered.includes('/unsubscribe') ||
+            href.includes('%UNSUBSCRIBELINK%') ||
+            href.includes('/t/c/')
+        ) {
+            return match; // leave untouched
+        }
+        const wrapped = `${TRACKING_BASE_URL}/t/c/${trackId}?url=${encodeURIComponent(href)}`;
+        return `<a${before}href="${wrapped}"${after}>`;
+    });
+
+    return out;
+}
+
+/**
  * Send a transactional email via Brevo API (POST /smtp/email).
  *
  * @param {object} opts
  * @param {string} opts.email - recipient
- * @param {string} opts.category - dispatch category (checkout_abandon, ...)
+ * @param {string} opts.category - dispatch category (checkout_abandon, sale_cancelled, funnel_abandon, welcome)
  * @param {number} opts.emailNum - which email in the flow (1-4)
  * @param {string} [opts.name] - lead first name (falls back to DB)
  * @param {string} [opts.last4digits] - last4digits (falls back to DB)
+ * @param {string} [opts.magicLink] - magic link for welcome emails
+ * @param {string} [opts.trackId] - existing track id (generated if omitted)
+ * @returns {Promise<{trackId: string, data: object}>}
  */
-async function sendTransactional({ email, category, emailNum, name = '', last4digits = '' }) {
+async function sendTransactional({ email, category, emailNum, name = '', last4digits = '', magicLink = '', trackId }) {
     if (!BREVO_API_KEY) {
         throw new Error('Brevo not configured: BREVO_API_KEY missing');
     }
@@ -200,14 +248,23 @@ async function sendTransactional({ email, category, emailNum, name = '', last4di
         FIRSTNAME: firstName,
         LAST4DIGITS: last4digits,
     };
+    if (magicLink) vars.MAGICLINK = magicLink;
 
     const subject = template.subject ? substituteVariables(template.subject, vars) : '';
-    const htmlContent = substituteVariables(template.html, vars);
-    // If a preheader exists, append it as a hidden preheader div if the
-    // template didn't already include one (best-effort).
-    if (template.preheader && !htmlContent.includes('esd-text') && !htmlContent.includes('display:none')) {
-        // simple no-op here; template already has preheader handling via esd-text
+    let htmlContent = substituteVariables(template.html, vars);
+
+    // Track id for self-hosted tracking + webhook correlation.
+    if (!trackId) trackId = trackingService.generateTrackId();
+
+    // Prepend hidden preheader if the template didn't include one.
+    if (template.preheader) {
+        htmlContent =
+            `<div style="display:none;font-size:1px;color:#0a0a0a;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">${template.preheader}</div>` +
+            htmlContent;
     }
+
+    // Inject self-hosted tracking pixel + click wrapper.
+    htmlContent = injectTracking(htmlContent, trackId);
 
     const payload = {
         sender: {
@@ -220,17 +277,16 @@ async function sendTransactional({ email, category, emailNum, name = '', last4di
         headers: {
             'X-Param-Category': category,
             'X-Param-EmailNum': String(emailNum),
+            'X-Param-TrackId': trackId,
         },
-        tags: [`recovery_${category}`],
+        params: {
+            track_id: trackId,
+            category,
+            email_num: String(emailNum),
+            ...(template.preheader ? { preheader: template.preheader } : {}),
+        },
+        tags: [category === 'welcome' ? 'welcome' : `recovery_${category}`],
     };
-
-    if (template.preheader) {
-        payload.params = { preheader: template.preheader };
-        // Prepend hidden preheader for clients that read it
-        payload.htmlContent =
-            `<div style="display:none;font-size:1px;color:#0a0a0a;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">${template.preheader}</div>` +
-            htmlContent;
-    }
 
     const response = await fetch(`${BREVO_API_URL}/smtp/email`, {
         method: 'POST',
@@ -254,8 +310,8 @@ async function sendTransactional({ email, category, emailNum, name = '', last4di
         throw new Error(`Brevo send failed: ${data?.message || data?.raw || response.status}`);
     }
 
-    console.log(`📧 Brevo: sent email #${emailNum} to ${email} (${category}) [last4: ${last4digits || 'n/a'}]`);
-    return data;
+    console.log(`📧 Brevo: sent email #${emailNum} to ${email} (${category}) [last4: ${last4digits || 'n/a'}] trackId=${trackId}`);
+    return { data, trackId };
 }
 
 module.exports = {
@@ -265,5 +321,6 @@ module.exports = {
     getTemplateFile,
     parseTemplateFile,
     substituteVariables,
+    injectTracking,
     TEMPLATE_FOLDER_MAP,
 };

@@ -37,7 +37,7 @@ async function ensureTrackingTable() {
     CREATE TABLE IF NOT EXISTS email_tracking_events (
       id SERIAL PRIMARY KEY,
       track_id VARCHAR(32) NOT NULL REFERENCES email_tracking(track_id),
-      event_type VARCHAR(10) NOT NULL,
+      event_type VARCHAR(20) NOT NULL,
       url TEXT,
       ip_address VARCHAR(45),
       user_agent TEXT,
@@ -47,6 +47,14 @@ async function ensureTrackingTable() {
     CREATE INDEX IF NOT EXISTS idx_events_type ON email_tracking_events(event_type);
     CREATE INDEX IF NOT EXISTS idx_events_created ON email_tracking_events(created_at);
   `);
+
+  // Widen event_type for Brevo webhook event names (e.g. 'hard_bounce',
+  // 'unsubscribed'). Idempotent - runs on every boot.
+  try {
+    await pool.queryRetry(`ALTER TABLE email_tracking_events ALTER COLUMN event_type TYPE VARCHAR(20);`);
+  } catch (e) {
+    console.error('Error widening event_type:', e.message);
+  }
 }
 
 // ==================== TRACK ID GENERATION ====================
@@ -150,6 +158,61 @@ async function recordClick(trackId, url, ipAddress, userAgent) {
 }
 
 /**
+ * Generic event recorder used by the self-hosted tracking routes and the
+ * Brevo webhook. Records an arbitrary event type against a known track id.
+ */
+async function recordEvent(trackId, eventType, { url = '', ip = '', userAgent = '' } = {}) {
+  if (!trackId) return false;
+  try {
+    const check = await pool.queryRetry(
+      `SELECT id FROM email_tracking WHERE track_id = $1`, [trackId]
+    );
+    if (check.rows.length === 0) return false;
+
+    await pool.queryRetry(`
+      INSERT INTO email_tracking_events (track_id, event_type, url, ip_address, user_agent)
+      VALUES ($1, $2, $3, $4, $5)
+    `, [trackId, eventType, url || null, ip || null, userAgent || null]);
+
+    return true;
+  } catch (error) {
+    console.error(`Error recording ${eventType}:`, error.message);
+    return false;
+  }
+}
+
+/**
+ * Generic event recorder by email + category + language + emailNum.
+ * Used by the Brevo webhook when correlating via custom headers.
+ * Auto-creates a tracking record if it doesn't exist yet.
+ */
+async function recordEventByEmail(email, category, language, emailNum, eventType, { url = '', ip = '', userAgent = '' } = {}) {
+  try {
+    const check = await pool.queryRetry(
+      `SELECT track_id FROM email_tracking WHERE email = $1 AND category = $2 AND language = $3 AND email_num = $4 LIMIT 1`,
+      [email, category, language, emailNum]
+    );
+
+    let trackId;
+    if (check.rows.length === 0) {
+      trackId = await createTrackingRecord(email, category, language, emailNum, null);
+    } else {
+      trackId = check.rows[0].track_id;
+    }
+
+    await pool.queryRetry(`
+      INSERT INTO email_tracking_events (track_id, event_type, url, ip_address, user_agent)
+      VALUES ($1, $2, $3, $4, $5)
+    `, [trackId, eventType, url || null, ip || null, userAgent || null]);
+
+    return true;
+  } catch (error) {
+    console.error(`Error recording ${eventType} by email:`, error.message);
+    return false;
+  }
+}
+
+/**
  * Record a click event by email + category + language + emailNum.
  * Used when tracking via AC personalization tags (%EMAIL%).
  */
@@ -209,11 +272,15 @@ async function getMetrics(filters = {}) {
     }
 
     const result = await pool.queryRetry(`
-      SELECT 
+      SELECT
         t.category,
         t.language,
         t.email_num,
         COUNT(DISTINCT t.track_id) as total_sent,
+        COUNT(DISTINCT CASE WHEN e.event_type = 'delivered' THEN t.track_id END) as unique_delivered,
+        COUNT(DISTINCT CASE WHEN e.event_type IN ('hard_bounce','soft_bounce') THEN t.track_id END) as unique_bounced,
+        COUNT(DISTINCT CASE WHEN e.event_type = 'unsubscribed' THEN t.track_id END) as unique_unsubscribed,
+        COUNT(DISTINCT CASE WHEN e.event_type = 'complaint' THEN t.track_id END) as unique_complaints,
         COUNT(DISTINCT CASE WHEN e.event_type = 'open' THEN t.track_id END) as unique_opens,
         COUNT(DISTINCT CASE WHEN e.event_type = 'click' THEN t.track_id END) as unique_clicks,
         COUNT(CASE WHEN e.event_type = 'open' THEN 1 END) as total_opens,
@@ -230,12 +297,19 @@ async function getMetrics(filters = {}) {
       language: row.language,
       email_num: parseInt(row.email_num),
       total_sent: parseInt(row.total_sent),
+      unique_delivered: parseInt(row.unique_delivered),
+      unique_bounced: parseInt(row.unique_bounced),
+      unique_unsubscribed: parseInt(row.unique_unsubscribed),
+      unique_complaints: parseInt(row.unique_complaints),
       unique_opens: parseInt(row.unique_opens),
       unique_clicks: parseInt(row.unique_clicks),
       total_opens: parseInt(row.total_opens),
       total_clicks: parseInt(row.total_clicks),
       open_rate: row.total_sent > 0 ? (parseInt(row.unique_opens) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
       click_rate: row.total_sent > 0 ? (parseInt(row.unique_clicks) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
+      delivered_rate: row.total_sent > 0 ? (parseInt(row.unique_delivered) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
+      bounce_rate: row.total_sent > 0 ? (parseInt(row.unique_bounced) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
+      unsubscribe_rate: row.total_sent > 0 ? (parseInt(row.unique_unsubscribed) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
     }));
   } catch (error) {
     console.error('Error getting metrics:', error.message);
@@ -249,11 +323,15 @@ async function getMetrics(filters = {}) {
 async function getSummaryMetrics() {
   try {
     const result = await pool.queryRetry(`
-      SELECT 
+      SELECT
         t.category,
         t.language,
         COUNT(DISTINCT t.track_id) as total_sent,
         COUNT(DISTINCT t.email) as unique_contacts,
+        COUNT(DISTINCT CASE WHEN e.event_type = 'delivered' THEN t.track_id END) as unique_delivered,
+        COUNT(DISTINCT CASE WHEN e.event_type IN ('hard_bounce','soft_bounce') THEN t.track_id END) as unique_bounced,
+        COUNT(DISTINCT CASE WHEN e.event_type = 'unsubscribed' THEN t.track_id END) as unique_unsubscribed,
+        COUNT(DISTINCT CASE WHEN e.event_type = 'complaint' THEN t.track_id END) as unique_complaints,
         COUNT(DISTINCT CASE WHEN e.event_type = 'open' THEN t.track_id END) as unique_opens,
         COUNT(DISTINCT CASE WHEN e.event_type = 'click' THEN t.track_id END) as unique_clicks,
         COUNT(DISTINCT CASE WHEN e.event_type = 'open' THEN t.email END) as contacts_opened,
@@ -269,12 +347,19 @@ async function getSummaryMetrics() {
       language: row.language,
       total_sent: parseInt(row.total_sent),
       unique_contacts: parseInt(row.unique_contacts),
+      unique_delivered: parseInt(row.unique_delivered),
+      unique_bounced: parseInt(row.unique_bounced),
+      unique_unsubscribed: parseInt(row.unique_unsubscribed),
+      unique_complaints: parseInt(row.unique_complaints),
       unique_opens: parseInt(row.unique_opens),
       unique_clicks: parseInt(row.unique_clicks),
       contacts_opened: parseInt(row.contacts_opened),
       contacts_clicked: parseInt(row.contacts_clicked),
       open_rate: row.total_sent > 0 ? (parseInt(row.unique_opens) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
       click_rate: row.total_sent > 0 ? (parseInt(row.unique_clicks) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
+      delivered_rate: row.total_sent > 0 ? (parseInt(row.unique_delivered) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
+      bounce_rate: row.total_sent > 0 ? (parseInt(row.unique_bounced) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
+      unsubscribe_rate: row.total_sent > 0 ? (parseInt(row.unique_unsubscribed) / parseInt(row.total_sent) * 100).toFixed(1) : '0.0',
     }));
   } catch (error) {
     console.error('Error getting summary metrics:', error.message);
@@ -356,6 +441,8 @@ module.exports = {
   recordOpenByEmail,
   recordClick,
   recordClickByEmail,
+  recordEvent,
+  recordEventByEmail,
   getMetrics,
   getSummaryMetrics,
   getRecentEvents,

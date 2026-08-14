@@ -1685,25 +1685,6 @@
                                 <span style="font-size: 12px; color: var(--text-muted);">Recomendado: 500 (respeita limite de 5.000 contatos ativos)</span>
                             </div>
 
-                            <!-- Purge AC Contacts - Limited -->
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px; background: rgba(59, 130, 246, 0.05); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2);">
-                                <div style="flex: 1;">
-                                    <div style="font-size: 13px; font-weight: 600; color: #3b82f6; margin-bottom: 4px;">🗑️ Deletar Contatos (Limitado)</div>
-                                    <div style="font-size: 11px; color: var(--text-muted);">Deleta até X contatos do ActiveCampaign (padrão: 500). Mais seguro que a limpeza total.</div>
-                                </div>
-                                <input type="number" id="purgeLimit" value="500" min="1" max="2000" style="width: 80px; padding: 8px 12px; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px;">
-                                <button onclick="purgeACContactsLimited()" style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.1); color: #3b82f6; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap;">Deletar</button>
-                            </div>
-
-                            <!-- Purge AC Contacts - All -->
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding: 12px; background: rgba(239, 68, 68, 0.05); border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2);">
-                                <div style="flex: 1;">
-                                    <div style="font-size: 13px; font-weight: 600; color: #ef4444; margin-bottom: 4px;">⚠️ Limpar TODOS Contatos AC</div>
-                                    <div style="font-size: 11px; color: var(--text-muted);">Deleta TODOS contatos de recuperação do ActiveCampaign. Cuidado!</div>
-                                </div>
-                                <button onclick="purgeACContacts()" style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.1); color: #ef4444; cursor: pointer; font-size: 12px; font-weight: 600; white-space: nowrap;">Limpar Tudo</button>
-                            </div>
-
                             <!-- Dispatch Progress -->
                             <div id="dispatchProgressSection" style="display: none; padding: 16px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -1790,6 +1771,18 @@
                                 <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center;">
                                     <div style="font-size: 24px; font-weight: 700; color: #ef4444;" id="trackClickRate">0%</div>
                                     <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Taxa de Clique</div>
+                                </div>
+                                <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #14b8a6;" id="trackTotalDelivered">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Entregues</div>
+                                </div>
+                                <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #f97316;" id="trackTotalBounced">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Rejeições</div>
+                                </div>
+                                <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #6b7280;" id="trackTotalUnsubscribed">0</div>
+                                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Descadastros</div>
                                 </div>
                             </div>
 
@@ -17747,11 +17740,16 @@ Posso ajudar em algo mais? 😊`
         console.log(`[${type}] ${title}: ${message}`);
     }
 
+    // ActiveCampaign dashboard was removed. Tab now shows Brevo dispatch +
+    // email tracking metrics (loaded via the overrides below).
     async function loadACDashboard() {
-        try {
-            const token = _acGetToken();
-            if (!token) return;
+        return;
+    }
 
+    /* eslint-disable no-unused-vars */
+    function _acLegacyDashboardUnused() {
+        return;
+        /* legacy body disabled
             const res = await fetch(`${_acGetApiUrl()}/api/admin/ac/dashboard`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -17802,11 +17800,7 @@ Posso ajudar em algo mais? 😊`
 
             // Load contacts
             loadACContacts(1);
-
-        } catch (error) {
-            console.error('Error loading AC dashboard:', error);
-            _acShowToast('Erro', 'Falha ao carregar dados do ActiveCampaign', 'error');
-        }
+        */
     }
 
     function renderACAutomations(automations) {
@@ -18034,7 +18028,7 @@ Posso ajudar em algo mais? 😊`
         const langNames = { 'en': 'Ingl\u00eas', 'es': 'Espanhol' };
         const batchSize = parseInt(document.getElementById('dispatchBatchSize').value) || 500;
 
-        if (!confirm(`Iniciar disparo de ${categoryNames[category]} (${langNames[language]}) com lote de ${batchSize} contatos?\n\nIsso vai enviar os emails de recupera\u00e7\u00e3o diretamente via ActiveCampaign.`)) {
+        if (!confirm(`Iniciar disparo de ${categoryNames[category]} (${langNames[language]}) com lote de ${batchSize} contatos?\n\nIsso vai enviar os emails de recupera\u00e7\u00e3o diretamente via Brevo.`)) {
             return;
         }
 
@@ -18091,63 +18085,6 @@ Posso ajudar em algo mais? 😊`
         document.getElementById('dispatchProcessed').textContent = status.processed;
         document.getElementById('dispatchSuccess').textContent = status.success;
         document.getElementById('dispatchFailed').textContent = status.failed;
-    }
-
-    async function purgeACContactsLimited() {
-        const limit = parseInt(document.getElementById('purgeLimit').value) || 500;
-        if (!confirm(`⚠️ Isso vai DELETAR até ${limit} contatos das listas de recuperação do ActiveCampaign.\n\nIsso libera slots do plano. Deseja continuar?`)) {
-            return;
-        }
-        try {
-            const token = _acGetToken();
-            _acShowToast('Limpando...', `Deletando até ${limit} contatos do ActiveCampaign...`, 'info');
-            const resp = await fetch(`${_acGetApiUrl()}/api/admin/dispatch/purge-ac-limit`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ confirm: 'PURGE_AC', limit: limit })
-            });
-            const data = await resp.json();
-            if (data.success) {
-                let details = `${data.message}\n\n`;
-                for (const [list, info] of Object.entries(data.lists || {})) {
-                    details += `${list}: ${info.deleted || 0}/${info.found || 0}\n`;
-                }
-                _acShowToast('Limpeza Concluída', `${data.totalDeleted} contatos removidos do AC!`, 'success');
-                alert(`Limpeza Concluída!\n\n${details}`);
-            } else {
-                _acShowToast('Erro', data.error || 'Erro na limpeza', 'error');
-            }
-        } catch (err) {
-            _acShowToast('Erro', err.message, 'error');
-        }
-    }
-
-    async function purgeACContacts() {
-        if (!confirm('⚠️ Isso vai DELETAR todos os contatos das listas de recuperação do ActiveCampaign.\n\nIsso libera slots do plano. Contatos que já receberam os emails serão removidos.\n\nDeseja continuar?')) {
-            return;
-        }
-        try {
-            const token = _acGetToken();
-            _acShowToast('Limpando...', 'Deletando contatos de recuperação do ActiveCampaign...', 'info');
-            const resp = await fetch(`${_acGetApiUrl()}/api/admin/dispatch/purge-ac`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ confirm: 'PURGE_AC' })
-            });
-            const data = await resp.json();
-            if (data.success) {
-                let details = `${data.totalDeleted} contatos deletados.\n\n`;
-                for (const [list, info] of Object.entries(data.lists || {})) {
-                    details += `${list}: ${info.deleted || 0}/${info.found || 0}\n`;
-                }
-                _acShowToast('Limpeza Concluída', `${data.totalDeleted} contatos removidos do AC!`, 'success');
-                alert(`Limpeza Concluída!\n\n${details}`);
-            } else {
-                _acShowToast('Erro', data.error || 'Erro na limpeza', 'error');
-            }
-        } catch (err) {
-            _acShowToast('Erro', err.message, 'error');
-        }
     }
 
     async function loadDispatchHistory_ac() {
@@ -18327,6 +18264,9 @@ Posso ajudar em algo mais? 😊`
                 document.getElementById('trackTotalClicks').textContent = (t.unique_clicks || 0).toLocaleString();
                 document.getElementById('trackOpenRate').textContent = (t.open_rate || '0.0') + '%';
                 document.getElementById('trackClickRate').textContent = (t.click_rate || '0.0') + '%';
+                document.getElementById('trackTotalDelivered').textContent = (t.unique_delivered || 0).toLocaleString();
+                document.getElementById('trackTotalBounced').textContent = (t.unique_bounced || 0).toLocaleString();
+                document.getElementById('trackTotalUnsubscribed').textContent = (t.unique_unsubscribed || 0).toLocaleString();
 
                 // Build detailed table from breakdown data
                 const tbody = document.getElementById('trackingMetricsTableBody');
@@ -18364,9 +18304,19 @@ Posso ajudar em algo mais? 😊`
                 if (eventsData.success && eventsData.data && eventsData.data.length > 0) {
                     eventsTbody.innerHTML = eventsData.data.map(e => {
                         const catLabel = categoryLabels[e.category] || e.category || '-';
+                        const evtLabels = {
+                            'open': ['Abertura', '#10b981'],
+                            'click': ['Clique', '#f59e0b'],
+                            'delivered': ['Entregue', '#3b82f6'],
+                            'hard_bounce': ['Rejeição', '#ef4444'],
+                            'soft_bounce': ['Rejeição', '#ef4444'],
+                            'unsubscribed': ['Descadastro', '#6b7280'],
+                            'complaint': ['Reclamação', '#dc2626']
+                        };
+                        const [evtLabel, evtColor] = evtLabels[e.event_type] || [e.event_type, '#8b5cf6'];
                         return `<tr>
                             <td>${e.email}</td>
-                            <td><span class="ac-type-badge" style="background: ${e.event_type === 'open' ? '#10b981' : '#f59e0b'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${e.event_type === 'open' ? 'Abertura' : 'Clique'}</span></td>
+                            <td><span class="ac-type-badge" style="background: ${evtColor}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">${evtLabel}</span></td>
                             <td>${catLabel}</td>
                             <td>${(e.language || '').toUpperCase()}</td>
                             <td style="font-size: 12px; color: var(--text-muted);">${new Date(e.created_at).toLocaleString('pt-BR')}</td>
