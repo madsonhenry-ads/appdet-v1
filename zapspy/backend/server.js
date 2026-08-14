@@ -328,7 +328,8 @@ app.listen(PORT, async () => {
         console.error('⚠️ Failed to init dispatch table:', e.message);
     }
 
-    // Cron: Process scheduled emails every 30 minutes
+    // Cron: Process scheduled emails every 1 minute so delivery happens close
+    // to the scheduled_for time (delays as low as 5-20 min for email 1).
     setInterval(async () => {
         try {
             const result = await dispatchService.processScheduledEmails();
@@ -338,7 +339,7 @@ app.listen(PORT, async () => {
         } catch (e) {
             console.error('⚠️ Cron scheduled emails error:', e.message);
         }
-    }, 30 * 60 * 1000); // Every 30 minutes
+    }, 60 * 1000); // Every 1 minute
 
     // Cron: Cleanup completed contacts every 1 hour
     setInterval(async () => {
