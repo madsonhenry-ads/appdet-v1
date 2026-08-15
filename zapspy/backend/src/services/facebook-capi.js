@@ -557,8 +557,16 @@ async function sendMissingCAPIPurchases() {
                 }
                 
                 // Event ID (status-agnostic for dedup) - use correct prefix per source
-                const eventPrefix = funnelSource === 'perfectpay' ? 'perfectpay' : 'monetizze';
-                const purchaseEventId = `${eventPrefix}_${transactionId}_purchase`;
+                // IMPORTANT: DigiStore transactions store transaction_id as "DS_<id>", and the
+                // DigiStore postback sends event_id "DS_<id>_purchase". Must match here so the
+                // Meta event dedup works regardless of which path (postback vs catch-up) fires.
+                let eventPrefix;
+                if (funnelSource === 'perfectpay') eventPrefix = 'perfectpay';
+                else if (funnelSource === 'digistore') {
+                    const rawTxId = String(transactionId || '').replace(/^DS_/, '');
+                    eventPrefix = `DS_${rawTxId}`;
+                } else eventPrefix = 'monetizze';
+                const purchaseEventId = `${eventPrefix}_purchase`;
                 
                 // CRITICAL: Double-check that this transaction hasn't been logged while we were processing
                 // This prevents race conditions when multiple catch-ups overlap

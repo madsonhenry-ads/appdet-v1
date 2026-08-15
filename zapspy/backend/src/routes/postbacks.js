@@ -2099,18 +2099,125 @@ router.all('/api/postback/digistore', async (req, res) => {
                 const fbEventName = (internalStatus === 'refunded' || internalStatus === 'chargeback')
                     ? 'Refund'
                     : 'Purchase';
-                const fbEventId = `DS_${transactionId || orderId}_${Date.now()}`;
+                // Stable event_id for dedup with catch-up (no Date.now() so Meta dedupes them)
+                const fbEventId = `DS_${transactionId || orderId}_purchase`;
 
                 if (internalStatus === 'approved') {
-                    // Purchase com 30s delay para dedup
-                    setTimeout(async () => {
+                    // DEDUP CHECK: skip if a successful CAPI Purchase was already sent for this transaction
+                    // (postback flow and sendMissingCAPIPurchases catch-up both key off capi_purchase_logs)
+                    const dedupCheck = await pool.query(
+                        `SELECT id FROM capi_purchase_logs WHERE transaction_id = $1 AND capi_success = true LIMIT 1`,
+                        [dsTransactionId]
+                    );
+                    if (dedupCheck.rows.length > 0) {
+                        console.log(`⏭️ DigiStore CAPI: Purchase already sent for ${dsTransactionId} - SKIPPING to avoid duplicate`);
+                    } else {
+                        // Reserva imediata em capi_purchase_logs (capi_success=false) para o
+                        // catch-up global (sendMissingCAPIPurchases) não reenviar durante a janela de 30s.
+                        // Se o envio falhar, o DELETE abaixo libera para o catch-up tentar de novo.
+                        let logInserted = false;
                         try {
-                            await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, fbEventId, capiOptions);
-                            console.log(`✅ DigiStore CAPI Purchase sent: ${dsTransactionId}`);
-                        } catch (err) {
-                            console.error('❌ DigiStore CAPI Purchase error:', err.message);
+                            const reserveResult = await pool.query(`
+                                INSERT INTO capi_purchase_logs (
+                                    transaction_id, email, product, value, currency,
+                                    funnel_language, funnel_source, event_source_url, event_id,
+                                    pixel_id, pixel_name, has_email, has_fbc, has_fbp,
+                                    has_ip, has_user_agent, has_external_id, has_country, has_phone,
+                                    lead_found, capi_success, capi_response, fb_events_received
+                                ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)
+                                ON CONFLICT (transaction_id) DO NOTHING
+                            `, [
+                                dsTransactionId, buyerEmail.toLowerCase().trim(),
+                                fbCustomData.content_name || `Whats Spy ${productTier || 'VIP'} (DigiStore)`,
+                                fbCustomData.value, fbCustomData.currency,
+                                funnelLanguage, 'digistore', eventSourceUrl, fbEventId,
+                                '', '',
+                                !!buyerEmail, !!(enrichedData.fbc), !!(enrichedData.fbp),
+                                !!(enrichedData.ip), !!(enrichedData.user_agent),
+                                !!visitorId, !!country, !!buyerPhoneFormatted,
+                                false, false, null, 0
+                            ]);
+                            logInserted = reserveResult.rowCount > 0;
+                        } catch (logErr) {
+                            console.error('❌ DigiStore CAPI: Error reserving capi_purchase_logs:', logErr.message);
                         }
-                    }, 30000);
+
+                        // Purchase com 30s delay para dar tempo ao enrichPurchase (fbc/fbp) chegar
+                        setTimeout(async () => {
+                            try {
+                                const purchaseResults = await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, fbEventId, capiOptions);
+                                const capiSuccess = !!(purchaseResults[0] && purchaseResults[0].success === true);
+                                const fbEventsReceived = (purchaseResults[0] && purchaseResults[0].result && purchaseResults[0].result.events_received) || 0;
+                                const pixelId = (purchaseResults[0] && purchaseResults[0].pixel) || '';
+                                const pixelName = funnelLanguage === 'es' ? 'PIXEL SPY ESPANHOL' : '[PABLO NOVO] - [SPY INGLES]';
+                                console.log(`✅ DigiStore CAPI Purchase sent: ${dsTransactionId} (success: ${capiSuccess})`);
+                                // Atualiza a reserva com o resultado real (capi_success=true bloqueia o catch-up).
+                                // Se a reserva não tinha sido inserida, faz INSERT com ON CONFLICT.
+                                try {
+                                    if (logInserted) {
+                                        await pool.query(`
+                                            UPDATE capi_purchase_logs SET
+                                                email = $2, product = $3, value = $4, currency = $5,
+                                                funnel_language = $6, funnel_source = 'digistore', event_source_url = $7, event_id = $8,
+                                                pixel_id = $9, pixel_name = $10,
+                                                has_email = $11, has_fbc = $12, has_fbp = $13,
+                                                has_ip = $14, has_user_agent = $15,
+                                                has_external_id = $16, has_country = $17, has_phone = $18,
+                                                capi_success = $19, capi_response = $20, fb_events_received = $21
+                                            WHERE transaction_id = $1
+                                        `, [
+                                            dsTransactionId, buyerEmail.toLowerCase().trim(),
+                                            fbCustomData.content_name || `Whats Spy ${productTier || 'VIP'} (DigiStore)`,
+                                            fbCustomData.value, fbCustomData.currency,
+                                            funnelLanguage, eventSourceUrl, fbEventId,
+                                            pixelId, pixelName,
+                                            !!buyerEmail, !!(enrichedData.fbc), !!(enrichedData.fbp),
+                                            !!(enrichedData.ip), !!(enrichedData.user_agent),
+                                            !!visitorId, !!country, !!buyerPhoneFormatted,
+                                            capiSuccess, JSON.stringify(purchaseResults), fbEventsReceived
+                                        ]);
+                                    } else {
+                                        await pool.query(`
+                                            INSERT INTO capi_purchase_logs (
+                                                transaction_id, email, product, value, currency,
+                                                funnel_language, funnel_source, event_source_url, event_id,
+                                                pixel_id, pixel_name, has_email, has_fbc, has_fbp,
+                                                has_ip, has_user_agent, has_external_id, has_country, has_phone,
+                                                lead_found, capi_success, capi_response, fb_events_received
+                                            ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)
+                                            ON CONFLICT (transaction_id) DO NOTHING
+                                        `, [
+                                            dsTransactionId, buyerEmail.toLowerCase().trim(),
+                                            fbCustomData.content_name || `Whats Spy ${productTier || 'VIP'} (DigiStore)`,
+                                            fbCustomData.value, fbCustomData.currency,
+                                            funnelLanguage, 'digistore', eventSourceUrl, fbEventId,
+                                            pixelId, pixelName,
+                                            !!buyerEmail, !!(enrichedData.fbc), !!(enrichedData.fbp),
+                                            !!(enrichedData.ip), !!(enrichedData.user_agent),
+                                            !!visitorId, !!country, !!buyerPhoneFormatted,
+                                            false, capiSuccess, JSON.stringify(purchaseResults), fbEventsReceived
+                                        ]);
+                                    }
+                                } catch (logErr) {
+                                    console.error('❌ DigiStore CAPI: Error saving capi_purchase_logs:', logErr.message);
+                                }
+                            } catch (err) {
+                                console.error('❌ DigiStore CAPI Purchase error:', err.message);
+                                // Se o envio falhou, libera a reserva para o catch-up tentar depois
+                                try {
+                                    if (logInserted) {
+                                        await pool.query(
+                                            `DELETE FROM capi_purchase_logs WHERE transaction_id = $1 AND capi_success = false`,
+                                            [dsTransactionId]
+                                        );
+                                        console.log(`♻️ DigiStore CAPI: reserva removida para ${dsTransactionId} - catch-up poderá reenviar`);
+                                    }
+                                } catch (cleanupErr) {
+                                    console.error('❌ DigiStore CAPI cleanup error:', cleanupErr.message);
+                                }
+                            }
+                        }, 30000);
+                    }
 
                     // Também envia Google Ads Purchase (se disponível)
                     try {
@@ -2125,9 +2232,10 @@ router.all('/api/postback/digistore', async (req, res) => {
                         // Google Ads não configurado - ignorar
                     }
                 } else {
-                    // Refund/Chargeback envia imediatamente
+                    // Refund/Chargeback envia imediatamente (event_id próprio, não reusa o de Purchase)
                     try {
-                        await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, fbEventId, capiOptions);
+                        const refundEventId = `DS_${transactionId || orderId}_refund_${Date.now()}`;
+                        await sendToFacebookCAPI(fbEventName, fbUserData, fbCustomData, eventSourceUrl, refundEventId, capiOptions);
                         console.log(`✅ DigiStore CAPI ${internalStatus} sent: ${dsTransactionId}`);
                     } catch (err) {
                         console.error(`❌ DigiStore CAPI ${internalStatus} error:`, err.message);
