@@ -226,7 +226,7 @@
 
     <!-- Secondary CTA - Discount -->
     <button class="rmk-cta secondary" onclick="handleDiscount()" style="border-color:rgba(233,30,99,0.3);color:var(--green-primary);">
-        &#127873; Get 50% OFF - Pay only $24.00
+        &#127873; Get 30% OFF - Pay only $24.00
         <span class="rmk-cta-subtitle" style="color:var(--text-muted);">Lower amounts have higher approval rates</span>
     </button>
 
@@ -293,7 +293,7 @@
 <script src="../js/remarketing-tracking.js"></script>
 <script>
 (function() {
-    RmkTracking.init('Remarketing - Retry', 'remarketing_retry', 47);
+    RmkTracking.init('Remarketing - Retry', 'remarketing_retry', 37);
 
     // Load target data
     var target = RmkTracking.getTargetData();
@@ -332,21 +332,21 @@
         icon: '\uD83D\uDCB3',
         title: 'Your access is still reserved!',
         text: '94% of users resolve payment issues on their second try. Try a different card or use our 50% off link for a lower charge amount.',
-        ctaLabel: 'TRY AGAIN - $47',
+        ctaLabel: 'TRY AGAIN - $37',
         ctaClass: 'primary',
         ctaAction: 'handleRetry()'
     });
 })();
 
 function handleRetry() {
-    RmkTracking.trackInitiateCheckout(47, 'Whats Spy VIP - Retry Full Price');
-    var url = RmkTracking.buildCheckoutUrl('KKM446018', 47);
+    RmkTracking.trackInitiateCheckout(37, 'Whats Spy VIP - Retry Full Price');
+    var url = RmkTracking.buildCheckoutUrl('VCCL1O8SD6JF', 37);
     window.location.href = url;
 }
 
 function handleDiscount() {
-    RmkTracking.trackInitiateCheckout(24, 'Whats Spy VIP - Retry 50% OFF');
-    var url = RmkTracking.buildCheckoutUrl('VCCL1O8SD6JF', 24);
+    RmkTracking.trackInitiateCheckout(24, 'Whats Spy VIP - Retry 30% OFF');
+    var url = RmkTracking.buildCheckoutUrl('VCCL1O8SD86A', 24);
     window.location.href = url;
 }
 </script>

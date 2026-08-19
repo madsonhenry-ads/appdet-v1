@@ -99,7 +99,7 @@ From: ZapSpy.Ai - support@mail.appdetect.site
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:auto;" class=" cke_show_border">
                                             <tbody>
                                                 <tr>
-                                                    <td style="border-radius:8px; background-color:#00ff88;"><a href="https://checkout.relationshipcheck.online/VCCL1O8SD7DK?utm_source=brevo&utm_medium=email&utm_campaign=recovery_checkout_abandon_en&utm_content=email3" target="_blank" style="display:inline-block; padding:18px 40px; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">🎟️ CLAIM MY 30% DISCOUNT </a></td>
+                                                    <td style="border-radius:8px; background-color:#00ff88;"><a href="https://en.appdetect.site/vega/remarketing/lastchance/?utm_source=brevo&utm_medium=email&utm_campaign=recovery_checkout_abandon_en&utm_content=email3" target="_blank" style="display:inline-block; padding:18px 40px; font-family:Arial,sans-serif; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; border-radius:8px; letter-spacing:0.5px;">🎟️ CLAIM MY 30% DISCOUNT </a></td>
                                                 </tr>
                                             </tbody>
                                         </table>

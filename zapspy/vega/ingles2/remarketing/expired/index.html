@@ -115,6 +115,20 @@
         <div class="rmk-timer-value" id="countdown">10:00</div>
     </div>
 
+    <!-- Final Offer Price -->
+    <div class="rmk-comparison">
+        <div class="rmk-compare-col dimmed">
+            <div class="rmk-compare-label">Regular</div>
+            <div class="rmk-compare-price">$37</div>
+            <div class="rmk-compare-note">Website price</div>
+        </div>
+        <div class="rmk-compare-col highlight">
+            <div class="rmk-compare-label">Final Price</div>
+            <div class="rmk-compare-price">$17</div>
+            <div class="rmk-compare-note">50% OFF - Last chance ever</div>
+        </div>
+    </div>
+
     <!-- CTA -->
     <button class="rmk-cta danger" id="ctaButton" onclick="handleCTA()">
         STOP DELETION - Keep My Results
@@ -145,7 +159,7 @@
 <script>
 (function() {
     // Initialize tracking
-    RmkTracking.init('Remarketing - Expired', 'remarketing_expired', 47);
+    RmkTracking.init('Remarketing - Expired', 'remarketing_expired', 17);
 
     // Load target data from localStorage
     var target = RmkTracking.getTargetData();
@@ -265,14 +279,14 @@ function handleCTA() {
     var target = RmkTracking.getTargetData();
     RmkTracking.trackEvent('Lead', {
         content_name: 'Remarketing Expired CTA',
-        value: 47,
+        value: 17,
         currency: 'USD'
     });
     if (target.phone) {
-        var url = 'https://checkout.appdetect.shop/VCCL1O8SD6JF?src=expired';
+        var url = 'https://checkout.appdetect.shop/VCCL1O8SD869?src=expired';
         window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs(url) : url;
     } else {
-        var url = 'https://checkout.appdetect.shop/VCCL1O8SD6JF?src=expired';
+        var url = 'https://checkout.appdetect.shop/VCCL1O8SD869?src=expired';
         window.location.href = (typeof TrackingUtils!=='undefined') ? TrackingUtils.appendUTMs(url) : url;
     }
 }

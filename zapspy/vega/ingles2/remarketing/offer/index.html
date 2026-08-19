@@ -87,7 +87,7 @@
 
     <!-- Exclusive Offer -->
     <div class="rmk-section-title">Exclusive Comeback Offer</div>
-    <div class="rmk-section-subtitle">Because you were so close, we're giving you a special discount. This offer is <strong style="color:var(--red-alert)">not available</strong> on our website.</div>
+    <div class="rmk-section-subtitle">Because you were so close, we're holding this special access for you. This price is <strong style="color:var(--red-alert)">not available</strong> on our website.</div>
 
     <!-- Stats Row -->
     <div class="rmk-stats-row">
@@ -114,8 +114,8 @@
         </div>
         <div class="rmk-compare-col highlight">
             <div class="rmk-compare-label">Your Price</div>
-            <div class="rmk-compare-price">$24.00</div>
-            <div class="rmk-compare-note">50% OFF - Exclusive</div>
+            <div class="rmk-compare-price">$37</div>
+            <div class="rmk-compare-note">Exclusive - Instant access</div>
         </div>
     </div>
 
@@ -129,8 +129,8 @@
 
     <!-- CTA -->
     <button class="rmk-cta primary" onclick="handleCheckout()" style="animation:glowPulse 2s ease-in-out infinite;">
-        UNLOCK NOW - 50% OFF
-        <span class="rmk-cta-subtitle">Only $24.00 - Save $23.00 today</span>
+        UNLOCK NOW - INSTANT ACCESS
+        <span class="rmk-cta-subtitle">Only $37 - One-time payment</span>
     </button>
 
     <!-- Trust Badges -->
@@ -240,14 +240,14 @@
 <!-- Sticky Footer CTA -->
 <div class="rmk-sticky-footer">
     <button class="rmk-cta primary" onclick="handleCheckout()">
-        UNLOCK NOW - $24.00 (50% OFF)
+        UNLOCK NOW - $37
     </button>
 </div>
 
 <script src="../js/remarketing-tracking.js"></script>
 <script>
 (function() {
-    RmkTracking.init('Remarketing - Offer', 'remarketing_offer', 24);
+    RmkTracking.init('Remarketing - Offer', 'remarketing_offer', 37);
 
     // Load target data
     var target = RmkTracking.getTargetData();
@@ -271,30 +271,30 @@
 
     // Activity Feed
     startActivityFeed([
-        { emoji: '\uD83D\uDC69', name: 'user_***2k from Europe', action: 'just unlocked full access with 50% off', time: '1 min ago' },
+        { emoji: '\uD83D\uDC69', name: 'user_***2k from Europe', action: 'just unlocked full access', time: '1 min ago' },
         { emoji: '\uD83D\uDC68', name: 'anon_***91 from Asia', action: 'recovered 89 deleted messages', time: '3 min ago' },
         { emoji: '\uD83D\uDC69', name: 'user_***7x from Americas', action: 'used the exclusive link just now', time: '2 min ago' },
         { emoji: '\uD83D\uDC68', name: 'anon_***4r from Africa', action: 'found evidence in hidden chats', time: '5 min ago' },
-        { emoji: '\uD83D\uDC69', name: 'user_***m3 from Oceania', action: 'saved $24.00 with the special offer', time: '4 min ago' }
+        { emoji: '\uD83D\uDC69', name: 'user_***m3 from Oceania', action: 'saved $37 with the special offer', time: '4 min ago' }
     ], 10000);
 
     // Tab title urgency
-    initTabTitle('\uD83C\uDF81 50% OFF - Don\'t miss it!');
+    initTabTitle('\uD83D\uDE80 Instant Access - Don\'t miss it!');
 
     // Exit intent
     initExitIntent({
-        icon: '\uD83C\uDF81',
-        title: 'Wait! Your 50% OFF is still active!',
-        text: 'This exclusive discount won\'t last. Get full access to all hidden conversations and deleted messages for just $24.00.',
-        ctaLabel: 'GET 50% OFF NOW - $24.00',
+        icon: '\uD83D\uDE80',
+        title: 'Wait! Your report is still ready!',
+        text: 'Get full access to all hidden conversations and deleted messages for just $37.',
+        ctaLabel: 'UNLOCK NOW - $37',
         ctaClass: 'primary',
         ctaAction: 'handleCheckout()'
     });
 })();
 
 function handleCheckout() {
-    RmkTracking.trackInitiateCheckout(24, 'Whats Spy VIP - Remarketing 50% OFF');
-    var url = RmkTracking.buildCheckoutUrl('VCCL1O8SD6JF', 24);
+    RmkTracking.trackInitiateCheckout(37, 'Whats Spy VIP - Remarketing');
+    var url = RmkTracking.buildCheckoutUrl('VCCL1O8SD6JF', 37);
     window.location.href = url;
 }
 </script>
